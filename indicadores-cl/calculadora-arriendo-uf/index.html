@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Arriendo en UF a Pesos Chile 2026 | indicadores.cl</title>
+  <meta name="description" content="Calcula cuánto es tu arriendo en UF convertido a pesos chilenos hoy. Ve cómo ha variado en los últimos 12 meses. Actualizado con el valor oficial del Banco Central.">
+  <link rel="canonical" href="https://indicadores.cl/calculadora-arriendo-uf/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cómo funciona el reajuste de arriendo en UF en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Los arriendos pactados en UF se reajustan automáticamente con la inflación. Cada mes pagas la misma cantidad de UF, pero en pesos distintos porque el valor de la UF cambia diariamente según el IPC." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuándo se aplica el nuevo valor UF en el arriendo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Se aplica el valor UF del día de pago indicado en el contrato. Si el contrato dice pagar el día 5 de cada mes, se usa el valor UF de ese día 5." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    /* ---- Calculadora principal ---- */
+    .calc-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .calc-wrap::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .calc-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
+    .calc-input-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: flex-end; margin-bottom: 24px; }
+    .uf-unit { font-family: var(--font-mono); font-size: 22px; color: var(--text-3); padding: 12px 0; }
+
+    /* Resultado */
+    .result-box {
+      background: var(--bg3);
+      border: 1px solid var(--border-em);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .result-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .result-value { font-family: var(--font-mono); font-size: clamp(28px, 6vw, 42px); font-weight: 500; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .result-detail { font-size: 13px; color: var(--text-2); }
+
+    /* Info chips */
+    .info-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .info-chip { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; font-size: 12px; color: var(--text-2); font-family: var(--font-mono); }
+    .info-chip span { color: var(--text); font-weight: 500; }
+
+    /* Chart */
+    .chart-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px; }
+    .chart-title { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .chart-subtitle { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+    .chart-container { position: relative; height: 240px; }
+
+    /* Historial tabla -->
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 10px 16px; color: var(--text-2); }
+    tbody td:first-child { color: var(--text); font-weight: 500; }
+    .td-hoy td { color: var(--accent) !important; background: var(--accent-dim); }
+    .td-hoy td:first-child { color: var(--accent) !important; }
+    .change-pos { color: var(--green); }
+    .change-neg { color: var(--red); }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+
+    @media (max-width: 480px) {
+      .calc-wrap { padding: 20px; }
+      .calc-input-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/calculadora-arriendo-uf/" class="active">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Herramienta</p>
+    <h1><strong>Calculadora de arriendo</strong> en UF</h1>
+    <p>Convierte tu arriendo en UF a pesos hoy y ve cómo ha variado en los últimos meses.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- CALCULADORA -->
+  <div class="calc-wrap animate">
+    <label class="calc-label" for="inp-uf">¿Cuántas UF es tu arriendo?</label>
+    <div class="calc-input-row">
+      <input class="input" id="inp-uf" type="number" min="0.1" max="500" step="0.1" value="15" placeholder="Ej: 15">
+      <div class="uf-unit">UF</div>
+    </div>
+
+    <div class="result-box" id="result-box">
+      <div class="result-label">Valor en pesos — hoy</div>
+      <div class="result-value" id="result-clp">Calculando…</div>
+      <div class="result-detail" id="result-detail"></div>
+    </div>
+
+    <div class="info-chips" id="info-chips">
+      <div class="info-chip">UF hoy: <span id="chip-uf">—</span></div>
+      <div class="info-chip">Hace 1 mes: <span id="chip-mes1">—</span></div>
+      <div class="info-chip">Variación 12 meses: <span id="chip-var">—</span></div>
+    </div>
+  </div>
+
+  <!-- GRÁFICO -->
+  <div class="chart-wrap animate delay-1">
+    <div class="chart-title">Evolución del arriendo en pesos</div>
+    <div class="chart-subtitle" id="chart-sub">Últimos 12 meses según el valor UF de cada mes</div>
+    <div class="chart-container">
+      <canvas id="chart-arriendo" role="img" aria-label="Gráfico de evolución del valor del arriendo en pesos los últimos 12 meses"></canvas>
+    </div>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- TABLA HISTORIAL -->
+  <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">Historial de pagos — últimos 12 meses</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>UF (día 1)</th>
+          <th id="th-pago">Pago en pesos</th>
+          <th>Variación mensual</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-hist">
+        <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Calculando…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FAQ -->
+  <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;margin-top:48px">Preguntas frecuentes</p>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo funciona el reajuste de arriendo en UF en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Los arriendos pactados en UF se reajustan <strong>automáticamente con la inflación</strong>. Cada mes pagas la misma cantidad de UF (por ejemplo, 15 UF), pero en pesos distintos porque el valor de la UF cambia diariamente según el IPC (Índice de Precios al Consumidor). Esto protege al arrendador de la inflación y le da previsibilidad al arrendatario respecto a cuántas UF debe pagar.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Qué valor UF se aplica en el pago del arriendo?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Se aplica el valor UF del <strong>día de pago indicado en el contrato</strong>. Si el contrato dice pagar el día 5 de cada mes, se usa el valor UF de ese día 5. Por eso la calculadora muestra el valor del día 1 de cada mes como referencia — el valor real depende de la fecha exacta de tu contrato.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Mi arriendo en UF sube más que uno en pesos?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Depende de la inflación. En períodos de alta inflación (como 2022–2023 en Chile, con IPC sobre 12%), los arriendos en UF subieron considerablemente en pesos. En períodos de baja inflación, la diferencia es mínima. Los arriendos en pesos fijos, por otro lado, el arrendador suele reajustar anualmente y puede subir más de lo que hubiera subido la UF.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuándo se publica el valor UF del mes siguiente?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El Banco Central publica los valores UF de cada mes <strong>entre el día 8 y 10 del mes anterior</strong>. Por ejemplo, los valores de mayo 2026 se publican alrededor del 9 de abril de 2026. Así, el primer día hábil del mes siguiente ya está disponible el valor exacto que regirá.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Puedo negociar que mi arriendo pase de UF a pesos fijos?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Sí, es totalmente posible y legal. Requiere acuerdo entre arrendador y arrendatario mediante un <strong>addendum al contrato</strong> notarial. El arrendador puede resistirse si teme que la inflación suba. Lo común es negociar un reajuste anual por IPC en lugar de UF diaria, lo que da más previsibilidad mensual al arrendatario.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadores.cl — Datos: Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">Historial UF</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, MESES, anioActual } = window.IC;
+  let ufHoy = null;
+  let historial = []; // [{mes, label, uf, clp}]
+  let chartInstance = null;
+
+  /* ---- Cargar datos ---- */
+  async function cargarDatos() {
+    // UF año actual
+    const dataActual = await fetchIndicador('uf', anioActual);
+    // UF año anterior (para cubrir los últimos 12 meses)
+    const dataAnterior = await fetchIndicador('uf', anioActual - 1);
+
+    const serie = [
+      ...dataAnterior.serie,
+      ...dataActual.serie
+    ].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+    // Valor UF de hoy
+    const todayStr = new Date().toISOString().split('T')[0];
+    const hoyDato = serie.find(r => r.fecha.split('T')[0] === todayStr)
+      || serie[serie.length - 1];
+    ufHoy = hoyDato.valor;
+
+    // Historial: primer día disponible de cada uno de los últimos 12 meses
+    const ahora = new Date();
+    historial = [];
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
+      const mesNum = d.getMonth() + 1;
+      const anio = d.getFullYear();
+      // Buscar primer valor del mes
+      const fila = serie.find(r => {
+        const rd = new Date(r.fecha);
+        return rd.getFullYear() === anio && rd.getMonth() + 1 === mesNum;
+      });
+      if (fila) {
+        historial.push({
+          anio, mes: mesNum,
+          label: `${MESES[mesNum - 1].slice(0, 3)} ${anio}`,
+          uf: fila.valor,
+          clp: null, // se calcula por la cantidad de UF
+        });
+      }
+    }
+
+    // Chips de info
+    document.getElementById('chip-uf').textContent = fmt.clp(ufHoy);
+    if (historial.length >= 2) {
+      const hace1 = historial[historial.length - 2];
+      document.getElementById('chip-mes1').textContent = fmt.clp(hace1.uf);
+      const varPct = ((ufHoy - historial[0].uf) / historial[0].uf * 100).toFixed(2);
+      const chipVar = document.getElementById('chip-var');
+      chipVar.textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
+      chipVar.style.color = varPct >= 0 ? 'var(--green)' : 'var(--red)';
+    }
+
+    // Render inicial
+    render(parseFloat(document.getElementById('inp-uf').value) || 15);
+  }
+
+  /* ---- Render con la cantidad de UF ---- */
+  function render(cantUF) {
+    if (!ufHoy) return;
+
+    // Resultado principal
+    const totalHoy = cantUF * ufHoy;
+    document.getElementById('result-clp').textContent = fmt.clp(totalHoy);
+    document.getElementById('result-detail').textContent =
+      `${fmt.num(cantUF, 2)} UF × ${fmt.clp(ufHoy)} (UF hoy) = ${fmt.clp(totalHoy)}`;
+
+    // Calcular historial con esta cantidad
+    const hist = historial.map(h => ({ ...h, clp: Math.round(cantUF * h.uf) }));
+
+    // Gráfico
+    document.getElementById('chart-sub').textContent =
+      `Valor mensual de ${fmt.num(cantUF, 2)} UF en pesos — últimos 12 meses`;
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart-arriendo'), {
+      type: 'bar',
+      data: {
+        labels: hist.map(h => h.label),
+        datasets: [{
+          label: 'Pago en pesos',
+          data: hist.map(h => h.clp),
+          backgroundColor: hist.map((h, i) => i === hist.length - 1 ? '#3b9eff' : 'rgba(59,158,255,0.25)'),
+          borderColor: hist.map((h, i) => i === hist.length - 1 ? '#3b9eff' : 'rgba(59,158,255,0.5)'),
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `Pago: ${fmt.clp(ctx.raw)}` } }
+        },
+        scales: {
+          x: { ticks: { color: '#4a5568', font: { size: 11 } }, grid: { display: false } },
+          y: {
+            ticks: { color: '#4a5568', font: { size: 11 }, callback: v => '$' + Math.round(v / 1000) + 'k' },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
+    });
+
+    // Tabla
+    document.getElementById('th-pago').textContent = `Pago (${fmt.num(cantUF, 1)} UF)`;
+    const tbody = document.getElementById('tabla-hist');
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    tbody.innerHTML = hist.map((h, i) => {
+      const esHoy = i === hist.length - 1;
+      let cambio = '—';
+      if (i > 0) {
+        const diff = h.clp - hist[i - 1].clp;
+        const pct = (diff / hist[i - 1].clp * 100).toFixed(1);
+        const cls = diff >= 0 ? 'change-pos' : 'change-neg';
+        cambio = `<span class="${cls}">${diff >= 0 ? '+' : ''}${fmt.clp(diff)} (${pct}%)</span>`;
+      }
+      return `<tr class="${esHoy ? 'td-hoy' : ''}">
+        <td>${h.label}${esHoy ? ' — hoy' : ''}</td>
+        <td>${fmt.clp(h.uf)}</td>
+        <td>${fmt.clp(h.clp)}</td>
+        <td>${cambio}</td>
+      </tr>`;
+    }).reverse().join('');
+  }
+
+  /* ---- Evento input ---- */
+  document.getElementById('inp-uf').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (v > 0) render(v);
+  });
+
+  /* ---- Init ---- */
+  try {
+    await cargarDatos();
+  } catch(e) {
+    document.getElementById('result-clp').textContent = 'Error al cargar datos';
+    console.error(e);
+  }
+
+})();
+</script>
+
+</body>
+</html>

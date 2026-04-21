@@ -1,0 +1,43 @@
+# Cloudflare Pages — configuración de build
+# Este archivo le dice a Cloudflare cómo publicar el sitio
+
+[build]
+  # Como es HTML estático puro, no necesita build command
+  # Si en el futuro agregas un generador (11ty, Hugo) va aquí
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Headers de seguridad y rendimiento para todas las páginas
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Cache: 1 hora para HTML (se actualiza seguido)
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+# Assets estáticos: cache largo (1 año)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects útiles
+[[redirects]]
+  from = "/uf-hoy"
+  to = "/uf/"
+  status = 301
+
+[[redirects]]
+  from = "/valor-uf"
+  to = "/uf/"
+  status = 301
+
+[[redirects]]
+  from = "/dolar-hoy"
+  to = "/dolar/"
+  status = 301
