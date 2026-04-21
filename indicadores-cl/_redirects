@@ -1,8 +1,0 @@
-# Cloudflare Pages — Redirects
-# Formato: /origen  /destino  código
-
-/uf-hoy          /uf/      301
-/valor-uf        /uf/      301
-/uf-a-pesos      /uf/      301
-/dolar-hoy       /dolar/   301
-/valor-dolar     /dolar/   301
