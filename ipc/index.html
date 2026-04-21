@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPC Chile 2026 — Inflación Mensual y Acumulada | indicadores.cl</title>
+  <meta name="description" content="IPC Chile actualizado. Inflación mensual y acumulada 2026. Calculadora de reajuste por IPC para contratos y arriendos en pesos. Fuente oficial INE y Banco Central.">
+  <meta name="keywords" content="IPC Chile 2026, inflación Chile hoy, IPC mensual Chile, reajuste IPC, índice precios consumidor Chile">
+  <link rel="canonical" href="https://indicadores.cl/ipc/">
+  <meta property="og:title" content="IPC Chile 2026 — Inflación y Calculadora de Reajuste">
+  <meta property="og:description" content="IPC mensual actualizado. Inflación acumulada, calculadora de reajuste y tabla histórica. Fuente INE Chile.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://indicadores.cl/ipc/">
+  <meta property="og:locale" content="es_CL">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué es el IPC en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El IPC (Índice de Precios al Consumidor) es el indicador oficial de inflación en Chile. Lo publica el INE (Instituto Nacional de Estadísticas) entre los días 8 y 10 de cada mes. Mide la variación de precios de una canasta representativa de bienes y servicios que consume un hogar promedio chileno." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cómo se calcula el reajuste por IPC de un contrato?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Para reajustar un monto por IPC entre dos fechas se multiplica el valor original por (1 + variación IPC acumulada). Por ejemplo, si un contrato de $1.000.000 firmado en enero 2025 se reajusta por IPC acumulado de 4,5%, el nuevo valor es $1.000.000 × 1.045 = $1.045.000. Usa la calculadora de esta página para hacerlo automáticamente." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(26px, 4.5vw, 40px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    /* Acento coral/rosa para IPC — diferente a UF (azul), dólar (verde), UTM (amber) */
+    :root { --ipc: #f97316; --ipc-dim: rgba(249,115,22,0.1); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .hero-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card.main::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .hero-value { font-family: var(--font-mono); font-size: clamp(36px, 7vw, 56px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px; }
+    .hero-value.orange { color: var(--ipc); }
+    .hero-value.white  { color: #fff; }
+    .hero-fecha { font-size: 13px; color: var(--text-2); }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--ipc); background: var(--ipc-dim);
+      border: 1px solid rgba(249,115,22,0.2);
+      padding: 4px 10px; border-radius: 99px; margin-top: 12px;
+    }
+
+    /* Stats strip */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .stat-chip { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .stat-chip-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-chip-val { font-family: var(--font-mono); font-size: 17px; font-weight: 500; color: var(--text); }
+    .stat-chip-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+    /* Calculadora reajuste */
+    .calc-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+    .calc-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .calc-desc  { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+    .calc-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .calc-field { display: flex; flex-direction: column; gap: 6px; }
+    .calc-lbl { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .calc-result {
+      background: var(--bg3);
+      border: 1px solid rgba(249,115,22,0.2);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .calc-res-item { display: flex; flex-direction: column; gap: 4px; }
+    .calc-res-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; }
+    .calc-res-val { font-family: var(--font-mono); font-size: 20px; font-weight: 500; }
+
+    /* Tabs */
+    .year-tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .year-tab { font-family: var(--font-mono); font-size: 13px; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border-em); background: transparent; color: var(--text-2); cursor: pointer; transition: all var(--transition); }
+    .year-tab:hover { background: var(--bg3); color: var(--text); }
+    .year-tab.active { background: var(--ipc); color: #fff; border-color: var(--ipc); font-weight: 500; }
+
+    /* Chart */
+    .chart-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px; }
+    .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .chart-title-txt { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .chart-subtitle { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 2px; }
+    .chart-legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-3); align-items: center; flex-wrap: wrap; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .chart-container { position: relative; height: 270px; }
+
+    /* Tabla */
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th:not(:first-child) { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 10px 16px; color: var(--text-2); }
+    tbody td:first-child { color: var(--text); font-weight: 500; }
+    tbody td:not(:first-child) { text-align: right; }
+    .ipc-pos { color: var(--red); }
+    .ipc-neg { color: var(--green); }
+    .td-last { background: var(--ipc-dim) !important; }
+    .td-last td { color: var(--ipc) !important; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--ipc); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+    .skel { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px; display: inline-block; }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    @media (max-width: 540px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .calc-fields { grid-template-columns: 1fr; }
+      .calc-result { grid-template-columns: 1fr; }
+      .hero-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/ipc/" class="active">IPC</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--ipc);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">📈 Inflación</p>
+    <h1><strong>IPC</strong> — Inflación Chile</h1>
+    <p>Índice de Precios al Consumidor mensual. Calculadora de reajuste para contratos y arriendos.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO GRID: IPC mensual + acumulado -->
+  <div class="hero-grid animate">
+    <div class="hero-card main">
+      <div class="hero-eyebrow">IPC — variación mensual</div>
+      <div class="hero-value orange" id="ipc-mensual"><span class="skel" style="width:120px;height:48px"></span></div>
+      <p class="hero-fecha" id="ipc-mes-label"><span class="skel" style="width:160px;height:14px"></span></p>
+      <div class="hero-badge" id="ipc-badge">Publicado por el INE</div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-eyebrow">IPC — acumulado año</div>
+      <div class="hero-value white" id="ipc-acum"><span class="skel" style="width:120px;height:48px"></span></div>
+      <p class="hero-fecha" id="ipc-acum-label">Desde enero del año actual</p>
+      <div style="margin-top:12px;font-size:13px;color:var(--text-2)" id="ipc-interanual-wrap">
+        Variación 12 meses: <strong id="ipc-12m" style="color:var(--ipc)">—</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip animate delay-1">
+    <div class="stat-chip"><div class="stat-chip-label">Último mes</div><div class="stat-chip-val" id="s-ult">—</div><div class="stat-chip-sub" id="s-ult-mes">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mayor alza año</div><div class="stat-chip-val" id="s-max">—</div><div class="stat-chip-sub" id="s-max-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mayor baja año</div><div class="stat-chip-val" id="s-min">—</div><div class="stat-chip-sub" id="s-min-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Promedio mensual</div><div class="stat-chip-val" id="s-prom">—</div><div class="stat-chip-sub">año actual</div></div>
+  </div>
+
+  <!-- CALCULADORA REAJUSTE -->
+  <div class="calc-card animate delay-2">
+    <div class="calc-title">Calculadora de reajuste por IPC</div>
+    <div class="calc-desc">Reajusta un monto en pesos según la inflación acumulada entre dos períodos.</div>
+    <div class="calc-fields">
+      <div class="calc-field">
+        <span class="calc-lbl">Monto original ($)</span>
+        <input class="input" id="inp-monto" type="number" min="1" step="1000" value="1000000" placeholder="1.000.000">
+      </div>
+      <div class="calc-field">
+        <span class="calc-lbl">Meses de reajuste</span>
+        <input class="input" id="inp-meses" type="number" min="1" max="60" step="1" value="12" placeholder="12">
+      </div>
+    </div>
+    <div class="calc-result">
+      <div class="calc-res-item">
+        <span class="calc-res-label">Monto reajustado</span>
+        <span class="calc-res-val" id="res-monto" style="color:var(--ipc)">—</span>
+      </div>
+      <div class="calc-res-item">
+        <span class="calc-res-label">Diferencia</span>
+        <span class="calc-res-val" id="res-diff" style="color:var(--text-2)">—</span>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-3);margin-top:12px">* Cálculo estimado usando el IPC promedio mensual del período. Para cálculos legales exactos consulte el INE.</p>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- TABS AÑO -->
+  <div class="year-tabs" id="year-tabs"></div>
+
+  <!-- GRÁFICO -->
+  <div class="chart-wrap animate delay-3">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title-txt">Inflación mensual</div>
+        <div class="chart-subtitle" id="chart-subtitle">IPC mensual — cargando…</div>
+      </div>
+      <div class="chart-legend">
+        <span style="display:flex;align-items:center;gap:5px"><span class="legend-dot" style="background:var(--ipc)"></span>IPC mensual</span>
+        <span style="display:flex;align-items:center;gap:5px"><span class="legend-dot" style="background:var(--accent)"></span>Acumulado</span>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="chart-ipc" role="img" aria-label="Gráfico de inflación mensual IPC Chile"></canvas>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <span class="section-label" id="tabla-label">IPC mensual — año actual</span>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>IPC mensual</th>
+          <th>Acumulado año</th>
+          <th>Variación 12 meses</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-ipc">
+        <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Cargando…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FAQ -->
+  <span class="section-label" style="margin-top:16px">Preguntas frecuentes</span>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Qué es el IPC y cómo se mide en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El <strong>IPC (Índice de Precios al Consumidor)</strong> mide la variación promedio de precios de una canasta de bienes y servicios representativa del consumo de los hogares chilenos. Lo elabora el <strong>INE (Instituto Nacional de Estadísticas)</strong> y se publica entre los días 8 y 10 de cada mes. La canasta incluye alimentos, transporte, vivienda, salud, educación y otros rubros ponderados según el gasto real de los hogares. Es el indicador oficial de inflación en Chile.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo afecta el IPC al valor de la UF?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        La UF se reajusta diariamente en función del IPC del mes anterior. El Banco Central calcula los valores diarios de la UF para el mes siguiente usando el IPC publicado por el INE. Si el IPC de marzo fue 0,5%, la UF subirá aproximadamente 0,5% distribuido entre los días de abril. Por eso, cuando la inflación sube, la UF sube — y con ella, los arriendos, hipotecas y deudas pactadas en UF.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Qué significa el IPC negativo (deflación)?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Un IPC negativo significa que los precios bajaron en promedio ese mes — se llama <strong>deflación</strong>. En Chile ocurre esporádicamente, generalmente en meses de bajas estacionales en alimentos o energía. Un mes de IPC negativo hace que la UF suba menos (o casi no suba) durante el mes siguiente. No es necesariamente malo: refleja baja de precios en algún componente de la canasta, como el petróleo o frutas de temporada.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo reajusto un arriendo en pesos por IPC?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Para reajustar un arriendo en pesos por IPC anual: <strong>nuevo valor = valor original × (1 + IPC acumulado 12 meses)</strong>. Por ejemplo, si tu arriendo es $450.000 y el IPC de los últimos 12 meses fue 4,2%: $450.000 × 1,042 = $468.900. Usa la calculadora de esta página ingresando el monto y los meses que quieres reajustar. Recuerda que para hacerlo en forma legal, el reajuste debe estar pactado en el contrato de arriendo.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuándo se publica el IPC en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El INE publica el IPC mensual <strong>entre los días 8 y 10 del mes siguiente</strong> al período medido. Por ejemplo, el IPC de marzo 2026 se publica entre el 8 y 10 de abril de 2026. La fecha exacta varía cada mes y el INE la anuncia con anticipación en su calendario estadístico. El dato publicado incluye la variación mensual, acumulada en el año e interanual (últimos 12 meses).
+      </div>
+    </div>
+  </div>
+
+  <!-- RELACIONADOS -->
+  <span class="section-label">Herramientas relacionadas</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
+    <a href="/uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📊</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">Valor UF hoy</div><div style="font-size:12px;color:var(--text-2)">La UF se reajusta por IPC</div></div>
+    </a>
+    <a href="/utm/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📋</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">UTM Chile</div><div style="font-size:12px;color:var(--text-2)">También sigue al IPC</div></div>
+    </a>
+    <a href="/calculadora-arriendo-uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">🏠</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">Arriendo en UF</div><div style="font-size:12px;color:var(--text-2)">Calculadora UF/CLP</div></div>
+    </a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadores.cl — Datos: INE · Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, fetchHoy, MESES, anioActual } = window.IC;
+  const ANIOS = [anioActual, anioActual - 1, anioActual - 2];
+  let chartInstance = null;
+  let ipcSerie = [];
+  let ipcPromMensual = 0;
+
+  /* ─── Datos del día ─── */
+  try {
+    const todos = await fetchHoy();
+    const ipc = todos.ipc;
+    const valMen = ipc.valor;
+    const d = new Date(ipc.fecha);
+    const mesNombre = MESES[d.getMonth()];
+
+    document.getElementById('ipc-mensual').textContent = `${valMen > 0 ? '+' : ''}${fmt.num(valMen, 1)}%`;
+    document.getElementById('ipc-mes-label').textContent =
+      `${mesNombre} ${d.getFullYear()} · Fuente: INE Chile`;
+    document.getElementById('ipc-badge').textContent =
+      valMen >= 0 ? `▲ Alza de precios en ${mesNombre}` : `▼ Baja de precios en ${mesNombre}`;
+    document.getElementById('ipc-badge').style.color = valMen >= 0 ? 'var(--ipc)' : 'var(--green)';
+  } catch(e) {
+    document.getElementById('ipc-mensual').textContent = 'Error';
+  }
+
+  /* ─── Tabs ─── */
+  const tabsEl = document.getElementById('year-tabs');
+  ANIOS.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'year-tab' + (a === anioActual ? ' active' : '');
+    btn.textContent = a;
+    btn.onclick = () => cargarAnio(a, btn);
+    tabsEl.appendChild(btn);
+  });
+
+  /* ─── Cargar año ─── */
+  async function cargarAnio(anio, btn) {
+    document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    let data;
+    try { data = await fetchIndicador('ipc', anio); } catch { return; }
+
+    ipcSerie = data.serie
+      .filter(r => new Date(r.fecha).getFullYear() === anio)
+      .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+    if (!ipcSerie.length) return;
+
+    const valores = ipcSerie.map(r => r.valor);
+    const acum = valores.reduce((s, v) => s + v, 0);
+    const max = Math.max(...valores);
+    const min = Math.min(...valores);
+    const maxFila = ipcSerie.find(r => r.valor === max);
+    const minFila = ipcSerie.find(r => r.valor === min);
+    ipcPromMensual = acum / valores.length;
+
+    /* Acumulado hero */
+    document.getElementById('ipc-acum').textContent = `${acum > 0 ? '+' : ''}${fmt.num(acum, 1)}%`;
+    document.getElementById('ipc-acum-label').textContent =
+      `Acumulado enero–${MESES[new Date(ipcSerie[ipcSerie.length-1].fecha).getMonth()]} ${anio}`;
+
+    /* Variación 12 meses — estimar con acumulado si mismo año */
+    document.getElementById('ipc-12m').textContent = `${acum > 0 ? '+' : ''}${fmt.num(acum, 1)}%`;
+
+    /* Stats */
+    const ult = ipcSerie[ipcSerie.length - 1];
+    document.getElementById('s-ult').textContent = `${ult.valor > 0 ? '+' : ''}${fmt.num(ult.valor, 1)}%`;
+    document.getElementById('s-ult-mes').textContent = MESES[new Date(ult.fecha).getMonth()].slice(0, 3) + ' ' + anio;
+    document.getElementById('s-max').textContent = `+${fmt.num(max, 1)}%`;
+    document.getElementById('s-max-f').textContent = maxFila ? MESES[new Date(maxFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-min').textContent = `${fmt.num(min, 1)}%`;
+    document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-prom').textContent = `${ipcPromMensual > 0 ? '+' : ''}${fmt.num(ipcPromMensual, 2)}%`;
+
+    /* Actualizar calculadora */
+    calcReajuste();
+
+    /* Gráfico dual: barras IPC mensual + línea acumulado */
+    document.getElementById('chart-subtitle').textContent = `IPC mensual y acumulado — ${anio}`;
+    const labels = ipcSerie.map(r => MESES[new Date(r.fecha).getMonth()].slice(0, 3));
+    let acumArr = [];
+    let running = 0;
+    for (const r of ipcSerie) { running += r.valor; acumArr.push(parseFloat(running.toFixed(2))); }
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart-ipc'), {
+      data: {
+        labels,
+        datasets: [
+          {
+            type: 'bar',
+            label: 'IPC mensual',
+            data: valores,
+            backgroundColor: valores.map(v => v >= 0 ? 'rgba(249,115,22,0.5)' : 'rgba(52,211,153,0.5)'),
+            borderColor:     valores.map(v => v >= 0 ? 'rgba(249,115,22,0.8)' : 'rgba(52,211,153,0.8)'),
+            borderWidth: 1,
+            borderRadius: 4,
+            yAxisID: 'y',
+          },
+          {
+            type: 'line',
+            label: 'Acumulado',
+            data: acumArr,
+            borderColor: 'rgba(59,158,255,0.8)',
+            backgroundColor: 'rgba(59,158,255,0.05)',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            fill: true,
+            tension: 0.3,
+            yAxisID: 'y2',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(17,23,32,0.95)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderWidth: 1,
+            callbacks: {
+              label: ctx => ctx.datasetIndex === 0
+                ? `  Mensual: ${ctx.raw > 0 ? '+' : ''}${fmt.num(ctx.raw, 2)}%`
+                : `  Acumulado: ${ctx.raw > 0 ? '+' : ''}${fmt.num(ctx.raw, 2)}%`
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#4a5568', font: { size: 11 } }, grid: { display: false }, border: { color: 'transparent' } },
+          y: {
+            position: 'left',
+            ticks: { color: '#4a5568', font: { size: 11 }, callback: v => `${v > 0 ? '+' : ''}${v}%` },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            border: { color: 'transparent' }
+          },
+          y2: {
+            position: 'right',
+            ticks: { color: '#4a5568', font: { size: 11 }, callback: v => `${v > 0 ? '+' : ''}${v}%` },
+            grid: { display: false },
+            border: { color: 'transparent' }
+          }
+        }
+      }
+    });
+
+    /* Tabla */
+    document.getElementById('tabla-label').textContent = `IPC mensual — ${anio}`;
+    let acumTabla = 0;
+    const filas = ipcSerie.map(r => {
+      acumTabla += r.valor;
+      return { ...r, acum: parseFloat(acumTabla.toFixed(2)) };
+    });
+
+    const tbody = document.getElementById('tabla-ipc');
+    tbody.innerHTML = [...filas].reverse().map((r, i, arr) => {
+      const d = new Date(r.fecha);
+      const isLast = i === 0;
+      const cls = r.valor >= 0 ? 'ipc-pos' : 'ipc-neg';
+      const interanual = arr.length >= 12 ? fmt.num(arr.slice(0, 12).reduce((s, x) => s + x.valor, 0), 2) + '%' : '—';
+      return `<tr class="${isLast ? 'td-last' : ''}">
+        <td>${MESES[d.getMonth()]} ${anio}${isLast ? ' — último' : ''}</td>
+        <td><span class="${cls}">${r.valor > 0 ? '+' : ''}${fmt.num(r.valor, 2)}%</span></td>
+        <td>${r.acum > 0 ? '+' : ''}${fmt.num(r.acum, 2)}%</td>
+        <td>${interanual}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ─── Calculadora reajuste ─── */
+  function calcReajuste() {
+    const monto = parseFloat(document.getElementById('inp-monto').value) || 0;
+    const meses = parseInt(document.getElementById('inp-meses').value) || 0;
+    if (!monto || !meses || !ipcPromMensual) return;
+    const factor = Math.pow(1 + ipcPromMensual / 100, meses);
+    const reajustado = Math.round(monto * factor);
+    const diff = reajustado - monto;
+    document.getElementById('res-monto').textContent = fmt.clp(reajustado);
+    document.getElementById('res-diff').textContent = `+${fmt.clp(diff)} (${fmt.num((factor - 1) * 100, 2)}%)`;
+  }
+
+  document.getElementById('inp-monto').addEventListener('input', calcReajuste);
+  document.getElementById('inp-meses').addEventListener('input', calcReajuste);
+
+  await cargarAnio(anioActual, document.querySelector('.year-tab'));
+})();
+</script>
+</body>
+</html>

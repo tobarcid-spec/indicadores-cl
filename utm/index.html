@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valor UTM 2026 Chile — Unidad Tributaria Mensual Actualizada | indicadores.cl</title>
+  <meta name="description" content="Valor de la UTM (Unidad Tributaria Mensual) en Chile 2026 actualizado. Tabla histórica, calculadora de multas y equivalencias. Fuente oficial SII y Banco Central.">
+  <meta name="keywords" content="UTM 2026 Chile, unidad tributaria mensual, valor UTM hoy, UTM en pesos, UTM SII Chile">
+  <link rel="canonical" href="https://indicadores.cl/utm/">
+  <meta property="og:title" content="Valor UTM 2026 Chile — Unidad Tributaria Mensual">
+  <meta property="og:description" content="UTM actualizada mensualmente. Tabla histórica, calculadora de multas y UTA. Fuente SII Chile.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://indicadores.cl/utm/">
+  <meta property="og:locale" content="es_CL">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué es la UTM en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "La UTM (Unidad Tributaria Mensual) es una unidad de medida tributaria que reajusta el SII mensualmente según la inflación (IPC). Se usa para expresar multas, sanciones, tramos de impuesto, exenciones y beneficios tributarios. Su valor en pesos cambia cada mes, siempre el 1° del mes." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto es 1 UTM en pesos en 2026?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El valor de la UTM en 2026 varía cada mes según el IPC. Puedes ver el valor exacto del mes actual en esta página, actualizado desde la fuente oficial del Banco Central de Chile." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuál es la diferencia entre UTM y UTA?",
+        "acceptedAnswer": { "@type": "Answer", "text": "La UTA (Unidad Tributaria Anual) equivale exactamente a 12 UTM. Se usa para expresar montos anuales como el tope de ciertos beneficios tributarios y tramos del impuesto a la renta. Cuando el SII o la ley habla de UTA, multiplica el valor UTM del mes correspondiente por 12." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(26px, 4.5vw, 40px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    .hero-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(251,191,36,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .hero-value { font-family: var(--font-mono); font-size: clamp(40px, 9vw, 64px); font-weight: 500; color: #fff; letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px; }
+    .hero-fecha { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--amber); background: var(--amber-dim);
+      border: 1px solid rgba(251,191,36,0.2);
+      padding: 4px 10px; border-radius: 99px;
+    }
+
+    /* Equivalencias grid */
+    .equiv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .equiv-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .equiv-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .equiv-val { font-family: var(--font-mono); font-size: 17px; font-weight: 500; color: var(--amber); }
+    .equiv-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+    /* Calculadora multas */
+    .calc-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+    .calc-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .calc-desc { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+    .calc-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
+    .calc-field { display: flex; flex-direction: column; gap: 6px; }
+    .calc-label-txt { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .calc-sep { font-family: var(--font-mono); font-size: 18px; color: var(--text-3); padding: 12px 0; text-align: center; }
+    .calc-result {
+      background: var(--bg3);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .calc-result-main { font-size: 22px; font-weight: 500; color: var(--amber); }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 32px; }
+    .stat-chip { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .stat-chip-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-chip-val { font-family: var(--font-mono); font-size: 17px; font-weight: 500; color: var(--text); }
+    .stat-chip-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+    /* Tabs */
+    .year-tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .year-tab { font-family: var(--font-mono); font-size: 13px; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border-em); background: transparent; color: var(--text-2); cursor: pointer; transition: all var(--transition); }
+    .year-tab:hover { background: var(--bg3); color: var(--text); }
+    .year-tab.active { background: var(--amber); color: #1c1200; border-color: var(--amber); font-weight: 500; }
+
+    /* Chart */
+    .chart-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px; }
+    .chart-title-txt { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .chart-subtitle { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 20px; }
+    .chart-container { position: relative; height: 260px; }
+
+    /* Tabla */
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th:not(:first-child) { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 10px 16px; color: var(--text-2); }
+    tbody td:not(:first-child) { text-align: right; }
+    .td-mes { color: var(--text) !important; font-weight: 500; }
+    .td-hoy { background: rgba(251,191,36,0.08) !important; }
+    .td-hoy td { color: var(--amber) !important; }
+    .change-pos { color: var(--red); }
+    .change-neg { color: var(--green); }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--amber); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+    .skel { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px; display: inline-block; }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    @media (max-width: 540px) {
+      .calc-row { grid-template-columns: 1fr; }
+      .hero-card { padding: 20px; }
+      .equiv-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/" class="active">UTM</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">📋 Tributario</p>
+    <h1><strong>UTM</strong> — Unidad Tributaria Mensual</h1>
+    <p>Valor oficial actualizado cada mes por el SII. Calculadora de multas y tabla histórica.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO -->
+  <div class="hero-card animate">
+    <div class="hero-eyebrow">UTM — Unidad Tributaria Mensual</div>
+    <div class="hero-value" id="utm-val"><span class="skel" style="width:200px;height:56px"></span></div>
+    <p class="hero-fecha" id="utm-fecha"><span class="skel" style="width:180px;height:14px"></span></p>
+    <div class="hero-badge">Se reajusta el 1° de cada mes según IPC</div>
+
+    <!-- Equivalencias en la misma card -->
+    <div class="equiv-grid" id="equiv-grid">
+      <div class="equiv-card"><div class="equiv-label">1 UTA</div><div class="equiv-val" id="eq-uta">—</div><div class="equiv-sub">12 × UTM</div></div>
+      <div class="equiv-card"><div class="equiv-label">5 UTM</div><div class="equiv-val" id="eq-5">—</div><div class="equiv-sub">Multa frecuente SII</div></div>
+      <div class="equiv-card"><div class="equiv-label">10 UTM</div><div class="equiv-val" id="eq-10">—</div><div class="equiv-sub">Infracciones moderadas</div></div>
+      <div class="equiv-card"><div class="equiv-label">50 UTM</div><div class="equiv-val" id="eq-50">—</div><div class="equiv-sub">Infracciones graves</div></div>
+    </div>
+  </div>
+
+  <!-- CALCULADORA MULTAS -->
+  <div class="calc-card animate delay-1">
+    <div class="calc-title">Calculadora de multas en UTM</div>
+    <div class="calc-desc">Ingresa el número de UTM de la multa y obtén el equivalente en pesos.</div>
+    <div class="calc-row">
+      <div class="calc-field">
+        <span class="calc-label-txt">Multa en UTM</span>
+        <input class="input" id="inp-utm" type="number" min="0.1" step="0.1" value="5" placeholder="Ej: 5">
+      </div>
+      <div class="calc-sep">=</div>
+      <div class="calc-field">
+        <span class="calc-label-txt">Equivalente en pesos</span>
+        <div class="input" id="out-pesos" style="cursor:default;color:var(--amber)">—</div>
+      </div>
+    </div>
+    <div class="calc-result">
+      <span id="calc-texto">—</span>
+      <span class="calc-result-main" id="calc-main">—</span>
+    </div>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- STATS -->
+  <div class="stats-row animate delay-2">
+    <div class="stat-chip"><div class="stat-chip-label">UTM actual</div><div class="stat-chip-val" id="s-hoy">—</div><div class="stat-chip-sub" id="s-mes">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mínimo año</div><div class="stat-chip-val" id="s-min">—</div><div class="stat-chip-sub" id="s-min-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Máximo año</div><div class="stat-chip-val" id="s-max">—</div><div class="stat-chip-sub" id="s-max-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Variación año</div><div class="stat-chip-val" id="s-var">—</div><div class="stat-chip-sub">vs enero</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">UTA actual</div><div class="stat-chip-val" id="s-uta">—</div><div class="stat-chip-sub">12 × UTM</div></div>
+  </div>
+
+  <!-- TABS AÑO -->
+  <div class="year-tabs" id="year-tabs"></div>
+
+  <!-- GRÁFICO -->
+  <div class="chart-wrap animate delay-3">
+    <div class="chart-title-txt">Evolución histórica</div>
+    <div class="chart-subtitle" id="chart-subtitle">Valor UTM mensual — cargando…</div>
+    <div class="chart-container">
+      <canvas id="chart-utm" role="img" aria-label="Gráfico evolución valor UTM mensual Chile"></canvas>
+    </div>
+  </div>
+
+  <!-- TABLA HISTÓRICA -->
+  <span class="section-label" id="tabla-label">UTM por mes — año actual</span>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>Valor UTM</th>
+          <th>UTA (12×)</th>
+          <th>Variación</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-utm">
+        <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Cargando…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FAQ -->
+  <span class="section-label" style="margin-top:16px">Preguntas frecuentes</span>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Qué es la UTM y para qué sirve?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        La <strong>UTM (Unidad Tributaria Mensual)</strong> es una unidad de medida que el SII reajusta mensualmente según la inflación (IPC). Se usa para expresar: multas e infracciones tributarias, tramos del impuesto a la renta, topes de exenciones y beneficios, honorarios de notarios y conservadores de bienes raíces, y sanciones laborales del Código del Trabajo. Su valor cambia el <strong>1° de cada mes</strong> y es idéntico en todo el país.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuál es la diferencia entre UTM y UTA?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        La <strong>UTA (Unidad Tributaria Anual)</strong> equivale exactamente a <strong>12 UTM</strong>. Se usa para expresar montos anuales: topes de beneficios tributarios, tramos del impuesto global complementario y ciertos límites de la Ley de Impuesto a la Renta. Cuando el SII o un contrato menciona UTA, multiplica el valor UTM del mes por 12. Por ejemplo, si la UTM es $65.000, la UTA es $780.000.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuándo y cómo se reajusta la UTM?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        La UTM se reajusta el <strong>1° de cada mes</strong> según la variación del IPC (Índice de Precios al Consumidor) del mes anterior, publicado por el INE. El SII fija el valor mediante resolución. A diferencia de la UF que cambia diariamente, la UTM es el mismo valor <strong>todos los días del mes</strong>. Si una multa te notifican en octubre, se aplica la UTM de octubre sin importar el día exacto.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo se calculan las multas del SII en UTM?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El Código Tributario establece multas en rangos de UTM. Por ejemplo: no emitir boleta puede costar entre 1 y 20 UTM; no presentar declaraciones a tiempo cuesta entre 1 UTM y el 10% de los impuestos adeudados; infracciones graves llegan a 100 UTM o más. Usa la calculadora de esta página ingresando el número de UTM de tu multa para saber el monto exacto en pesos del mes actual.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿La UTM es lo mismo en todo Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Sí. La UTM tiene el mismo valor en <strong>todo el territorio chileno</strong>, incluida la Región Metropolitana, regiones extremas y territorios especiales. No existe diferenciación geográfica. El valor es único y oficial para todo el país, publicado por el SII en su sitio web el último día hábil del mes anterior.
+      </div>
+    </div>
+  </div>
+
+  <!-- ENLACES RELACIONADOS -->
+  <span class="section-label">Herramientas relacionadas</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
+    <a href="/uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📊</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">Valor UF hoy</div><div style="font-size:12px;color:var(--text-2)">Conversor e historial UF/CLP</div></div>
+    </a>
+    <a href="/ipc/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📈</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">IPC — Inflación Chile</div><div style="font-size:12px;color:var(--text-2)">Índice de Precios al Consumidor</div></div>
+    </a>
+    <a href="/dolar/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">🇺🇸</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">Dólar hoy</div><div style="font-size:12px;color:var(--text-2)">Tipo de cambio USD/CLP</div></div>
+    </a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadores.cl — Datos: Banco Central · SII Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, fetchHoy, MESES, anioActual } = window.IC;
+  const ANIOS = [anioActual, anioActual - 1, anioActual - 2];
+  let utmHoy = null;
+  let chartInstance = null;
+
+  /* ─── Cargar UTM de hoy ─── */
+  try {
+    const todos = await fetchHoy();
+    utmHoy = todos.utm.valor;
+    const fecha = todos.utm.fecha;
+    const d = new Date(fecha);
+    const mesNombre = MESES[d.getMonth()];
+
+    document.getElementById('utm-val').textContent = fmt.clp(utmHoy);
+    document.getElementById('utm-fecha').textContent =
+      `Vigente durante ${mesNombre} ${d.getFullYear()} · Fuente: SII Chile`;
+
+    /* Equivalencias */
+    document.getElementById('eq-uta').textContent = fmt.clp(utmHoy * 12);
+    document.getElementById('eq-5').textContent   = fmt.clp(utmHoy * 5);
+    document.getElementById('eq-10').textContent  = fmt.clp(utmHoy * 10);
+    document.getElementById('eq-50').textContent  = fmt.clp(utmHoy * 50);
+
+    /* Calculadora multas */
+    const inpUtm = document.getElementById('inp-utm');
+    function calcMulta() {
+      const n = parseFloat(inpUtm.value) || 0;
+      const pesos = Math.round(n * utmHoy);
+      document.getElementById('out-pesos').textContent = fmt.clp(pesos);
+      document.getElementById('calc-texto').textContent =
+        `${fmt.num(n, 1)} UTM × ${fmt.clp(utmHoy)} =`;
+      document.getElementById('calc-main').textContent = fmt.clp(pesos);
+    }
+    inpUtm.addEventListener('input', calcMulta);
+    calcMulta();
+
+  } catch(e) {
+    document.getElementById('utm-val').textContent = 'Error al cargar';
+  }
+
+  /* ─── Tabs de año ─── */
+  const tabsEl = document.getElementById('year-tabs');
+  ANIOS.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'year-tab' + (a === anioActual ? ' active' : '');
+    btn.textContent = a;
+    btn.onclick = () => cargarAnio(a, btn);
+    tabsEl.appendChild(btn);
+  });
+
+  /* ─── Cargar año ─── */
+  async function cargarAnio(anio, btn) {
+    document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    let data;
+    try { data = await fetchIndicador('utm', anio); } catch { return; }
+
+    const serie = data.serie
+      .filter(r => new Date(r.fecha).getFullYear() === anio)
+      .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+    if (!serie.length) return;
+
+    const valores = serie.map(r => r.valor);
+    const min = Math.min(...valores);
+    const max = Math.max(...valores);
+    const primero = valores[0];
+    const ultimo = valores[valores.length - 1];
+    const varPct = ((ultimo - primero) / primero * 100).toFixed(2);
+    const minFila = serie.find(r => r.valor === min);
+    const maxFila = serie.find(r => r.valor === max);
+    const mesActualIdx = new Date().getMonth();
+
+    /* Stats */
+    document.getElementById('s-hoy').textContent = fmt.clp(anio === anioActual ? (utmHoy || ultimo) : ultimo);
+    document.getElementById('s-mes').textContent = MESES[new Date(serie[serie.length - 1].fecha).getMonth()];
+    document.getElementById('s-min').textContent = fmt.clp(min);
+    document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-max').textContent = fmt.clp(max);
+    document.getElementById('s-max-f').textContent = maxFila ? MESES[new Date(maxFila.fecha).getMonth()].slice(0, 3) : '';
+    const sVar = document.getElementById('s-var');
+    sVar.textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
+    sVar.style.color = varPct >= 0 ? 'var(--red)' : 'var(--green)';
+    document.getElementById('s-uta').textContent = fmt.clp(Math.round((anio === anioActual ? (utmHoy || ultimo) : ultimo) * 12));
+
+    /* Gráfico */
+    document.getElementById('chart-subtitle').textContent = `Valor UTM mensual — ${anio}`;
+    const labels = serie.map(r => MESES[new Date(r.fecha).getMonth()].slice(0, 3));
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart-utm'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'UTM',
+          data: valores,
+          backgroundColor: serie.map((_, i) =>
+            i === serie.length - 1 ? 'rgba(251,191,36,0.7)' : 'rgba(251,191,36,0.25)'),
+          borderColor: 'rgba(251,191,36,0.8)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(17,23,32,0.95)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderWidth: 1,
+            callbacks: { label: ctx => `UTM: ${fmt.clp(ctx.raw)}` }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#4a5568', font: { size: 11 } }, grid: { display: false }, border: { color: 'transparent' } },
+          y: {
+            ticks: { color: '#4a5568', font: { size: 11 }, callback: v => '$' + Math.round(v / 1000) + 'k' },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            border: { color: 'transparent' }
+          }
+        }
+      }
+    });
+
+    /* Tabla */
+    document.getElementById('tabla-label').textContent = `UTM por mes — ${anio}`;
+    const mesActualNum = new Date().getMonth() + 1;
+    const tbody = document.getElementById('tabla-utm');
+
+    tbody.innerHTML = [...serie].reverse().map((r, i, arr) => {
+      const d = new Date(r.fecha);
+      const mesNum = d.getMonth() + 1;
+      const isActual = anio === anioActual && mesNum === mesActualNum;
+      const prev = arr[i + 1];
+      let cambio = '—';
+      if (prev) {
+        const diff = r.valor - prev.valor;
+        const pct = (diff / prev.valor * 100).toFixed(2);
+        const cls = diff > 0 ? 'change-pos' : 'change-neg';
+        cambio = `<span class="${cls}">${diff > 0 ? '+' : ''}${fmt.clp(diff)} (${pct}%)</span>`;
+      }
+      return `<tr class="${isActual ? 'td-hoy' : ''}">
+        <td class="td-mes">${MESES[d.getMonth()]} ${anio}${isActual ? ' — actual' : ''}</td>
+        <td>${fmt.clp(r.valor)}</td>
+        <td>${fmt.clp(r.valor * 12)}</td>
+        <td>${cambio}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  await cargarAnio(anioActual, document.querySelector('.year-tab'));
+})();
+</script>
+</body>
+</html>
