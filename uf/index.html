@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valor UF Hoy 2026 — Tabla Completa e Historial | indicadores.cl</title>
+  <meta name="description" content="Valor de la UF hoy en Chile actualizado. Tabla completa del mes, gráfico histórico anual y conversor UF a pesos. Fuente oficial Banco Central.">
+  <link rel="canonical" href="https://indicadores.cl/uf/">
+  <meta property="og:title" content="Valor UF Hoy Chile 2026 — Tabla e Historial">
+  <meta property="og:description" content="UF actualizada diariamente. Tabla del mes completa, gráfico anual y conversor instantáneo.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "Valor UF Chile 2026",
+    "description": "Valores históricos diarios de la Unidad de Fomento (UF) en Chile",
+    "url": "https://indicadores.cl/uf/",
+    "creator": { "@type": "Organization", "name": "Banco Central de Chile" },
+    "license": "https://www.bcch.cl"
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    /* Stat chips */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .stat-chip {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .stat-chip-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-chip-val { font-family: var(--font-mono); font-size: 18px; font-weight: 500; color: var(--text); }
+
+    /* Year tabs */
+    .year-tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .year-tab {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1px solid var(--border-em);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .year-tab:hover { background: var(--bg3); color: var(--text); }
+    .year-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Chart */
+    .chart-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .chart-title { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+    .chart-container { position: relative; height: 280px; width: 100%; }
+
+    /* Month accordion */
+    .month-section { margin-bottom: 8px; }
+    .month-header {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .month-header:hover { background: var(--bg3); border-color: var(--border-em); }
+    .month-header.open { border-radius: var(--radius) var(--radius) 0 0; border-color: var(--accent); }
+    .month-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); display: flex; gap: 16px; }
+    .month-body {
+      display: none;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      overflow: hidden;
+    }
+    .month-header.open + .month-body { display: block; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 8px 16px; color: var(--text-2); }
+    tbody td:last-child { color: var(--text); font-weight: 500; }
+    .td-hoy { background: var(--accent-dim) !important; }
+    .td-hoy td { color: var(--accent) !important; }
+
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+
+    @media (max-width: 480px) {
+      .month-meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/" class="active">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Unidad de Fomento</p>
+    <h1><strong>Valor UF</strong> — Hoy y Historial</h1>
+    <p>Tabla completa, gráfico anual y conversor. Fuente oficial: Banco Central de Chile.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Stats del año -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-chip"><div class="stat-chip-label">UF hoy</div><div class="stat-chip-val" id="s-hoy">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mínimo año</div><div class="stat-chip-val" id="s-min">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Máximo año</div><div class="stat-chip-val" id="s-max">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Variación año</div><div class="stat-chip-val" id="s-var">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Promedio año</div><div class="stat-chip-val" id="s-prom">—</div></div>
+  </div>
+
+  <!-- Selector de año -->
+  <div class="year-tabs" id="year-tabs"></div>
+
+  <!-- Gráfico -->
+  <div class="chart-wrap">
+    <div class="chart-title" id="chart-title">Evolución UF — 2026</div>
+    <div class="chart-container">
+      <canvas id="chart-uf" role="img" aria-label="Gráfico de evolución del valor UF durante el año"></canvas>
+    </div>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- Tablas por mes -->
+  <div id="meses-container"></div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadores.cl — Datos: Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Calculadora arriendo</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, MESES, anioActual } = window.IC;
+  const ANIOS = [anioActual, anioActual - 1, anioActual - 2];
+  let chartInstance = null;
+  let anioActivo = anioActual;
+
+  /* ---- Tabs de año ---- */
+  const tabsEl = document.getElementById('year-tabs');
+  ANIOS.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'year-tab' + (a === anioActual ? ' active' : '');
+    btn.textContent = a;
+    btn.onclick = () => cargarAnio(a, btn);
+    tabsEl.appendChild(btn);
+  });
+
+  /* ---- Cargar datos de un año ---- */
+  async function cargarAnio(anio, btn) {
+    // Actualizar tab activo
+    document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    anioActivo = anio;
+
+    let data;
+    try {
+      data = await fetchIndicador('uf', anio);
+    } catch(e) {
+      alert('Error cargando datos de ' + anio);
+      return;
+    }
+
+    const serie = data.serie.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const valores = serie.map(r => r.valor);
+    const min = Math.min(...valores);
+    const max = Math.max(...valores);
+    const prom = valores.reduce((s, v) => s + v, 0) / valores.length;
+    const primero = valores[0];
+    const ultimo = valores[valores.length - 1];
+    const varPct = ((ultimo - primero) / primero * 100).toFixed(2);
+    const todayStr = new Date().toISOString().split('T')[0];
+    const hoyDato = serie.find(r => r.fecha.split('T')[0] === todayStr);
+
+    /* Stats */
+    document.getElementById('s-hoy').textContent = hoyDato ? fmt.clp(hoyDato.valor) : fmt.clp(ultimo);
+    document.getElementById('s-min').textContent = fmt.clp(min);
+    document.getElementById('s-max').textContent = fmt.clp(max);
+    document.getElementById('s-var').textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
+    document.getElementById('s-prom').textContent = fmt.clp(Math.round(prom));
+
+    /* Chart */
+    document.getElementById('chart-title').textContent = `Evolución UF — ${anio}`;
+    const labels = serie.map(r => fmt.dateShort(r.fecha));
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart-uf'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'UF',
+          data: valores,
+          borderColor: '#3b9eff',
+          backgroundColor: 'rgba(59,158,255,0.08)',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => `UF: ${fmt.clp(ctx.raw)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#4a5568', font: { size: 11 }, maxTicksLimit: 12 },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            ticks: {
+              color: '#4a5568',
+              font: { size: 11 },
+              callback: v => '$' + Math.round(v).toLocaleString('es-CL')
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
+    });
+
+    /* Tablas por mes */
+    const porMes = {};
+    for (const r of serie) {
+      const d = new Date(r.fecha);
+      const m = d.getMonth() + 1;
+      if (!porMes[m]) porMes[m] = [];
+      porMes[m].push(r);
+    }
+
+    const cont = document.getElementById('meses-container');
+    cont.innerHTML = '';
+
+    const mesesOrdenados = Object.keys(porMes).map(Number).sort((a, b) => b - a);
+
+    mesesOrdenados.forEach((m, idx) => {
+      const filas = porMes[m].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+      const minM = Math.min(...filas.map(r => r.valor));
+      const maxM = Math.max(...filas.map(r => r.valor));
+
+      const section = document.createElement('div');
+      section.className = 'month-section';
+
+      const isCurrentMonth = (anio === anioActual && m === new Date().getMonth() + 1);
+
+      const header = document.createElement('button');
+      header.className = 'month-header' + (idx === 0 ? ' open' : '');
+      header.innerHTML = `
+        <span>${MESES[m - 1]} ${anio} ${isCurrentMonth ? '<span style="color:var(--accent);font-size:11px;margin-left:8px">(mes actual)</span>' : ''}</span>
+        <span class="month-meta">
+          <span>Mín: ${fmt.clp(minM)}</span>
+          <span>Máx: ${fmt.clp(maxM)}</span>
+          <span>${filas.length} días</span>
+        </span>`;
+      header.onclick = () => header.classList.toggle('open');
+
+      const body = document.createElement('div');
+      body.className = 'month-body';
+      body.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Día</th><th>Fecha</th><th>Valor UF</th></tr></thead>
+            <tbody>
+              ${filas.map(r => {
+                const d = new Date(r.fecha);
+                const dStr = r.fecha.split('T')[0];
+                const isHoy = dStr === todayStr;
+                return `<tr class="${isHoy ? 'td-hoy' : ''}">
+                  <td>${d.getDate()}</td>
+                  <td>${fmt.date(r.fecha)}${isHoy ? ' — hoy' : ''}</td>
+                  <td>${fmt.clp(r.valor)}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>`;
+
+      section.appendChild(header);
+      section.appendChild(body);
+      cont.appendChild(section);
+    });
+  }
+
+  /* Cargar año actual al inicio */
+  await cargarAnio(anioActual, document.querySelector('.year-tab'));
+
+})();
+</script>
+
+</body>
+</html>
