@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dólar Hoy Chile 2026 — Tipo de Cambio Observado y Conversor | indicadores.cl</title>
+  <meta name="description" content="Valor del dólar observado hoy en Chile actualizado. Conversor dólar a pesos chilenos, gráfico histórico, tabla del mes y euro. Fuente oficial Banco Central de Chile.">
+  <meta name="keywords" content="dólar hoy Chile, tipo de cambio Chile, dólar observado Chile, conversor dólar pesos, dólar peso chileno 2026">
+  <link rel="canonical" href="https://indicadores.cl/dolar/">
+  <meta property="og:title" content="Dólar Hoy Chile 2026 — Tipo de Cambio y Conversor">
+  <meta property="og:description" content="Dólar observado actualizado. Conversor USD/CLP, gráfico anual, tabla del mes. Banco Central de Chile.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://indicadores.cl/dolar/">
+  <meta property="og:locale" content="es_CL">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué es el dólar observado en Chile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El dólar observado es el tipo de cambio oficial que publica diariamente el Banco Central de Chile. Corresponde al promedio ponderado de las transacciones de dólares realizadas el día hábil anterior en el mercado cambiario formal. Es la referencia legal para contratos, impuestos y operaciones financieras en Chile."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuándo se publica el dólar observado del día?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El Banco Central publica el dólar observado cada día hábil alrededor de las 10:00 AM. El valor publicado hoy corresponde a las transacciones del día hábil anterior. Los fines de semana y feriados no hay publicación."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuál es la diferencia entre dólar observado y dólar de acuerdo?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El dólar observado es el promedio de transacciones del mercado formal del día anterior. El dólar de acuerdo (también llamado dólar interbancario) es fijado bilateralmente entre el Banco Central y los bancos comerciales. Para la mayoría de los trámites legales y contratos en Chile, se usa el dólar observado."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ---- Header ---- */
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(26px, 4.5vw, 40px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    /* ---- Hero card ---- */
+    .hero-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .hero-value {
+      font-family: var(--font-mono);
+      font-size: clamp(40px, 9vw, 64px);
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .hero-fecha {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 6px;
+    }
+    .hero-tipo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+    }
+    .hero-tipo::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s ease infinite;
+    }
+
+    /* ---- Conversor ---- */
+    .conv-grid {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .conv-field { display: flex; flex-direction: column; gap: 6px; }
+    .conv-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .conv-flag { font-size: 14px; }
+    .swap-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border-em);
+      border-radius: var(--radius);
+      width: 40px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-3);
+      transition: color var(--transition), background var(--transition);
+      user-select: none;
+    }
+    .swap-btn:hover { color: var(--accent); background: var(--accent-dim); }
+    .conv-result {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .conv-rate { color: var(--text-3); font-size: 12px; }
+
+    /* ---- Cruce EUR ---- */
+    .cross-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .cross-item { flex: 1; min-width: 120px; }
+    .cross-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .cross-val { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--text); }
+    .cross-sub { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+    .cross-divider { width: 1px; height: 48px; background: var(--border); }
+
+    /* ---- Stats ---- */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .stat-chip { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .stat-chip-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-chip-val { font-family: var(--font-mono); font-size: 17px; font-weight: 500; color: var(--text); }
+    .stat-chip-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+    /* ---- Selector años ---- */
+    .year-tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .year-tab {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1px solid var(--border-em);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .year-tab:hover { background: var(--bg3); color: var(--text); }
+    .year-tab.active { background: var(--green); color: #052e16; border-color: var(--green); font-weight: 500; }
+
+    /* ---- Gráfico ---- */
+    .chart-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .chart-title { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .chart-subtitle { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 2px; }
+    .chart-legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-3); align-items: center; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .chart-container { position: relative; height: 280px; }
+
+    /* ---- Tabla ---- */
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th:not(:first-child) { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 9px 16px; color: var(--text-2); }
+    tbody td:first-child { color: var(--text-3); }
+    tbody td:not(:first-child) { text-align: right; }
+    .td-val { color: var(--text) !important; font-weight: 500; }
+    .td-hoy { background: rgba(34,197,94,0.08) !important; }
+    .td-hoy td { color: var(--green) !important; }
+    .td-hoy .td-val { color: var(--green) !important; }
+    .change-pos { color: var(--green); }
+    .change-neg { color: var(--red); }
+
+    /* ---- Acordeón meses ---- */
+    .month-section { margin-bottom: 8px; }
+    .month-header {
+      width: 100%; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; font-family: var(--font-body); font-size: 14px;
+      font-weight: 600; color: var(--text); transition: all var(--transition); text-align: left;
+    }
+    .month-header:hover { background: var(--bg3); border-color: var(--border-em); }
+    .month-header.open { border-radius: var(--radius) var(--radius) 0 0; border-color: var(--green); color: var(--green); }
+    .month-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); display: flex; gap: 16px; }
+    .month-body { display: none; border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+    .month-header.open + .month-body { display: block; }
+
+    /* ---- FAQ ---- */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--green); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ---- Ad slot ---- */
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+
+    /* ---- Skeleton ---- */
+    .skel { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px; display: inline-block; }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    @media (max-width: 560px) {
+      .conv-grid { grid-template-columns: 1fr; }
+      .swap-btn { width: 100%; height: 36px; transform: rotate(90deg); }
+      .cross-divider { display: none; }
+      .month-meta { display: none; }
+      .hero-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/" class="active">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">🇺🇸 Tipo de cambio</p>
+    <h1><strong>Dólar hoy</strong> en Chile</h1>
+    <p>Tipo de cambio observado oficial. Fuente: Banco Central de Chile.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO + CONVERSOR -->
+  <div class="hero-card animate">
+    <div class="hero-eyebrow">Dólar observado (USD/CLP)</div>
+    <div class="hero-value" id="dolar-val"><span class="skel" style="width:200px;height:56px"></span></div>
+    <p class="hero-fecha" id="dolar-fecha"><span class="skel" style="width:180px;height:14px"></span></p>
+    <div class="hero-tipo" id="hero-tipo">Dólar Observado — Banco Central de Chile</div>
+
+    <!-- CONVERSOR -->
+    <div class="conv-grid">
+      <div class="conv-field">
+        <span class="conv-label"><span class="conv-flag">🇺🇸</span> Dólares (USD)</span>
+        <input class="input" id="inp-usd" type="number" min="0" step="0.01" value="100" placeholder="100">
+      </div>
+      <div class="swap-btn" onclick="swapConv()" title="Intercambiar">⇄</div>
+      <div class="conv-field">
+        <span class="conv-label"><span class="conv-flag">🇨🇱</span> Pesos (CLP)</span>
+        <input class="input" id="inp-clp" type="number" min="0" step="1" placeholder="0">
+      </div>
+    </div>
+    <div class="conv-result">
+      <span id="conv-texto">—</span>
+      <span class="conv-rate" id="conv-rate">—</span>
+    </div>
+  </div>
+
+  <!-- CRUCE EUR -->
+  <div class="cross-card animate delay-1" id="cross-card">
+    <div class="cross-item">
+      <div class="cross-label">🇺🇸 USD · Dólar observado</div>
+      <div class="cross-val" id="cross-usd">—</div>
+      <div class="cross-sub" id="cross-usd-sub">—</div>
+    </div>
+    <div class="cross-divider"></div>
+    <div class="cross-item">
+      <div class="cross-label">🇪🇺 EUR · Euro</div>
+      <div class="cross-val" id="cross-eur">—</div>
+      <div class="cross-sub" id="cross-eur-sub">—</div>
+    </div>
+    <div class="cross-divider"></div>
+    <div class="cross-item">
+      <div class="cross-label">📋 Equivalencia</div>
+      <div class="cross-val" id="cross-eq">—</div>
+      <div class="cross-sub">1 EUR en dólares</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row animate delay-2" id="stats-row">
+    <div class="stat-chip"><div class="stat-chip-label">Hoy</div><div class="stat-chip-val" id="s-hoy">—</div><div class="stat-chip-sub">Observado</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mínimo año</div><div class="stat-chip-val" id="s-min">—</div><div class="stat-chip-sub" id="s-min-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Máximo año</div><div class="stat-chip-val" id="s-max">—</div><div class="stat-chip-sub" id="s-max-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Variación año</div><div class="stat-chip-val" id="s-var">—</div><div class="stat-chip-sub" id="s-var-sub">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Promedio año</div><div class="stat-chip-val" id="s-prom">—</div><div class="stat-chip-sub">Año actual</div></div>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- SELECTOR AÑO -->
+  <div class="year-tabs" id="year-tabs"></div>
+
+  <!-- GRÁFICO -->
+  <div class="chart-wrap animate delay-3">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Tipo de cambio USD/CLP</div>
+        <div class="chart-subtitle" id="chart-subtitle">Evolución anual — cargando…</div>
+      </div>
+      <div class="chart-legend">
+        <span style="display:flex;align-items:center;gap:5px"><span class="legend-dot" style="background:var(--green)"></span>USD/CLP</span>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="chart-dolar" role="img" aria-label="Gráfico de evolución del tipo de cambio dólar peso chileno"></canvas>
+    </div>
+  </div>
+
+  <!-- TABLA POR MES -->
+  <span class="section-label" id="tabla-section-label">Dólar observado — mes actual</span>
+  <div id="meses-container"></div>
+
+  <!-- FAQ -->
+  <span class="section-label" style="margin-top:48px">Preguntas frecuentes</span>
+  <div class="faq-list">
+
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Qué es el dólar observado en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El <strong>dólar observado</strong> es el tipo de cambio oficial que publica cada día hábil el Banco Central de Chile. Corresponde al promedio ponderado de todas las transacciones de dólares realizadas el día hábil anterior en el mercado cambiario formal chileno (bancos y corredoras autorizadas). Es la referencia legal para contratos, impuestos y operaciones financieras. <strong>No es el precio al que los bancos venden dólares al público</strong> — ese incluye una comisión adicional llamada spread.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuándo se publica el dólar observado del día?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El Banco Central publica el dólar observado cada <strong>día hábil alrededor de las 10:00 AM</strong>. El valor publicado hoy corresponde a las transacciones del día hábil anterior. Los fines de semana y feriados no hay publicación — en esos días se mantiene el último valor publicado. Esto significa que el "dólar de hoy" es técnicamente el promedio de ayer.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuál es la diferencia entre el dólar observado y el dólar en el banco?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Hay una diferencia importante. El <strong>dólar observado</strong> es la referencia oficial del Banco Central — el precio teórico del mercado interbancario. Cuando vas a un banco o casa de cambio a <strong>comprar dólares</strong>, el precio incluye un spread o margen de ganancia del establecimiento, que puede ser de $20 a $80 pesos por dólar. Las <strong>casas de cambio</strong> suelen ofrecer mejores tasas que los bancos para montos mayores.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Por qué sube o baja el dólar en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El tipo de cambio en Chile fluctúa principalmente por: <strong>precio del cobre</strong> (Chile es el mayor productor mundial — cuando sube el cobre, baja el dólar), <strong>política monetaria de la Fed</strong> (tasas en EE.UU.), <strong>inflación y tasas del Banco Central de Chile</strong>, <strong>riesgo político y social local</strong>, y el <strong>flujo de inversión extranjera</strong>. Chile tiene un tipo de cambio flotante — el Banco Central interviene solo en situaciones de extrema volatilidad.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo se calcula el IVA o impuestos en dólares para importaciones?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Para calcular aranceles e IVA en importaciones, el SII y Aduanas usan el <strong>dólar observado del día de la declaración de importación</strong>. El proceso es: valor CIF en USD × dólar observado del día = base imponible en pesos. Sobre esa base se aplica el arancel (generalmente 6%) y luego el IVA (19%). Usa el conversor de esta página ingresando el valor CIF en dólares.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Dónde conviene más comprar dólares en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        En general, de mayor a menor conveniencia: <strong>1) Aplicaciones fintech</strong> (Buda, OrionX, apps bancarias digitales) suelen tener el spread más bajo. <strong>2) Casas de cambio formales</strong> como Afex o Forex Chile, especialmente para montos altos. <strong>3) Bancos tradicionales</strong> — conveniente pero spread mayor. <strong>Nunca cambies en el aeropuerto</strong> — tienen el spread más alto del mercado. Para montos sobre USD 10.000, considera solicitar una transferencia directa vía corredora.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ENLACES RELACIONADOS -->
+  <div style="margin-bottom:48px">
+    <span class="section-label">Herramientas relacionadas</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <a href="/uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:24px">📊</span>
+        <div><div style="font-size:14px;font-weight:600;color:var(--text)">Valor UF hoy</div><div style="font-size:12px;color:var(--text-2)">Historial y conversor UF/CLP</div></div>
+      </a>
+      <a href="/utm/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:24px">📋</span>
+        <div><div style="font-size:14px;font-weight:600;color:var(--text)">Valor UTM</div><div style="font-size:12px;color:var(--text-2)">Unidad Tributaria Mensual</div></div>
+      </a>
+      <a href="/calculadora-arriendo-uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:24px">🏠</span>
+        <div><div style="font-size:14px;font-weight:600;color:var(--text)">Calculadora arriendo UF</div><div style="font-size:12px;color:var(--text-2)">Convierte tu arriendo a pesos</div></div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadores.cl — Datos: Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, fetchHoy, MESES, anioActual } = window.IC;
+  const ANIOS = [anioActual, anioActual - 1, anioActual - 2];
+  let chartInstance = null;
+  let dolarHoy = null;
+
+  /* ─── 1. Cargar datos de hoy (dólar + euro para cruce) ─── */
+  let todos;
+  try {
+    todos = await fetchHoy();
+  } catch (e) {
+    document.getElementById('dolar-val').textContent = 'Error al cargar';
+    return;
+  }
+
+  dolarHoy = todos.dolar.valor;
+  const euroHoy = todos.euro?.valor ?? null;
+
+  /* Hero */
+  document.getElementById('dolar-val').textContent = fmt.clp(dolarHoy);
+  document.getElementById('dolar-fecha').textContent =
+    `Publicado ${fmt.date(todos.dolar.fecha)} · Dólar observado oficial`;
+
+  /* Cruce de monedas */
+  document.getElementById('cross-usd').textContent = fmt.clp(dolarHoy);
+  document.getElementById('cross-usd-sub').textContent = fmt.date(todos.dolar.fecha);
+
+  if (euroHoy) {
+    document.getElementById('cross-eur').textContent = fmt.clp(euroHoy);
+    document.getElementById('cross-eur-sub').textContent = fmt.date(todos.euro.fecha);
+    document.getElementById('cross-eq').textContent =
+      fmt.num(euroHoy / dolarHoy, 4) + ' USD';
+  } else {
+    document.getElementById('cross-eur').textContent = 'No disponible';
+  }
+
+  /* ─── 2. Conversor ─── */
+  const inpUSD = document.getElementById('inp-usd');
+  const inpCLP = document.getElementById('inp-clp');
+  let swapped = false;
+
+  function calcUSDtoCLP() {
+    const v = parseFloat(inpUSD.value) || 0;
+    const r = Math.round(v * dolarHoy);
+    inpCLP.value = r;
+    document.getElementById('conv-texto').textContent =
+      `${fmt.num(v, 2)} USD = ${fmt.clp(r)}`;
+    document.getElementById('conv-rate').textContent =
+      `Tipo de cambio: 1 USD = ${fmt.clp(dolarHoy)}`;
+  }
+  function calcCLPtoUSD() {
+    const v = parseFloat(inpCLP.value) || 0;
+    const r = (v / dolarHoy).toFixed(4);
+    inpUSD.value = r;
+    document.getElementById('conv-texto').textContent =
+      `${fmt.clp(v)} = ${fmt.num(parseFloat(r), 4)} USD`;
+    document.getElementById('conv-rate').textContent =
+      `Tipo de cambio: 1 USD = ${fmt.clp(dolarHoy)}`;
+  }
+
+  inpUSD.addEventListener('input', calcUSDtoCLP);
+  inpCLP.addEventListener('input', calcCLPtoUSD);
+  calcUSDtoCLP();
+
+  window.swapConv = () => {
+    swapped = !swapped;
+    const tmp = inpUSD.value;
+    inpUSD.value = inpCLP.value;
+    inpCLP.value = tmp;
+    swapped ? calcCLPtoUSD() : calcUSDtoCLP();
+  };
+
+  /* ─── 3. Tabs de año ─── */
+  const tabsEl = document.getElementById('year-tabs');
+  ANIOS.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'year-tab' + (a === anioActual ? ' active' : '');
+    btn.textContent = a;
+    btn.onclick = () => cargarAnio(a, btn);
+    tabsEl.appendChild(btn);
+  });
+
+  /* ─── 4. Cargar año ─── */
+  async function cargarAnio(anio, btn) {
+    document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    let data;
+    try {
+      data = await fetchIndicador('dolar', anio);
+    } catch {
+      return;
+    }
+
+    const serie = data.serie
+      .filter(r => new Date(r.fecha).getFullYear() === anio)
+      .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+    if (!serie.length) return;
+
+    const valores = serie.map(r => r.valor);
+    const min = Math.min(...valores);
+    const max = Math.max(...valores);
+    const prom = valores.reduce((s, v) => s + v, 0) / valores.length;
+    const primero = valores[0];
+    const ultimo = valores[valores.length - 1];
+    const varPct = ((ultimo - primero) / primero * 100).toFixed(2);
+    const varAbs = Math.round(ultimo - primero);
+    const todayStr = new Date().toISOString().split('T')[0];
+    const minFila = serie.find(r => r.valor === min);
+    const maxFila = serie.find(r => r.valor === max);
+
+    /* Stats */
+    document.getElementById('s-hoy').textContent = fmt.clp(anio === anioActual ? dolarHoy : ultimo);
+    document.getElementById('s-min').textContent = fmt.clp(min);
+    document.getElementById('s-min-f').textContent = minFila ? fmt.date(minFila.fecha) : '';
+    document.getElementById('s-max').textContent = fmt.clp(max);
+    document.getElementById('s-max-f').textContent = maxFila ? fmt.date(maxFila.fecha) : '';
+    const sVar = document.getElementById('s-var');
+    sVar.textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
+    sVar.style.color = varPct >= 0 ? 'var(--red)' : 'var(--green)';
+    document.getElementById('s-var-sub').textContent =
+      `${varAbs > 0 ? '+' : ''}${fmt.clp(varAbs)} vs inicio año`;
+    document.getElementById('s-prom').textContent = fmt.clp(Math.round(prom));
+
+    /* Gráfico */
+    document.getElementById('chart-subtitle').textContent =
+      `Dólar observado USD/CLP — ${anio}`;
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart-dolar'), {
+      type: 'line',
+      data: {
+        labels: serie.map(r => fmt.dateShort(r.fecha)),
+        datasets: [{
+          label: 'USD/CLP',
+          data: valores,
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34,197,94,0.07)',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#22c55e',
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(17,23,32,0.95)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderWidth: 1,
+            padding: 10,
+            titleColor: '#8a99b3',
+            bodyColor: '#e8edf5',
+            callbacks: {
+              title: items => items[0].label,
+              label: ctx => `  Dólar: ${fmt.clp(ctx.raw)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#4a5568', font: { size: 11 }, maxTicksLimit: 10 },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            border: { color: 'transparent' }
+          },
+          y: {
+            ticks: {
+              color: '#4a5568',
+              font: { size: 11 },
+              callback: v => '$' + Math.round(v).toLocaleString('es-CL')
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            border: { color: 'transparent' }
+          }
+        }
+      }
+    });
+
+    /* Tablas por mes */
+    const porMes = {};
+    for (const r of serie) {
+      const m = new Date(r.fecha).getMonth() + 1;
+      if (!porMes[m]) porMes[m] = [];
+      porMes[m].push(r);
+    }
+
+    const mesesOrdenados = Object.keys(porMes).map(Number).sort((a, b) => b - a);
+    const cont = document.getElementById('meses-container');
+    cont.innerHTML = '';
+    document.getElementById('tabla-section-label').textContent =
+      `Dólar observado por mes — ${anio}`;
+
+    mesesOrdenados.forEach((m, idx) => {
+      const filas = porMes[m].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+      const valsM = filas.map(r => r.valor);
+      const minM = Math.min(...valsM);
+      const maxM = Math.max(...valsM);
+      const isCurrentMonth = (anio === anioActual && m === new Date().getMonth() + 1);
+
+      const section = document.createElement('div');
+      section.className = 'month-section';
+
+      const header = document.createElement('button');
+      header.className = 'month-header' + (idx === 0 ? ' open' : '');
+      header.innerHTML = `
+        <span>${MESES[m - 1]} ${anio}${isCurrentMonth ? '<span style="color:var(--text-3);font-size:11px;margin-left:8px;font-weight:400">(mes actual)</span>' : ''}</span>
+        <span class="month-meta">
+          <span>Mín: ${fmt.clp(minM)}</span>
+          <span>Máx: ${fmt.clp(maxM)}</span>
+          <span>${filas.length} días</span>
+        </span>`;
+      header.onclick = () => header.classList.toggle('open');
+
+      const body = document.createElement('div');
+      body.className = 'month-body';
+
+      /* Construir filas con variación diaria */
+      const rowsHtml = filas.map((r, i) => {
+        const isHoy = r.fecha.split('T')[0] === todayStr;
+        let cambio = '—';
+        if (i > 0) {
+          const diff = r.valor - filas[i - 1].valor;
+          const pct = (diff / filas[i - 1].valor * 100).toFixed(2);
+          const cls = diff >= 0 ? 'change-pos' : 'change-neg';
+          cambio = `<span class="${cls}">${diff >= 0 ? '+' : ''}${fmt.clp(diff)} (${pct}%)</span>`;
+        }
+        return `<tr class="${isHoy ? 'td-hoy' : ''}">
+          <td>${fmt.date(r.fecha)}${isHoy ? ' — hoy' : ''}</td>
+          <td class="td-val">${fmt.clp(r.valor)}</td>
+          <td>${cambio}</td>
+        </tr>`;
+      }).join('');
+
+      body.innerHTML = `
+        <div class="table-wrap" style="border-radius:0;border:none">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Dólar observado</th>
+                <th>Variación diaria</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>`;
+
+      section.appendChild(header);
+      section.appendChild(body);
+      cont.appendChild(section);
+    });
+  }
+
+  /* ─── 5. Init ─── */
+  await cargarAnio(anioActual, document.querySelector('.year-tab'));
+
+})();
+</script>
+
+</body>
+</html>
