@@ -82,12 +82,12 @@
 
     /* Historial tabla -->
     .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
-    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; line-height: 1.4; }
-    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 20px; text-align: left; border-bottom: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
     tbody tr { border-bottom: 1px solid var(--border); }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--bg3); }
-    tbody td { padding: 12px 20px; color: var(--text-2); }
+    tbody td { padding: 10px 16px; color: var(--text-2); }
     tbody td:first-child { color: var(--text); font-weight: 500; }
     .td-hoy td { color: var(--accent) !important; background: var(--accent-dim); }
     .td-hoy td:first-child { color: var(--accent) !important; }
@@ -111,6 +111,16 @@
       .calc-input-row { grid-template-columns: 1fr; }
     }
   </style>
+  <!-- Google Analytics 4 — reemplazar G-XXXXXXXXXX con tu Measurement ID -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-XXXXXXXXXX");
+  </script>
+  -->
 </head>
 <body>
 
@@ -381,7 +391,7 @@
         <td>${fmt.clp(h.clp)}</td>
         <td>${cambio}</td>
       </tr>`;
-    }).join('');
+    }).reverse().join('');
   }
 
   /* ---- Evento input ---- */

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Widget UF Chile — Agrega el Valor UF a tu Sitio Web Gratis | indicadores.cl</title>
+  <meta name="description" content="Widget gratuito para mostrar el valor UF actualizado en tu sitio web. Copia el código y listo. También disponible para dólar, UTM e IPC. Sin registro.">
+  <meta name="keywords" content="widget UF Chile, código UF web, mostrar valor UF sitio web, embed UF Chile, widget indicadores económicos">
+  <link rel="canonical" href="https://indicadores.cl/widget/">
+  <meta property="og:title" content="Widget UF Chile — Gratis para tu sitio web">
+  <meta property="og:description" content="Agrega el valor UF actualizado a tu web con una línea de código. Gratis, sin registro.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://indicadores.cl/widget/">
+  <meta property="og:locale" content="es_CL">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(26px, 4.5vw, 40px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    /* Tabs de widget */
+    .widget-tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .widget-tab {
+      font-family: var(--font-mono); font-size: 12px; padding: 6px 14px;
+      border-radius: 99px; border: 1px solid var(--border-em);
+      background: transparent; color: var(--text-2); cursor: pointer;
+      transition: all var(--transition);
+    }
+    .widget-tab:hover { background: var(--bg3); color: var(--text); }
+    .widget-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Preview del widget */
+    .preview-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 12px;
+    }
+    .preview-label {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-3);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .preview-label::after {
+      content: 'Vista previa';
+      background: var(--bg3); border: 1px solid var(--border-em);
+      border-radius: 4px; padding: 2px 8px; font-size: 10px; color: var(--text-3);
+    }
+    .preview-area {
+      background: var(--bg);
+      border: 1px dashed var(--border-em);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+
+    /* Los propios widgets — se usan también en la preview */
+    .ic-widget-compact {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #111720;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-family: 'DM Mono', monospace, monospace;
+      text-decoration: none;
+    }
+    .ic-widget-compact .ic-label {
+      font-size: 11px;
+      color: rgba(138,153,179,1);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .ic-widget-compact .ic-value {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .ic-widget-compact .ic-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #34d399;
+      animation: ic-pulse 2s ease infinite;
+      flex-shrink: 0;
+    }
+    @keyframes ic-pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .ic-widget-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #111720;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-family: 'DM Mono', monospace;
+      text-decoration: none;
+    }
+    .ic-widget-badge .ic-b-label { font-size: 11px; color: rgba(138,153,179,1); }
+    .ic-widget-badge .ic-b-value { font-size: 14px; font-weight: 500; color: #3b9eff; }
+    .ic-widget-badge .ic-b-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; animation: ic-pulse 2s ease infinite; flex-shrink: 0; }
+
+    .ic-widget-card {
+      display: inline-flex;
+      flex-direction: column;
+      background: #111720;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: 'DM Mono', monospace;
+      text-decoration: none;
+      min-width: 160px;
+    }
+    .ic-widget-card .ic-c-eyebrow { font-size: 10px; color: rgba(138,153,179,0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .ic-widget-card .ic-c-value { font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+    .ic-widget-card .ic-c-date { font-size: 11px; color: rgba(138,153,179,0.6); }
+    .ic-widget-card .ic-c-footer { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(138,153,179,0.5); }
+
+    /* Código */
+    .code-block-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg3);
+    }
+    .code-header-label { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); }
+    .copy-btn {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-2);
+      background: transparent; border: 1px solid var(--border-em);
+      border-radius: 4px; padding: 4px 12px; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .copy-btn.copied { background: var(--green-dim); color: var(--green); border-color: transparent; }
+    pre {
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-2);
+    }
+    .c-tag { color: #7dd3fc; }
+    .c-attr { color: #86efac; }
+    .c-str { color: #fcd34d; }
+    .c-cmt { color: #4a5568; font-style: italic; }
+    .c-key { color: #c4b5fd; }
+    .c-val { color: #fda4af; }
+
+    /* Paso a paso */
+    .steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent-dim); border: 1px solid var(--accent);
+      color: var(--accent); font-family: var(--font-mono); font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .step-line { width: 1px; background: var(--border); margin: 4px 0 4px 13px; min-height: 20px; }
+    .step-body { padding-bottom: 24px; flex: 1; }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .step-desc { font-size: 13px; color: var(--text-2); line-height: 1.7; }
+    code { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+
+    /* API section */
+    .api-endpoint {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .method { color: var(--green); font-size: 11px; font-weight: 500; }
+    .endpoint-url { color: var(--accent); flex: 1; }
+    .endpoint-desc { font-size: 12px; color: var(--text-3); }
+
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+
+    @media (max-width: 480px) { .ic-widget-card { min-width: 140px; } }
+  </style>
+  <!-- Google Analytics 4 — reemplazar G-XXXXXXXXXX con tu Measurement ID -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-XXXXXXXXXX");
+  </script>
+  -->
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/widget/" class="active">Widget</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">🔧 Para desarrolladores y sitios web</p>
+    <h1><strong>Widget UF</strong> para tu sitio web</h1>
+    <p>Muestra el valor UF actualizado en tu web con una línea de código. Gratis, sin registro, sin límites.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- SELECTOR DE ESTILO -->
+  <span class="section-label">Elige el estilo del widget</span>
+  <div class="widget-tabs">
+    <button class="widget-tab active" onclick="showWidget('compact', this)">Compacto</button>
+    <button class="widget-tab" onclick="showWidget('badge', this)">Badge</button>
+    <button class="widget-tab" onclick="showWidget('card', this)">Tarjeta</button>
+    <button class="widget-tab" onclick="showWidget('iframe', this)">iFrame</button>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-wrap">
+    <div class="preview-label">Indicador</div>
+    <div class="preview-area" id="preview-area">
+      <!-- se rellena por JS -->
+    </div>
+  </div>
+
+  <!-- CÓDIGO GENERADO -->
+  <div class="code-block-wrap" id="code-wrap">
+    <div class="code-header">
+      <span class="code-header-label" id="code-label">HTML — Copia y pega en tu sitio</span>
+      <button class="copy-btn" id="copy-btn" onclick="copiarCodigo()">Copiar código</button>
+    </div>
+    <pre id="code-pre"></pre>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- INSTRUCCIONES -->
+  <span class="section-label">Cómo instalarlo</span>
+  <div class="steps">
+    <div class="step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Elige el estilo que prefieras arriba</div>
+        <div class="step-desc">Compacto es ideal para barras laterales. Badge funciona bien dentro de texto o encabezados. Tarjeta es perfecta para secciones destacadas.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Copia el código con el botón "Copiar código"</div>
+        <div class="step-desc">El código incluye todo lo necesario: estilos, el fetch a la API y el enlace a indicadores.cl. No necesitas instalar ninguna dependencia.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="step-num">3</div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Pégalo en el HTML de tu sitio donde quieras mostrarlo</div>
+        <div class="step-desc">El widget se actualiza automáticamente cada vez que alguien visita tu página. No requiere base de datos ni backend — consulta directo a la API del Banco Central.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API PÚBLICA -->
+  <span class="section-label" style="margin-top:16px">API pública — úsala directamente</span>
+  <p style="font-size:14px;color:var(--text-2);margin-bottom:20px">Si prefieres construir tu propia integración, puedes consultar la API de <strong>mindicador.cl</strong> directamente. Es gratuita, no requiere API key y tiene CORS habilitado.</p>
+
+  <div class="api-endpoint">
+    <span class="method">GET</span>
+    <span class="endpoint-url">https://mindicador.cl/api</span>
+    <span class="endpoint-desc">Todos los indicadores del día (UF, dólar, UTM, euro, IPC…)</span>
+  </div>
+  <div class="api-endpoint">
+    <span class="method">GET</span>
+    <span class="endpoint-url">https://mindicador.cl/api/uf</span>
+    <span class="endpoint-desc">UF del mes actual — array de valores diarios</span>
+  </div>
+  <div class="api-endpoint">
+    <span class="method">GET</span>
+    <span class="endpoint-url">https://mindicador.cl/api/uf/2026</span>
+    <span class="endpoint-desc">UF de todo el año 2026</span>
+  </div>
+  <div class="api-endpoint">
+    <span class="method">GET</span>
+    <span class="endpoint-url">https://mindicador.cl/api/dolar</span>
+    <span class="endpoint-desc">Dólar observado del mes</span>
+  </div>
+  <div class="api-endpoint" style="margin-bottom:32px">
+    <span class="method">GET</span>
+    <span class="endpoint-url">https://mindicador.cl/api/utm</span>
+    <span class="endpoint-desc">UTM del mes actual</span>
+  </div>
+
+  <!-- EJEMPLO JS PURO -->
+  <span class="section-label">Ejemplo en JavaScript puro</span>
+  <div class="code-block-wrap" style="margin-bottom:48px">
+    <div class="code-header">
+      <span class="code-header-label">JavaScript — fetch a la API</span>
+      <button class="copy-btn" onclick="copiarEjemplo(this)">Copiar</button>
+    </div>
+    <pre id="ejemplo-js"><span class="c-cmt">// Obtener valor UF de hoy</span>
+<span class="c-key">fetch</span>(<span class="c-str">'https://mindicador.cl/api/uf'</span>)
+  .<span class="c-key">then</span>(r <span class="c-key">=></span> r.<span class="c-key">json</span>())
+  .<span class="c-key">then</span>(data <span class="c-key">=></span> {
+    <span class="c-key">const</span> hoy = data.serie[<span class="c-val">0</span>];
+    console.<span class="c-key">log</span>(<span class="c-str">`UF hoy: $${hoy.valor} (${hoy.fecha})`</span>);
+    <span class="c-cmt">// → UF hoy: $38542.45 (2026-04-21T00:00:00.000Z)</span>
+  });
+
+<span class="c-cmt">// Obtener todos los indicadores del día</span>
+<span class="c-key">fetch</span>(<span class="c-str">'https://mindicador.cl/api'</span>)
+  .<span class="c-key">then</span>(r <span class="c-key">=></span> r.<span class="c-key">json</span>())
+  .<span class="c-key">then</span>(data <span class="c-key">=></span> {
+    console.<span class="c-key">log</span>(<span class="c-str">'UF:'</span>, data.uf.valor);
+    console.<span class="c-key">log</span>(<span class="c-str">'Dólar:'</span>, data.dolar.valor);
+    console.<span class="c-key">log</span>(<span class="c-str">'UTM:'</span>, data.utm.valor);
+  });</pre>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadores.cl — API: mindicador.cl · Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF hoy</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchHoy } = window.IC;
+  let ufVal = null, dolarVal = null, utmVal = null;
+
+  /* Cargar valores reales */
+  try {
+    const todos = await fetchHoy();
+    ufVal    = todos.uf?.valor    ?? 38542;
+    dolarVal = todos.dolar?.valor ?? 985;
+    utmVal   = todos.utm?.valor   ?? 65443;
+  } catch {
+    ufVal = 38542; dolarVal = 985; utmVal = 65443;
+  }
+
+  const ufFmt    = fmt.clp(ufVal);
+  const dolarFmt = fmt.clp(dolarVal);
+  const utmFmt   = fmt.clp(utmVal);
+  const hoyStr   = new Date().toLocaleDateString('es-CL', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+  /* ─── Definición de widgets ─── */
+  const WIDGETS = {
+    compact: {
+      label: 'HTML — Widget compacto',
+      preview: () => `
+        <a class="ic-widget-compact" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+          <div class="ic-dot"></div>
+          <div>
+            <div class="ic-label">UF Hoy · ${hoyStr}</div>
+            <div class="ic-value" id="pw-val">${ufFmt}</div>
+          </div>
+        </a>`,
+      code: () => `<style>
+.ic-widget{display:inline-flex;align-items:center;gap:12px;background:#111720;
+border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 16px;
+font-family:monospace;text-decoration:none}
+.ic-widget .ic-label{font-size:11px;color:#8a99b3;text-transform:uppercase;letter-spacing:.08em}
+.ic-widget .ic-value{font-size:18px;font-weight:500;color:#fff}
+.ic-dot{width:6px;height:6px;border-radius:50%;background:#34d399;flex-shrink:0;
+animation:ic-p 2s ease infinite}
+@keyframes ic-p{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+<a class="ic-widget" href="https://indicadores.cl/uf/" target="_blank" rel="noopener" id="ic-uf-widget">
+  <div class="ic-dot"></div>
+  <div>
+    <div class="ic-label">UF Hoy</div>
+    <div class="ic-value" id="ic-uf-value">Cargando…</div>
+  </div>
+</a>
+<script>
+fetch('https://mindicador.cl/api/uf')
+  .then(r=>r.json()).then(d=>{
+    const v=d.serie[0].valor;
+    document.getElementById('ic-uf-value').textContent=
+      new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(v);
+  }).catch(()=>{});
+<\/script>`
+    },
+    badge: {
+      label: 'HTML — Badge inline',
+      preview: () => `
+        <a class="ic-widget-badge" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+          <div class="ic-b-dot"></div>
+          <span class="ic-b-label">UF</span>
+          <span class="ic-b-value">${ufFmt}</span>
+        </a>`,
+      code: () => `<style>
+.ic-badge{display:inline-flex;align-items:center;gap:8px;background:#111720;
+border:1px solid rgba(255,255,255,.08);border-radius:99px;padding:6px 14px;
+font-family:monospace;text-decoration:none}
+.ic-badge .lbl{font-size:11px;color:#8a99b3}
+.ic-badge .val{font-size:14px;font-weight:500;color:#3b9eff}
+.ic-bdot{width:5px;height:5px;border-radius:50%;background:#34d399;flex-shrink:0;
+animation:ic-p 2s ease infinite}
+@keyframes ic-p{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+<a class="ic-badge" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+  <div class="ic-bdot"></div>
+  <span class="lbl">UF hoy</span>
+  <span class="val" id="ic-uf-badge">—</span>
+</a>
+<script>
+fetch('https://mindicador.cl/api/uf')
+  .then(r=>r.json()).then(d=>{
+    document.getElementById('ic-uf-badge').textContent=
+      new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(d.serie[0].valor);
+  }).catch(()=>{});
+<\/script>`
+    },
+    card: {
+      label: 'HTML — Tarjeta con fecha',
+      preview: () => `
+        <a class="ic-widget-card" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+          <div class="ic-c-eyebrow">Unidad de Fomento · Chile</div>
+          <div class="ic-c-value">${ufFmt}</div>
+          <div class="ic-c-date">${hoyStr} · Banco Central</div>
+          <div class="ic-c-footer">Fuente: indicadores.cl</div>
+        </a>`,
+      code: () => `<style>
+.ic-card{display:inline-flex;flex-direction:column;background:#111720;
+border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 20px;
+font-family:monospace;text-decoration:none;min-width:180px}
+.ic-card .ey{font-size:10px;color:rgba(138,153,179,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.ic-card .val{font-size:24px;font-weight:500;color:#fff;margin-bottom:4px}
+.ic-card .dt{font-size:11px;color:rgba(138,153,179,.6)}
+.ic-card .ft{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)}
+</style>
+<a class="ic-card" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+  <div class="ey">Unidad de Fomento · Chile</div>
+  <div class="val" id="ic-uf-card">—</div>
+  <div class="dt" id="ic-uf-date">—</div>
+  <div class="ft">Fuente: indicadores.cl</div>
+</a>
+<script>
+fetch('https://mindicador.cl/api/uf').then(r=>r.json()).then(d=>{
+  const r=d.serie[0];
+  document.getElementById('ic-uf-card').textContent=
+    new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(r.valor);
+  document.getElementById('ic-uf-date').textContent=
+    new Date(r.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'})
+    +' · Banco Central';
+}).catch(()=>{});
+<\/script>`
+    },
+    iframe: {
+      label: 'iFrame — Compatible con cualquier CMS',
+      preview: () => `
+        <div style="width:200px;background:#111720;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px 20px;font-family:monospace">
+          <div style="font-size:10px;color:rgba(138,153,179,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">UF · Chile</div>
+          <div style="font-size:22px;font-weight:500;color:#fff;margin-bottom:4px">${ufFmt}</div>
+          <div style="font-size:11px;color:rgba(138,153,179,.6)">${hoyStr}</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)">indicadores.cl</div>
+        </div>`,
+      code: () => `<!-- Usar con cualquier CMS (WordPress, Wix, Squarespace…) -->
+<iframe
+  src="https://indicadores.cl/widget/embed.html"
+  width="220"
+  height="110"
+  frameborder="0"
+  scrolling="no"
+  style="border:none;overflow:hidden"
+  title="Valor UF Chile hoy - indicadores.cl">
+</iframe>`
+    }
+  };
+
+  let activeWidget = 'compact';
+
+  function renderWidget(key) {
+    const w = WIDGETS[key];
+    document.getElementById('preview-area').innerHTML = w.preview();
+    const code = w.code();
+    document.getElementById('code-pre').textContent = code;
+    document.getElementById('code-label').textContent = w.label;
+    document.getElementById('copy-btn').textContent = 'Copiar código';
+    document.getElementById('copy-btn').classList.remove('copied');
+    activeWidget = key;
+  }
+
+  window.showWidget = (key, btn) => {
+    document.querySelectorAll('.widget-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderWidget(key);
+  };
+
+  window.copiarCodigo = () => {
+    const code = WIDGETS[activeWidget].code();
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copiar código'; btn.classList.remove('copied'); }, 2500);
+    });
+  };
+
+  window.copiarEjemplo = (btn) => {
+    const text = document.getElementById('ejemplo-js').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2500);
+    });
+  };
+
+  renderWidget('compact');
+})();
+</script>
+
+</body>
+</html>
