@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Widget UF Chile — Agrega el Valor UF a tu Sitio Web Gratis | indicadores.cl</title>
+  <title>Widget UF Chile — Agrega el Valor UF a tu Sitio Web Gratis | indicadoreschile.cl</title>
   <meta name="description" content="Widget gratuito para mostrar el valor UF actualizado en tu sitio web. Copia el código y listo. También disponible para dólar, UTM e IPC. Sin registro.">
   <meta name="keywords" content="widget UF Chile, código UF web, mostrar valor UF sitio web, embed UF Chile, widget indicadores económicos">
-  <link rel="canonical" href="https://indicadores.cl/widget/">
+  <link rel="canonical" href="https://indicadoreschile.cl/widget/">
   <meta property="og:title" content="Widget UF Chile — Gratis para tu sitio web">
   <meta property="og:description" content="Agrega el valor UF actualizado a tu web con una línea de código. Gratis, sin registro.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://indicadores.cl/widget/">
+  <meta property="og:url" content="https://indicadoreschile.cl/widget/">
   <meta property="og:locale" content="es_CL">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
   <link rel="stylesheet" href="/assets/css/base.css">
@@ -217,13 +217,13 @@
 
 <nav class="navbar">
   <div class="navbar-inner">
-    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <a href="/" class="nav-logo"><span>$</span> indicadoreschile.cl</a>
     <ul class="nav-links">
       <li><a href="/">Dashboard</a></li>
       <li><a href="/uf/">UF</a></li>
       <li><a href="/dolar/">Dólar</a></li>
       <li><a href="/utm/">UTM</a></li>
-      <li><a href="/widget/" class="active">Widget</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
     </ul>
   </div>
 </nav>
@@ -286,7 +286,7 @@
       </div>
       <div class="step-body">
         <div class="step-title">Copia el código con el botón "Copiar código"</div>
-        <div class="step-desc">El código incluye todo lo necesario: estilos, el fetch a la API y el enlace a indicadores.cl. No necesitas instalar ninguna dependencia.</div>
+        <div class="step-desc">El código incluye todo lo necesario: estilos, el fetch a la API y el enlace a indicadoreschile.cl. No necesitas instalar ninguna dependencia.</div>
       </div>
     </div>
     <div class="step">
@@ -360,7 +360,7 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <span class="footer-copy">© 2026 indicadores.cl — API: mindicador.cl · Banco Central de Chile</span>
+    <span class="footer-copy">© 2026 indicadoreschile.cl — API: mindicador.cl · Banco Central de Chile</span>
     <ul class="footer-links">
       <li><a href="/">Dashboard</a></li>
       <li><a href="/uf/">UF hoy</a></li>
@@ -396,7 +396,7 @@
     compact: {
       label: 'HTML — Widget compacto',
       preview: () => `
-        <a class="ic-widget-compact" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+        <a class="ic-widget-compact" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
           <div class="ic-dot"></div>
           <div>
             <div class="ic-label">UF Hoy · ${hoyStr}</div>
@@ -413,7 +413,7 @@ font-family:monospace;text-decoration:none}
 animation:ic-p 2s ease infinite}
 @keyframes ic-p{0%,100%{opacity:1}50%{opacity:.3}}
 </style>
-<a class="ic-widget" href="https://indicadores.cl/uf/" target="_blank" rel="noopener" id="ic-uf-widget">
+<a class="ic-widget" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener" id="ic-uf-widget">
   <div class="ic-dot"></div>
   <div>
     <div class="ic-label">UF Hoy</div>
@@ -432,7 +432,7 @@ fetch('https://mindicador.cl/api/uf')
     badge: {
       label: 'HTML — Badge inline',
       preview: () => `
-        <a class="ic-widget-badge" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+        <a class="ic-widget-badge" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
           <div class="ic-b-dot"></div>
           <span class="ic-b-label">UF</span>
           <span class="ic-b-value">${ufFmt}</span>
@@ -447,7 +447,7 @@ font-family:monospace;text-decoration:none}
 animation:ic-p 2s ease infinite}
 @keyframes ic-p{0%,100%{opacity:1}50%{opacity:.3}}
 </style>
-<a class="ic-badge" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+<a class="ic-badge" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
   <div class="ic-bdot"></div>
   <span class="lbl">UF hoy</span>
   <span class="val" id="ic-uf-badge">—</span>
@@ -463,11 +463,11 @@ fetch('https://mindicador.cl/api/uf')
     card: {
       label: 'HTML — Tarjeta con fecha',
       preview: () => `
-        <a class="ic-widget-card" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+        <a class="ic-widget-card" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
           <div class="ic-c-eyebrow">Unidad de Fomento · Chile</div>
           <div class="ic-c-value">${ufFmt}</div>
           <div class="ic-c-date">${hoyStr} · Banco Central</div>
-          <div class="ic-c-footer">Fuente: indicadores.cl</div>
+          <div class="ic-c-footer">Fuente: indicadoreschile.cl</div>
         </a>`,
       code: () => `<style>
 .ic-card{display:inline-flex;flex-direction:column;background:#111720;
@@ -478,11 +478,11 @@ font-family:monospace;text-decoration:none;min-width:180px}
 .ic-card .dt{font-size:11px;color:rgba(138,153,179,.6)}
 .ic-card .ft{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)}
 </style>
-<a class="ic-card" href="https://indicadores.cl/uf/" target="_blank" rel="noopener">
+<a class="ic-card" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
   <div class="ey">Unidad de Fomento · Chile</div>
   <div class="val" id="ic-uf-card">—</div>
   <div class="dt" id="ic-uf-date">—</div>
-  <div class="ft">Fuente: indicadores.cl</div>
+  <div class="ft">Fuente: indicadoreschile.cl</div>
 </a>
 <script>
 fetch('https://mindicador.cl/api/uf').then(r=>r.json()).then(d=>{
@@ -502,17 +502,17 @@ fetch('https://mindicador.cl/api/uf').then(r=>r.json()).then(d=>{
           <div style="font-size:10px;color:rgba(138,153,179,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">UF · Chile</div>
           <div style="font-size:22px;font-weight:500;color:#fff;margin-bottom:4px">${ufFmt}</div>
           <div style="font-size:11px;color:rgba(138,153,179,.6)">${hoyStr}</div>
-          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)">indicadores.cl</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)">indicadoreschile.cl</div>
         </div>`,
       code: () => `<!-- Usar con cualquier CMS (WordPress, Wix, Squarespace…) -->
 <iframe
-  src="https://indicadores.cl/widget/embed.html"
+  src="https://indicadoreschile.cl/widget/embed.html"
   width="220"
   height="110"
   frameborder="0"
   scrolling="no"
   style="border:none;overflow:hidden"
-  title="Valor UF Chile hoy - indicadores.cl">
+  title="Valor UF Chile hoy - indicadoreschile.cl">
 </iframe>`
     }
   };

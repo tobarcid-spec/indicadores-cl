@@ -6,13 +6,13 @@
   <title>Indicadores Económicos Chile Hoy 2026 | UF, Dólar, UTM, IPC</title>
   <meta name="description" content="Valor UF hoy en Chile actualizado al día. Consulta también el dólar observado, UTM, euro e IPC. Conversor UF a pesos en tiempo real.">
   <meta name="keywords" content="UF hoy, valor UF Chile, dólar hoy Chile, UTM 2026, indicadores económicos Chile">
-  <link rel="canonical" href="https://indicadores.cl/">
+  <link rel="canonical" href="https://indicadoreschile.cl/">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Indicadores Económicos Chile — UF, Dólar, UTM hoy">
   <meta property="og:description" content="Valor UF actualizado al día. Conversor UF a pesos. Dólar, UTM, Euro e IPC Chile.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://indicadores.cl/">
+  <meta property="og:url" content="https://indicadoreschile.cl/">
   <meta property="og:locale" content="es_CL">
 
   <!-- Favicon inline SVG -->
@@ -26,11 +26,11 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Indicadores Económicos Chile",
-    "url": "https://indicadores.cl",
+    "url": "https://indicadoreschile.cl",
     "description": "Portal de indicadores económicos de Chile actualizado diariamente. UF, Dólar, UTM, Euro, IPC.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://indicadores.cl/?q={search_term_string}",
+      "target": "https://indicadoreschile.cl/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
@@ -321,7 +321,7 @@
 <!-- ======== NAVBAR ======== -->
 <nav class="navbar">
   <div class="navbar-inner">
-    <a href="/" class="nav-logo"><span>$</span> indicadores.cl</a>
+    <a href="/" class="nav-logo"><span>$</span> indicadoreschile.cl</a>
     <ul class="nav-links">
       <li><a href="/" class="active">Dashboard</a></li>
       <li><a href="/uf/">UF</a></li>
@@ -471,13 +471,12 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">
-        ¿Qué diferencia hay entre UF, UTM y IVP?
+        ¿Qué diferencia hay entre UF y UTM?
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-a">
-        <strong>UF (Unidad de Fomento)</strong>: se reajusta diariamente según inflación. Se usa para arriendos, hipotecas, multas y contratos de largo plazo.<br><br>
-        <strong>UTM (Unidad Tributaria Mensual)</strong>: se reajusta mensualmente. El SII la usa para calcular multas, impuestos y beneficios tributarios.<br><br>
-        <strong>IVP (Índice de Valor Promedio)</strong>: similar a la UF pero para depósitos de ahorro habitacional. Menos frecuente en contratos privados.
+        <strong>UF (Unidad de Fomento)</strong>: se reajusta <em>diariamente</em> según la inflación del mes anterior. Se usa en contratos privados: arriendos, hipotecas, seguros y créditos de largo plazo.<br><br>
+        <strong>UTM (Unidad Tributaria Mensual)</strong>: se reajusta una vez al mes. Es la unidad que usa el SII para expresar multas tributarias, sanciones y tramos del impuesto a la renta. La UTA (Unidad Tributaria Anual) equivale a 12 UTM.
       </div>
     </div>
   </div>
@@ -512,7 +511,7 @@
 <!-- ======== FOOTER ======== -->
 <footer class="footer">
   <div class="footer-inner">
-    <span class="footer-copy">© 2026 indicadores.cl — Datos: Banco Central de Chile</span>
+    <span class="footer-copy">© 2026 indicadoreschile.cl — Datos: Banco Central de Chile</span>
     <ul class="footer-links">
       <li><a href="/que-es-la-uf/">¿Qué es la UF?</a></li>
       <li><a href="/widget/">Widget</a></li>
@@ -590,11 +589,10 @@
 
   /* ---- Otros indicadores ---- */
   const indicadores = [
-    { key: 'dolar',  label: 'Dólar USD',  href: '/dolar/', emoji: '🇺🇸' },
-    { key: 'euro',   label: 'Euro EUR',   href: '/dolar/', emoji: '🇪🇺' },
-    { key: 'utm',    label: 'UTM',        href: '/utm/',   emoji: '📋' },
-    { key: 'ivp',   label: 'IVP',        href: '/',       emoji: '🏦' },
-    { key: 'ipc',   label: 'IPC mensual', href: '/ipc/',   emoji: '📊' },
+    { key: 'dolar',  label: 'Dólar USD',   href: '/dolar/', emoji: '🇺🇸' },
+    { key: 'euro',   label: 'Euro EUR',    href: '/dolar/', emoji: '🇪🇺' },
+    { key: 'utm',    label: 'UTM',         href: '/utm/',   emoji: '📋' },
+    { key: 'ipc',    label: 'IPC mensual', href: '/ipc/',   emoji: '📊' },
   ];
 
   const grid = document.getElementById('otros-grid');
