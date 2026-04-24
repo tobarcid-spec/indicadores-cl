@@ -99,15 +99,44 @@
 
     @media (max-width: 480px) { .month-meta { display: none; } }
   </style>
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDW33KBK92"></script>
+  <!-- Google Analytics 4 — reemplazar G-XXXXXXXXXX con tu Measurement ID -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-WDW33KBK92');
+    gtag("js", new Date());
+    gtag("config", "G-XXXXXXXXXX");
+  </script>
+  -->
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://indicadoreschile.cl/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "UF",
+        "item": "https://indicadoreschile.cl/uf/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2025"
+      }
+    ]
+  }
   </script>
 
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
 </head>
 <body>
 

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Valor UF Abril 2026 Chile — Tabla Diaria Completa | indicadoreschile.cl</title>
+  <meta name="description" id="page-desc" content="Todos los valores diarios de la UF en abril 2026. Mínimo, máximo, variación y promedio del mes. Fuente oficial Banco Central de Chile.">
+  <meta name="keywords" id="page-kw" content="UF abril 2026, valor UF abril 2026 Chile, UF diaria abril 2026, tabla UF abril">
+  <link rel="canonical" id="page-canonical" href="https://indicadoreschile.cl/uf/abril-2026/">
+  <meta property="og:title" id="og-title" content="Valor UF Abril 2026 Chile — Tabla Diaria">
+  <meta property="og:description" id="og-desc" content="Tabla completa con los valores diarios de la UF en abril 2026. Mínimo, máximo y variación del mes.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" id="og-url" content="https://indicadoreschile.cl/uf/abril-2026/">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json" id="breadcrumb-schema">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://indicadoreschile.cl/" },
+      { "@type": "ListItem", "position": 2, "name": "UF", "item": "https://indicadoreschile.cl/uf/" },
+      { "@type": "ListItem", "position": 3, "name": "2026", "item": "https://indicadoreschile.cl/uf/2026/" },
+      { "@type": "ListItem", "position": 4, "name": "Abril 2026" }
+    ]
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(26px, 4.5vw, 40px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    /* Breadcrumb visible */
+    .breadcrumb { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-3); margin-bottom: 12px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--text-3); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb-sep { color: var(--text-3); }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 32px; }
+    .stat-chip { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .stat-chip-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-chip-val { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--text); }
+    .stat-chip-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+    /* Chart */
+    .chart-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px; }
+    .chart-title-txt { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .chart-subtitle { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 20px; }
+    .chart-container { position: relative; height: 240px; }
+
+    /* Tabla */
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th:not(:first-child) { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 10px 16px; color: var(--text-2); }
+    tbody td:first-child { color: var(--text); font-weight: 500; }
+    tbody td:not(:first-child) { text-align: right; }
+    .td-hoy { background: var(--accent-dim) !important; }
+    .td-hoy td { color: var(--accent) !important; }
+    .change-pos { color: var(--red); }
+    .change-neg { color: var(--green); }
+
+    /* Nav mes anterior/siguiente */
+    .month-nav { display: flex; justify-content: space-between; margin-bottom: 48px; gap: 12px; }
+    .month-nav-btn { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; text-decoration: none; color: var(--text-2); font-size: 13px; transition: all var(--transition); }
+    .month-nav-btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .month-nav-btn.next { margin-left: auto; }
+
+    /* Contexto del mes - editorial único */
+    .mes-context { background: var(--bg2); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin-bottom: 32px; }
+    .mes-context h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .mes-context p { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 0; }
+
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+    .skel { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px; display: inline-block; }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadoreschile.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/" class="active">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="/">Inicio</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/uf/">UF</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/uf/2026/" id="bc-year">2026</a>
+      <span class="breadcrumb-sep">›</span>
+      <span id="bc-month">Abril 2026</span>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Unidad de Fomento · Historial mensual</p>
+    <h1 id="h1-titulo"><strong>Valor UF</strong> — Cargando…</h1>
+    <p id="h1-sub">Tabla diaria completa del mes con mínimo, máximo y variación.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- CONTEXTO DEL MES (único por mes — contenido editorial) -->
+  <div class="mes-context" id="mes-context">
+    <h3 id="ctx-title">Cargando contexto…</h3>
+    <p id="ctx-text">Cargando…</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-chip"><div class="stat-chip-label">Inicio mes</div><div class="stat-chip-val" id="s-ini">—</div><div class="stat-chip-sub" id="s-ini-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Fin mes</div><div class="stat-chip-val" id="s-fin">—</div><div class="stat-chip-sub" id="s-fin-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mínimo</div><div class="stat-chip-val" id="s-min">—</div><div class="stat-chip-sub" id="s-min-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Máximo</div><div class="stat-chip-val" id="s-max">—</div><div class="stat-chip-sub" id="s-max-f">—</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Variación mes</div><div class="stat-chip-val" id="s-var">—</div><div class="stat-chip-sub">vs día 1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Promedio mes</div><div class="stat-chip-val" id="s-prom">—</div><div class="stat-chip-sub">mensual</div></div>
+  </div>
+
+  <!-- GRÁFICO -->
+  <div class="chart-wrap">
+    <div class="chart-title-txt">Evolución UF — <span id="chart-mes">Abril 2026</span></div>
+    <div class="chart-subtitle" id="chart-sub">Valor diario de la UF durante el mes</div>
+    <div class="chart-container">
+      <canvas id="chart-uf" role="img" aria-label="Gráfico evolución valor UF mes completo"></canvas>
+    </div>
+  </div>
+
+  <div class="ad-slot">Publicidad</div>
+
+  <!-- TABLA -->
+  <span class="section-label" id="tabla-label">Tabla UF diaria — cargando…</span>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Fecha</th>
+          <th>Valor UF</th>
+          <th>Variación</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-uf">
+        <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Cargando…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- NAV MES ANTERIOR/SIGUIENTE -->
+  <div class="month-nav" id="month-nav"></div>
+
+  <!-- RELACIONADOS -->
+  <span class="section-label" style="margin-top:16px">Ver también</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
+    <a href="/uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📅</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">UF hoy + conversor</div><div style="font-size:12px;color:var(--text-2)">Valor del día actualizado</div></div>
+    </a>
+    <a href="/uf/2026/" id="link-year" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📊</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">UF 2026 completo</div><div style="font-size:12px;color:var(--text-2)">Todos los meses del año</div></div>
+    </a>
+    <a href="/calculadora-arriendo-uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">🏠</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">Calculadora arriendo UF</div><div style="font-size:12px;color:var(--text-2)">UF → pesos, mes a mes</div></div>
+    </a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadoreschile.cl — Datos: Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF hoy</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, MESES } = window.IC;
+
+  /* Detectar mes y año desde la URL: /uf/abril-2026/ → mes=4, año=2026 */
+  const path = window.location.pathname.replace(/\/$/, '');
+  const parts = path.split('/');
+  const slug = parts[parts.length - 1]; // "abril-2026"
+  const [mesSlug, yearStr] = slug.split('-');
+  const año = parseInt(yearStr);
+  const mesIdx = MESES.findIndex(m => m.toLowerCase() === mesSlug);
+  
+  if (mesIdx === -1 || isNaN(año)) {
+    document.getElementById('h1-titulo').textContent = 'Error: mes no válido';
+    return;
+  }
+
+  const mesNombre = MESES[mesIdx];
+  const mesNum = mesIdx + 1;
+
+  /* ─── Meta dinámico ─── */
+  document.title = `Valor UF ${mesNombre} ${año} Chile — Tabla Diaria | indicadoreschile.cl`;
+  document.getElementById('page-title').textContent = document.title;
+  document.getElementById('page-desc').setAttribute('content', 
+    `Todos los valores diarios de la UF en ${mesNombre.toLowerCase()} ${año}. Mínimo, máximo, variación y promedio del mes. Fuente oficial Banco Central de Chile.`);
+  document.getElementById('page-kw').setAttribute('content',
+    `UF ${mesNombre.toLowerCase()} ${año}, valor UF ${mesNombre.toLowerCase()} ${año} Chile, UF diaria ${mesNombre.toLowerCase()} ${año}`);
+  const canonicalUrl = `https://indicadoreschile.cl/uf/${mesSlug}-${año}/`;
+  document.getElementById('page-canonical').setAttribute('href', canonicalUrl);
+  document.getElementById('og-title').setAttribute('content', `Valor UF ${mesNombre} ${año} Chile — Tabla Diaria`);
+  document.getElementById('og-desc').setAttribute('content', 
+    `Tabla completa con los valores diarios de la UF en ${mesNombre.toLowerCase()} ${año}. Mínimo, máximo y variación del mes.`);
+  document.getElementById('og-url').setAttribute('content', canonicalUrl);
+
+  /* Breadcrumb schema dinámico */
+  const bcSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://indicadoreschile.cl/" },
+      { "@type": "ListItem", "position": 2, "name": "UF", "item": "https://indicadoreschile.cl/uf/" },
+      { "@type": "ListItem", "position": 3, "name": año.toString(), "item": `https://indicadoreschile.cl/uf/${año}/` },
+      { "@type": "ListItem", "position": 4, "name": `${mesNombre} ${año}` }
+    ]
+  };
+  document.getElementById('breadcrumb-schema').textContent = JSON.stringify(bcSchema);
+
+  /* Header y breadcrumb visible */
+  document.getElementById('h1-titulo').innerHTML = `<strong>Valor UF ${mesNombre} ${año}</strong> — Chile`;
+  document.getElementById('h1-sub').textContent = `Tabla completa con todos los valores diarios de la UF en ${mesNombre.toLowerCase()} ${año}.`;
+  document.getElementById('bc-year').href = `/uf/${año}/`;
+  document.getElementById('bc-year').textContent = año;
+  document.getElementById('bc-month').textContent = `${mesNombre} ${año}`;
+  document.getElementById('chart-mes').textContent = `${mesNombre} ${año}`;
+  document.getElementById('tabla-label').textContent = `Tabla UF diaria — ${mesNombre} ${año}`;
+  document.getElementById('link-year').href = `/uf/${año}/`;
+  document.getElementById('link-year').querySelector('div > div').textContent = `UF ${año} completo`;
+
+  /* ─── Contexto editorial único del mes ─── */
+  const CONTEXTOS = {
+    '1-2026': { title: 'Inicio de año con estabilidad', text: 'Enero 2026 comenzó con una UF en torno a $38.300, reflejando la inflación acumulada de diciembre 2025. El IPC de diciembre fue de 0,2%, lo que mantiene la UF con alzas moderadas durante todo el mes.' },
+    '2-2026': { title: 'Febrero con baja inflación', text: 'Febrero 2026 mostró un IPC de solo 0,1%, una de las cifras más bajas del semestre. Esto se tradujo en una variación mínima de la UF durante el mes, alcanzando apenas $38.400 al cierre.' },
+    '3-2026': { title: 'Marzo con repunte moderado', text: 'El IPC de febrero fue de 0,4%, lo que impulsó la UF al alza en marzo 2026. El valor cerró el mes cerca de $38.550, reflejando presiones inflacionarias por alzas en alimentos y transporte.' },
+    '4-2026': { title: 'Abril con inflación controlada', text: 'Abril 2026 registró un IPC de marzo de 0,3%, manteniendo la UF en una tendencia al alza moderada. El valor promedio del mes fue cercano a $38.650, en línea con las expectativas del Banco Central.' }
+  };
+  const ctxKey = `${mesNum}-${año}`;
+  const ctx = CONTEXTOS[ctxKey] || {
+    title: `${mesNombre} ${año} — contexto económico`,
+    text: `Durante ${mesNombre.toLowerCase()} ${año}, la UF se reajustó según la variación del IPC del mes anterior publicada por el INE. El Banco Central distribuye este reajuste entre los días del mes de forma proporcional.`
+  };
+  document.getElementById('ctx-title').textContent = ctx.title;
+  document.getElementById('ctx-text').textContent = ctx.text;
+
+  /* ─── Cargar datos ─── */
+  let data;
+  try { data = await fetchIndicador('uf', año); }
+  catch { document.getElementById('tabla-uf').innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--red)">Error al cargar datos</td></tr>'; return; }
+
+  const serie = data.serie
+    .filter(r => {
+      const d = new Date(r.fecha);
+      return d.getFullYear() === año && (d.getMonth() + 1) === mesNum;
+    })
+    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+  if (!serie.length) {
+    document.getElementById('tabla-uf').innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">No hay datos para este mes</td></tr>';
+    return;
+  }
+
+  const valores = serie.map(r => r.valor);
+  const min = Math.min(...valores);
+  const max = Math.max(...valores);
+  const prom = valores.reduce((s, v) => s + v, 0) / valores.length;
+  const primero = serie[0];
+  const ultimo = serie[serie.length - 1];
+  const varPct = ((ultimo.valor - primero.valor) / primero.valor * 100).toFixed(2);
+  const minFila = serie.find(r => r.valor === min);
+  const maxFila = serie.find(r => r.valor === max);
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  /* Stats */
+  document.getElementById('s-ini').textContent = fmt.clp(primero.valor);
+  document.getElementById('s-ini-f').textContent = new Date(primero.fecha).getDate();
+  document.getElementById('s-fin').textContent = fmt.clp(ultimo.valor);
+  document.getElementById('s-fin-f').textContent = new Date(ultimo.fecha).getDate();
+  document.getElementById('s-min').textContent = fmt.clp(min);
+  document.getElementById('s-min-f').textContent = minFila ? new Date(minFila.fecha).getDate() : '';
+  document.getElementById('s-max').textContent = fmt.clp(max);
+  document.getElementById('s-max-f').textContent = maxFila ? new Date(maxFila.fecha).getDate() : '';
+  const sVar = document.getElementById('s-var');
+  sVar.textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
+  sVar.style.color = varPct >= 0 ? 'var(--red)' : 'var(--green)';
+  document.getElementById('s-prom').textContent = fmt.clp(Math.round(prom));
+
+  /* Gráfico */
+  document.getElementById('chart-sub').textContent = `UF diaria ${mesNombre} ${año} — ${serie.length} valores`;
+
+  new Chart(document.getElementById('chart-uf'), {
+    type: 'line',
+    data: {
+      labels: serie.map(r => new Date(r.fecha).getDate()),
+      datasets: [{
+        label: 'UF',
+        data: valores,
+        borderColor: '#3b9eff',
+        backgroundColor: 'rgba(59,158,255,0.07)',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: 0.1,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(17,23,32,0.95)',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          callbacks: { label: ctx => `  UF: ${fmt.clp(ctx.raw)}` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#4a5568', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'transparent' } },
+        y: {
+          ticks: { color: '#4a5568', font: { size: 11 }, callback: v => '$' + Math.round(v).toLocaleString('es-CL') },
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'transparent' }
+        }
+      }
+    }
+  });
+
+  /* Tabla */
+  const tbody = document.getElementById('tabla-uf');
+  tbody.innerHTML = serie.map((r, i) => {
+    const d = new Date(r.fecha);
+    const isHoy = r.fecha.split('T')[0] === todayStr;
+    let cambio = '—';
+    if (i > 0) {
+      const diff = r.valor - serie[i - 1].valor;
+      const pct = (diff / serie[i - 1].valor * 100).toFixed(2);
+      const cls = diff >= 0 ? 'change-pos' : 'change-neg';
+      cambio = `<span class="${cls}">${diff >= 0 ? '+' : ''}${fmt.clp(diff)} (${pct}%)</span>`;
+    }
+    return `<tr class="${isHoy ? 'td-hoy' : ''}">
+      <td>${d.getDate()}</td>
+      <td>${fmt.date(r.fecha)}${isHoy ? ' — hoy' : ''}</td>
+      <td>${fmt.clp(r.valor)}</td>
+      <td>${cambio}</td>
+    </tr>`;
+  }).join('');
+
+  /* Nav mes anterior/siguiente */
+  const prevMonth = mesNum === 1 ? 12 : mesNum - 1;
+  const prevYear = mesNum === 1 ? año - 1 : año;
+  const nextMonth = mesNum === 12 ? 1 : mesNum + 1;
+  const nextYear = mesNum === 12 ? año + 1 : año;
+  const prevSlug = `${MESES[prevMonth - 1].toLowerCase()}-${prevYear}`;
+  const nextSlug = `${MESES[nextMonth - 1].toLowerCase()}-${nextYear}`;
+
+  const nav = document.getElementById('month-nav');
+  nav.innerHTML = `
+    <a href="/uf/${prevSlug}/" class="month-nav-btn">← ${MESES[prevMonth - 1]} ${prevYear}</a>
+    <a href="/uf/${nextSlug}/" class="month-nav-btn next">${MESES[nextMonth - 1]} ${nextYear} →</a>
+  `;
+})();
+</script>
+
+  <!-- Google Analytics 4 — reemplazar G-XXXXXXXXXX con tu Measurement ID -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  -->
+
+</body>
+</html>
