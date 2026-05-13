@@ -5,15 +5,15 @@ activar-analytics.py
 Activa Google Analytics 4 en todas las páginas del sitio indicadoreschile.cl
 
 USO:
-    python3 activar-analytics.py G-XXXXXXXXXX
+    python3 activar-analytics.py G-WDW33KBK92
 
-Reemplaza G-XXXXXXXXXX con tu Measurement ID real de GA4.
+Reemplaza G-WDW33KBK92 con tu Measurement ID real de GA4.
 El script descomenta el bloque de tracking en todos los HTML.
 
 También agrega el meta tag de verificación de Google Search Console
 si lo proporcionas como segundo argumento:
 
-    python3 activar-analytics.py G-XXXXXXXXXX "google-site-verification_CONTENT"
+    python3 activar-analytics.py G-WDW33KBK92 "google-site-verification_CONTENT"
 """
 
 import sys
@@ -24,7 +24,7 @@ import re
 # ─── Validaciones ────────────────────────────────────────────────
 if len(sys.argv) < 2:
     print("ERROR: Falta el Measurement ID de GA4")
-    print("Uso: python3 activar-analytics.py G-XXXXXXXXXX")
+    print("Uso: python3 activar-analytics.py G-WDW33KBK92")
     sys.exit(1)
 
 GA4_ID = sys.argv[1].strip()
@@ -57,7 +57,7 @@ if GSC_CONTENT:
 
 # ─── Patrón del bloque comentado a reemplazar ────────────────────
 PATTERN = re.compile(
-    r'  <!-- Google Analytics 4 — reemplazar G-XXXXXXXXXX con tu Measurement ID -->\s*'
+    r'  <!-- Google Analytics 4 — reemplazar G-WDW33KBK92 con tu Measurement ID -->\s*'
     r'  <!--.*?-->\s*',
     re.DOTALL
 )
