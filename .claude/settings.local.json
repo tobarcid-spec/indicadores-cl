@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/procesos/personal/indicadores-cl log --oneline --all)"
+    ]
+  }
+}
