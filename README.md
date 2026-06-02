@@ -44,7 +44,8 @@ indicadores-cl/
 │   ├── febrero-2026/index.html       ← UF diaria febrero 2026
 │   ├── marzo-2026/index.html         ← UF diaria marzo 2026
 │   ├── abril-2026/index.html         ← UF diaria abril 2026
-│   └── mayo-2026/index.html          ← UF diaria mayo 2026
+│   ├── mayo-2026/index.html          ← UF diaria mayo 2026
+│   └── junio-2026/index.html         ← UF diaria junio 2026
 │
 ├── dolar/index.html                  ← Tipo de cambio USD/CLP
 ├── utm/index.html                    ← Valor UTM mensual
@@ -117,18 +118,19 @@ Cloudflare detecta el push desde GitHub y publica automáticamente en ~30 segund
 
 ## Tarea mensual — agregar mes nuevo de UF
 
-1. Copiar `/uf/mayo-2026/index.html` → `/uf/junio-2026/index.html`
-2. Actualizar `<title>`, `<meta name="description">`, canonical, og:url y breadcrumb schema dentro del nuevo archivo
-3. Agregar la URL en `sitemap.xml`:
+1. Copiar `/uf/junio-2026/index.html` → `/uf/julio-2026/index.html`
+2. Actualizar en el nuevo archivo los meta estáticos del `<head>`: `<title>`, `<meta name="description">`, `<meta name="keywords">`, canonical, og:title, og:description, og:url y el breadcrumb schema inicial
+3. Agregar la entrada `'7-2026'` en el objeto `CONTEXTOS` del JS con el contexto editorial del mes
+4. En `sitemap.xml`: cambiar junio-2026 a `changefreq=yearly` y agregar julio-2026:
    ```xml
    <url>
-     <loc>https://indicadoreschile.cl/uf/junio-2026/</loc>
+     <loc>https://indicadoreschile.cl/uf/julio-2026/</loc>
      <lastmod>2026-07-01</lastmod>
-     <changefreq>yearly</changefreq>
-     <priority>0.8</priority>
+     <changefreq>monthly</changefreq>
+     <priority>0.9</priority>
    </url>
    ```
-4. Commit y push
+5. Commit y push
 
 ---
 
