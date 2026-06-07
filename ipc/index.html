@@ -535,7 +535,8 @@
   /* ─── Datos del día ─── */
   try {
     const todos = await fetchHoy();
-    const ipc = todos.ipc;
+    const ipc = todos?.ipc;
+    if (!ipc || ipc.valor == null) throw new Error('sin datos ipc');
     const valMen = ipc.valor;
     const d = new Date(ipc.fecha);
     const mesNombre = MESES[d.getMonth()];
@@ -547,7 +548,9 @@
       valMen >= 0 ? `▲ Alza de precios en ${mesNombre}` : `▼ Baja de precios en ${mesNombre}`;
     document.getElementById('ipc-badge').style.color = valMen >= 0 ? 'var(--ipc)' : 'var(--green)';
   } catch(e) {
-    document.getElementById('ipc-mensual').textContent = 'Error';
+    document.getElementById('ipc-mensual').textContent = '—';
+    document.getElementById('ipc-mes-label').textContent = 'No disponible';
+    document.getElementById('ipc-badge').textContent = 'Sin conexión a la API';
   }
 
   /* ─── Tabs ─── */
@@ -566,13 +569,23 @@
     btn.classList.add('active');
 
     let data;
-    try { data = await fetchIndicador('ipc', anio); } catch { return; }
+    try { data = await fetchIndicador('ipc', anio); } catch {
+      document.getElementById('ipc-acum').textContent = '—';
+      document.getElementById('tabla-ipc').innerHTML =
+        '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--red)">Error al cargar datos — reintenta en unos segundos</td></tr>';
+      return;
+    }
 
-    ipcSerie = data.serie
+    ipcSerie = (data?.serie || [])
       .filter(r => new Date(r.fecha).getFullYear() === anio)
       .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-    if (!ipcSerie.length) return;
+    if (!ipcSerie.length) {
+      document.getElementById('ipc-acum').textContent = '—';
+      document.getElementById('tabla-ipc').innerHTML =
+        '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Sin datos para este año</td></tr>';
+      return;
+    }
 
     const valores = ipcSerie.map(r => r.valor);
     const acum = valores.reduce((s, v) => s + v, 0);

@@ -15,11 +15,13 @@ const fmt = {
 /* ---- Fetch con cache en localStorage (TTL 1 hora) ---- */
 async function fetchIndicador(tipo, fecha = '') {
   const key = `ind_${tipo}_${fecha || 'hoy'}`;
-  const cached = localStorage.getItem(key);
-  if (cached) {
-    const { ts, data } = JSON.parse(cached);
-    if (Date.now() - ts < 3600_000) return data; // 1 hora de cache
-  }
+  try {
+    const cached = localStorage.getItem(key);
+    if (cached) {
+      const { ts, data } = JSON.parse(cached);
+      if (Date.now() - ts < 3600_000) return data; // 1 hora de cache
+    }
+  } catch { localStorage.removeItem(key); } // entrada corrupta — descarta y recarga
   const url = fecha
     ? `${API_BASE}/${tipo}/${fecha}`
     : `${API_BASE}/${tipo}`;
@@ -33,11 +35,13 @@ async function fetchIndicador(tipo, fecha = '') {
 /* ---- Fetch de todos los indicadores de hoy ---- */
 async function fetchHoy() {
   const key = 'ind_hoy_all';
-  const cached = localStorage.getItem(key);
-  if (cached) {
-    const { ts, data } = JSON.parse(cached);
-    if (Date.now() - ts < 1800_000) return data; // 30 min de cache para el dashboard
-  }
+  try {
+    const cached = localStorage.getItem(key);
+    if (cached) {
+      const { ts, data } = JSON.parse(cached);
+      if (Date.now() - ts < 1800_000) return data; // 30 min de cache para el dashboard
+    }
+  } catch { localStorage.removeItem(key); } // entrada corrupta — descarta y recarga
   const res = await fetch(API_BASE);
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   const data = await res.json();
