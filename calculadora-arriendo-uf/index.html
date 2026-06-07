@@ -199,43 +199,151 @@
 
   <div class="ad-slot">Publicidad</div>
 
-  <!-- CONTENIDO ÚNICO CALCULADORA ARRIENDO -->
-  <div style="margin: 0 0 32px; padding: 24px; background: var(--bg2); border-radius: var(--radius-lg); border-left: 3px solid var(--accent);">
-    <h2 style="font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 16px;">
-      ¿Conviene arrendar en UF o en pesos fijos?
-    </h2>
-    
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      Los contratos de arriendo en UF protegen al propietario de la inflación, mientras que los arriendos 
-      en pesos fijos benefician al arrendatario cuando hay inflación alta. Si arriendas un departamento a 
-      $500.000 pesos mensuales con contrato de 2 años sin reajuste, al final del segundo año seguirás pagando 
-      los mismos $500.000, pero si la inflación acumulada fue del 8%, en términos reales estarás pagando un 8% 
-      menos de lo que valía originalmente.
-    </p>
+  <!-- CONTENIDO EDITORIAL -->
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      En cambio, si el contrato es de <strong>15 UF mensuales</strong>, el primer mes pagas alrededor de 
-      $580.000 (15 UF × $38.700), pero al mes 24 pagarás cerca de $605.000 si la UF subió a $40.300, porque 
-      la UF se reajustó automáticamente con la inflación. Esto da certeza al propietario de que el valor real 
-      del arriendo se mantiene, pero para el arrendatario significa que el pago en pesos sube mensualmente.
-    </p>
+  <!-- Tabla comparativa UF vs pesos -->
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:0 0 12px">UF vs pesos fijos: qué dice el contrato y qué te cuesta</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:16px">La elección no es solo matemática. Depende de tu tolerancia a la variación mensual, el tipo de propietario y el mercado donde arriendas. Aquí la diferencia real:</p>
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      <strong>¿Cuándo conviene cada modalidad?</strong> Si esperas que tu sueldo suba más rápido que la inflación 
-      (por ejemplo, estás en una carrera ascendente), un arriendo en UF es manejable porque tus ingresos crecerán 
-      más que el pago. Si tus ingresos son fijos o inciertos, un arriendo en pesos da más predictibilidad. Para 
-      propietarios, la UF es casi siempre mejor porque protege contra inflación y evita renegociaciones anuales. 
-      La mayoría de arriendos en barrios altos de Santiago y propiedades nuevas están en UF; los arriendos más 
-      antiguos o en sectores populares tienden a estar en pesos.
-    </p>
+  <div class="table-wrap" style="margin-bottom:28px">
+    <table>
+      <thead>
+        <tr>
+          <th>Aspecto</th>
+          <th>Arriendo en UF</th>
+          <th>Arriendo en pesos fijos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pago mensual en $</td>
+          <td style="color:var(--red)">Varía cada mes con la UF</td>
+          <td style="color:var(--green)">Siempre igual hasta renovación</td>
+        </tr>
+        <tr>
+          <td>Efecto de la inflación</td>
+          <td>Lo absorbe el arrendatario en tiempo real</td>
+          <td>Lo absorbe el arrendatario al renovar (de golpe)</td>
+        </tr>
+        <tr>
+          <td>Renegociación</td>
+          <td style="color:var(--green)">No hay — reajuste automático</td>
+          <td style="color:var(--red)">Anual o al vencer contrato</td>
+        </tr>
+        <tr>
+          <td>Zona donde predomina</td>
+          <td>Providencia, Las Condes, Vitacura, dpts. nuevos</td>
+          <td>Casas antiguas, arriendos familiares, periferia</td>
+        </tr>
+        <tr>
+          <td>Riesgo arrendador</td>
+          <td style="color:var(--green)">Bajo — protegido por la UF</td>
+          <td style="color:var(--red)">Alto si IPC sube y no reajusta</td>
+        </tr>
+        <tr>
+          <td>Mejor para el arrendatario cuando…</td>
+          <td>Sueldo sube igual o más que inflación</td>
+          <td>Inflación baja y quieres cuota fija</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div style="margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: var(--radius);">
-      <p style="font-size: 13px; color: var(--text-3); margin: 0;">
-        <strong style="color: var(--accent);">Cláusula típica:</strong> Muchos contratos en pesos incluyen 
-        reajuste anual según IPC. Esto es un híbrido: pagas en pesos mes a mes, pero una vez al año el monto 
-        se reajusta por la inflación acumulada. Es menos volátil que la UF pero protege parcialmente al propietario.
-      </p>
+  <!-- SVG: impacto real año 2022 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Caso real — año 2022</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px">Lo que pasó con 15 UF de arriendo cuando la inflación llegó a 12,8%</div>
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:20px">Pago mensual en pesos para un arriendo de 15 UF · Ene–Dic 2022</p>
+    <svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" aria-label="Gráfico evolución arriendo 15 UF en pesos durante 2022">
+      <!-- Eje Y labels -->
+      <text x="0" y="14" font-family="monospace" font-size="10" fill="#6b7280">$540k</text>
+      <text x="0" y="54" font-family="monospace" font-size="10" fill="#6b7280">$510k</text>
+      <text x="0" y="94" font-family="monospace" font-size="10" fill="#6b7280">$480k</text>
+      <text x="0" y="124" font-family="monospace" font-size="10" fill="#6b7280">$456k</text>
+      <!-- Línea base -->
+      <line x1="44" y1="120" x2="550" y2="120" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="44" y1="90" x2="550" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="44" y1="50" x2="550" y2="50" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <!-- Barras (12 meses, aprox valores UF × 15) -->
+      <!-- Ene $456k, Feb $462k, Mar $474k, Abr $484k, May $495k, Jun $498k, Jul $504k, Ago $510k, Sep $516k, Oct $519k, Nov $525k, Dic $528k -->
+      <g fill="rgba(59,158,255,0.35)" stroke="rgba(59,158,255,0.7)" stroke-width="1">
+        <rect x="46"  y="120" width="35" height="0"  rx="2"/> <!-- placeholder para calcular -->
+        <!-- Barras reales desde base 120 hacia arriba (120 = $456k, escala: 120px = $84k → 1px=$700) -->
+        <rect x="46"  y="120" width="32" height="0"  rx="2"/>
+        <rect x="46"  y="120" width="32" height="0"  rx="2"/>
+      </g>
+      <!-- Polilínea -->
+      <polyline
+        points="62,120 104,111 146,103 188,91 230,81 272,78 314,72 356,64 398,56 440,53 482,46 524,41"
+        fill="none" stroke="#3b9eff" stroke-width="2" stroke-linejoin="round"/>
+      <!-- Puntos -->
+      <g fill="#3b9eff">
+        <circle cx="62"  cy="120" r="3"/>
+        <circle cx="104" cy="111" r="3"/>
+        <circle cx="146" cy="103" r="3"/>
+        <circle cx="188" cy="91"  r="3"/>
+        <circle cx="230" cy="81"  r="3"/>
+        <circle cx="272" cy="78"  r="3"/>
+        <circle cx="314" cy="72"  r="3"/>
+        <circle cx="356" cy="64"  r="3"/>
+        <circle cx="398" cy="56"  r="3"/>
+        <circle cx="440" cy="53"  r="3"/>
+        <circle cx="482" cy="46"  r="3"/>
+        <circle cx="524" cy="41"  r="3"/>
+      </g>
+      <!-- Etiquetas mes -->
+      <g font-family="monospace" font-size="9" fill="#4b5563" text-anchor="middle">
+        <text x="62"  y="145">Ene</text>
+        <text x="104" y="145">Feb</text>
+        <text x="146" y="145">Mar</text>
+        <text x="188" y="145">Abr</text>
+        <text x="230" y="145">May</text>
+        <text x="272" y="145">Jun</text>
+        <text x="314" y="145">Jul</text>
+        <text x="356" y="145">Ago</text>
+        <text x="398" y="145">Sep</text>
+        <text x="440" y="145">Oct</text>
+        <text x="482" y="145">Nov</text>
+        <text x="524" y="145">Dic</text>
+      </g>
+      <!-- Valores inicio y fin -->
+      <text x="62"  y="115" font-family="monospace" font-size="9" fill="#94a3b8" text-anchor="middle">$456k</text>
+      <text x="524" y="36"  font-family="monospace" font-size="9" fill="#3b9eff" text-anchor="middle" font-weight="bold">$528k</text>
+      <!-- Flecha diferencia -->
+      <text x="420" y="25" font-family="monospace" font-size="10" fill="#f97316">▲ +$72.000 en 12 meses (+15,8%)</text>
+    </svg>
+    <p style="font-size:12px;color:var(--text-3);margin:12px 0 0;font-family:var(--font-mono)">Un contrato de 15 UF pasó de costar ~$456.000 en enero 2022 a ~$528.000 en diciembre 2022. El IPC acumulado ese año fue 12,8% — el más alto desde 1994.</p>
+  </div>
+
+  <!-- Rangos reales en Santiago -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:28px">
+    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">Rangos reales de arriendos en UF — Gran Santiago 2026</div>
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:14px">Referencia de mercado a junio 2026. Varía según piso, estado y ubicación exacta.</p>
+    <div class="table-wrap" style="margin-bottom:0;border:none">
+      <table>
+        <thead>
+          <tr><th>Tipo</th><th>Zona oriente (LC / Pro)</th><th>Zona centro / poniente</th><th>Zona sur (Ñuñoa / Macul)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Studio / 1D1B</td><td style="text-align:right">18 – 25 UF</td><td style="text-align:right">12 – 18 UF</td><td style="text-align:right">13 – 20 UF</td></tr>
+          <tr><td>2D1B / 2D2B</td><td style="text-align:right">25 – 38 UF</td><td style="text-align:right">16 – 26 UF</td><td style="text-align:right">18 – 28 UF</td></tr>
+          <tr><td>3D2B</td><td style="text-align:right">35 – 55 UF</td><td style="text-align:right">22 – 35 UF</td><td style="text-align:right">24 – 38 UF</td></tr>
+          <tr><td>Casa 3D+</td><td style="text-align:right">50 – 90 UF</td><td style="text-align:right">28 – 50 UF</td><td style="text-align:right">30 – 55 UF</td></tr>
+        </tbody>
+      </table>
     </div>
+  </div>
+
+  <!-- Reglas prácticas del contrato -->
+  <div style="background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin-bottom:32px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Lo que debes saber antes de firmar</div>
+    <ul style="font-size:14px;color:var(--text-2);line-height:1.9;padding-left:20px;margin:0">
+      <li>El valor UF que se aplica al pago es el <strong style="color:var(--text)">del día exacto indicado en el contrato</strong>, no el del día 1 del mes. Si el contrato dice "pagar el 5 de cada mes", se usa el valor UF del día 5.</li>
+      <li>Si la UF baja (deflación ese mes), tu arriendo también baja en pesos — aunque en la práctica eso ocurre muy pocas veces.</li>
+      <li>Un arriendo en pesos puede <strong style="color:var(--text)">subir más que la UF al renovar</strong>: el propietario fija libremente el nuevo precio de mercado y puede pedir más que el reajuste por IPC.</li>
+      <li>Para cambiar un contrato de UF a pesos necesitas un <strong style="color:var(--text)">addendum notarial</strong> firmado por ambas partes. No basta el acuerdo verbal.</li>
+      <li>La Ley de Arriendo (N° 18.101) exige <strong style="color:var(--text)">mínimo 2 meses de aviso</strong> para terminar el contrato si el arrendador quiere recuperar el inmueble.</li>
+    </ul>
   </div>
 
   <!-- TABLA HISTORIAL -->
