@@ -319,48 +319,131 @@
     </table>
   </div>
 
+  <!-- CONTENIDO EDITORIAL ÚNICO -->
+
+  <!-- Qué pesa en la canasta -->
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:0 0 12px">¿Qué productos mueven el IPC en Chile?</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:16px">
+    La canasta tiene 303 productos y el INE mide sus precios en más de 30.000 puntos de venta en 18 ciudades. Pero no todo pesa igual: si sube el precio de la bencina impacta mucho más que si sube el precio de los zapatos, porque los chilenos gastan más en transporte que en calzado. Esta es la distribución real según la canasta base 2023:
+  </p>
+
+  <div class="table-wrap" style="margin-bottom:28px">
+    <table>
+      <thead>
+        <tr>
+          <th>División del gasto</th>
+          <th>Peso en el IPC</th>
+          <th>Qué incluye</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Alimentos y bebidas</td><td style="text-align:right;color:var(--ipc);font-weight:600">19,9%</td><td style="text-align:right">Pan, carne, frutas, aceite, leche</td></tr>
+        <tr><td>Transporte</td><td style="text-align:right;color:var(--ipc);font-weight:600">14,0%</td><td style="text-align:right">Bencina, pasajes, auto propio</td></tr>
+        <tr><td>Vivienda y servicios básicos</td><td style="text-align:right;color:var(--ipc);font-weight:600">14,0%</td><td style="text-align:right">Arriendos, luz, agua, gas</td></tr>
+        <tr><td>Restaurantes y hoteles</td><td style="text-align:right">8,5%</td><td style="text-align:right">Almuerzo, delivery, café</td></tr>
+        <tr><td>Recreación y cultura</td><td style="text-align:right">7,0%</td><td style="text-align:right">Streaming, libros, viajes</td></tr>
+        <tr><td>Muebles y hogar</td><td style="text-align:right">5,5%</td><td style="text-align:right">Electrodomésticos, muebles</td></tr>
+        <tr><td>Salud</td><td style="text-align:right">6,0%</td><td style="text-align:right">Medicamentos, consultas, isapre</td></tr>
+        <tr><td>Educación</td><td style="text-align:right">6,0%</td><td style="text-align:right">Colegio, universidad, jardín</td></tr>
+        <tr><td>Información y comunicación</td><td style="text-align:right">4,5%</td><td style="text-align:right">Internet, celular, TV cable</td></tr>
+        <tr><td>Vestuario y calzado</td><td style="text-align:right">4,0%</td><td style="text-align:right">Ropa, zapatos</td></tr>
+        <tr><td>Otros bienes y servicios</td><td style="text-align:right">10,6%</td><td style="text-align:right">Seguros, peluquería, etc.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gráfico SVG de barras de la canasta -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Canasta IPC Chile 2023 — peso por división</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:20px">Distribución del gasto de un hogar promedio chileno</div>
+    <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible" aria-label="Gráfico de barras con el peso de cada división del IPC en Chile">
+      <!-- Barras horizontales -->
+      <g font-family="monospace" font-size="11" fill="#6b7280">
+        <!-- Alimentos 19.9% -->
+        <text x="0" y="18" fill="#e2e8f0" font-size="12">Alimentos</text>
+        <rect x="130" y="5" width="199" height="16" rx="3" fill="rgba(249,115,22,0.7)"/>
+        <text x="335" y="18" fill="#f97316" font-weight="bold">19,9%</text>
+
+        <!-- Transporte 14% -->
+        <text x="0" y="46" fill="#e2e8f0" font-size="12">Transporte</text>
+        <rect x="130" y="33" width="140" height="16" rx="3" fill="rgba(249,115,22,0.55)"/>
+        <text x="276" y="46" fill="#cbd5e1">14,0%</text>
+
+        <!-- Vivienda 14% -->
+        <text x="0" y="74" fill="#e2e8f0" font-size="12">Vivienda</text>
+        <rect x="130" y="61" width="140" height="16" rx="3" fill="rgba(249,115,22,0.55)"/>
+        <text x="276" y="74" fill="#cbd5e1">14,0%</text>
+
+        <!-- Restaurantes 8.5% -->
+        <text x="0" y="102" fill="#e2e8f0" font-size="12">Restaurantes</text>
+        <rect x="130" y="89" width="85" height="16" rx="3" fill="rgba(249,115,22,0.4)"/>
+        <text x="221" y="102" fill="#94a3b8">8,5%</text>
+
+        <!-- Recreación 7% -->
+        <text x="0" y="130" fill="#e2e8f0" font-size="12">Recreación</text>
+        <rect x="130" y="117" width="70" height="16" rx="3" fill="rgba(249,115,22,0.35)"/>
+        <text x="206" y="130" fill="#94a3b8">7,0%</text>
+
+        <!-- Salud 6% -->
+        <text x="0" y="158" fill="#e2e8f0" font-size="12">Salud</text>
+        <rect x="130" y="145" width="60" height="16" rx="3" fill="rgba(249,115,22,0.3)"/>
+        <text x="196" y="158" fill="#94a3b8">6,0%</text>
+
+        <!-- Educación 6% -->
+        <text x="0" y="186" fill="#e2e8f0" font-size="12">Educación</text>
+        <rect x="130" y="173" width="60" height="16" rx="3" fill="rgba(249,115,22,0.3)"/>
+        <text x="196" y="186" fill="#94a3b8">6,0%</text>
+
+        <!-- Otros 10.6% -->
+        <text x="0" y="214" fill="#e2e8f0" font-size="12">Otros</text>
+        <rect x="130" y="201" width="106" height="16" rx="3" fill="rgba(249,115,22,0.25)"/>
+        <text x="242" y="214" fill="#94a3b8">10,6%</text>
+      </g>
+    </svg>
+    <p style="font-size:12px;color:var(--text-3);margin:12px 0 0;font-family:var(--font-mono)">Fuente: INE Chile — Base canasta IPC 2023. Los tres rubros más pesados (alimentos, transporte y vivienda) explican casi el 48% del índice.</p>
+  </div>
+
+  <!-- Ejemplo real: IPC y arriendo -->
+  <div style="background:var(--bg2);border-left:3px solid var(--ipc);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--ipc);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Caso práctico — reajuste de arriendo</div>
+    <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:12px">
+      Tienes un arriendo de <strong style="color:var(--text)">$500.000</strong> firmado en enero 2025 con cláusula de reajuste anual por IPC. El IPC acumulado enero–diciembre 2025 fue aproximadamente <strong style="color:var(--text)">4,7%</strong>. Al renovar en enero 2026:
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:12px">
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">ARRIENDO ORIGINAL</div>
+        <div style="font-family:var(--font-mono);font-size:18px;color:var(--text)">$500.000</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">IPC APLICADO</div>
+        <div style="font-family:var(--font-mono);font-size:18px;color:var(--ipc)">× 1,047</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">NUEVO VALOR</div>
+        <div style="font-family:var(--font-mono);font-size:18px;color:var(--text)">$523.500</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">ALZA MENSUAL</div>
+        <div style="font-family:var(--font-mono);font-size:18px;color:var(--ipc)">+$23.500</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text-3);margin:0">El reajuste por IPC en un arriendo en pesos es distinto al reajuste en UF: en UF el valor sube automáticamente cada día; en pesos el arrendador debe pedir el reajuste con base en el IPC publicado por el INE y solo si el contrato lo estipula.</p>
+  </div>
+
+  <!-- Cuándo se publica -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:32px">
+    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">Cuándo y cómo se publica el IPC</div>
+    <ul style="font-size:14px;color:var(--text-2);line-height:1.9;padding-left:20px;margin:0">
+      <li>El INE publica el IPC entre el <strong style="color:var(--text)">día 8 y 10 del mes siguiente</strong> al período medido.</li>
+      <li>El dato incluye: variación mensual, acumulada en el año e interanual (12 meses).</li>
+      <li>El mismo día que el INE publica el IPC, el Banco Central calcula los nuevos valores diarios de la <strong style="color:var(--text)">UF para el mes siguiente</strong>.</li>
+      <li>El calendario exacto de publicación lo anuncia el INE en su sitio web con meses de anticipación.</li>
+      <li>La meta del Banco Central es mantener la inflación en <strong style="color:var(--text)">3% anual ± 1 punto</strong>. Si supera el 4%, sube la tasa; si baja del 2%, la baja.</li>
+    </ul>
+  </div>
+
   <!-- FAQ -->
   <span class="section-label" style="margin-top:16px">Preguntas frecuentes</span>
-
-  <!-- CONTENIDO ÚNICO IPC -->
-  <div style="margin: 0 0 32px; padding: 24px; background: var(--bg2); border-radius: var(--radius-lg); border-left: 3px solid var(--accent);">
-    <h2 style="font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 16px;">
-      ¿Cómo se mide el IPC en Chile?
-    </h2>
-    
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      El Índice de Precios al Consumidor mide la variación promedio de los precios de una canasta representativa 
-      de 303 productos y servicios que consumen los hogares chilenos. El Instituto Nacional de Estadísticas (INE) 
-      envía encuestadores a más de 30.000 puntos de venta en 17 ciudades del país cada mes, registrando precios 
-      de pan, bencina, arriendos, medicamentos, pasajes de micro, internet, ropa, electrodomésticos, y cientos 
-      de ítems más.
-    </p>
-
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      No todos los productos pesan igual en el cálculo. Los <strong>alimentos y bebidas</strong> representan 
-      aproximadamente el 19% del índice, <strong>transporte</strong> el 14%, <strong>vivienda</strong> (incluye 
-      arriendos y servicios básicos) el 14%, y <strong>salud</strong> el 6%. Esto significa que una subida del 10% 
-      en el precio de la bencina tiene más impacto en el IPC que un alza del 10% en el precio de los zapatos, 
-      porque la gente gasta más en transporte que en calzado mensualmente.
-    </p>
-
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      El IPC se diferencia del <strong>Índice de Precios Mayoristas (IPM)</strong> que mide precios al por mayor 
-      entre empresas, no al consumidor final. El IPC es el que más te afecta directamente porque refleja lo que 
-      pagas en el supermercado, la farmacia, y la bencinera. Cuando el Banco Central habla de "inflación", se 
-      refiere al IPC. Su meta es mantenerla en torno al 3% anual ±1 punto porcentual. Si sube mucho (sobre 4%), 
-      el Central puede subir las tasas de interés para enfriarla; si está muy baja (bajo 2%), puede bajar tasas 
-      para estimular la economía.
-    </p>
-
-    <div style="margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: var(--radius);">
-      <p style="font-size: 13px; color: var(--text-3); margin: 0;">
-        <strong style="color: var(--accent);">Impacto en tu bolsillo:</strong> Un IPC de 0,3% mensual significa 
-        que, en promedio, lo que te costaba $100.000 el mes pasado hoy te cuesta $100.300. Acumulado en 12 meses 
-        al 0,3% mensual, la inflación anual llega a cerca del 3,7%.
-      </p>
-    </div>
-  </div>
   <div class="faq-list">
     <div class="faq-item open">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
