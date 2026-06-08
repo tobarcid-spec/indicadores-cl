@@ -423,42 +423,127 @@
     </div>
   </div>
 
-  <!-- CONTENIDO ÚNICO DÓLAR -->
-  <div style="margin: 48px 0; padding: 24px; background: var(--bg2); border-radius: var(--radius-lg); border-left: 3px solid var(--accent);">
-    <h2 style="font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 16px;">
-      ¿Qué mueve el precio del dólar observado en Chile?
-    </h2>
-    
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      El dólar observado es el tipo de cambio promedio de las transacciones bancarias del día anterior, 
-      certificado por el Banco Central de Chile. A diferencia del dólar en tiempo real que fluctúa cada 
-      segundo en el mercado cambiario, el dólar observado es una cifra oficial única por día que se publica 
-      alrededor de las 13:00 horas y se usa para contratos, importaciones, y operaciones formales.
-    </p>
+  <!-- CONTENIDO EDITORIAL -->
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      El principal factor que determina su valor es el <strong>precio del cobre</strong>. Chile exporta 
-      más de $40 mil millones USD anuales en cobre, y cuando el precio del metal sube, ingresan más dólares 
-      al país, aumentando la oferta y bajando el tipo de cambio. Por el contrario, si el cobre cae, el dólar 
-      tiende a subir. Otros factores importantes son las tasas de interés de la Reserva Federal de Estados Unidos 
-      (tasas altas atraen capitales al dólar), eventos geopolíticos globales, y decisiones del Banco Central 
-      que puede intervenir vendiendo o comprando dólares para moderar fluctuaciones bruscas.
-    </p>
+  <!-- Quién gana y quién pierde -->
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:48px 0 12px">¿Dólar alto o bajo? Depende de qué lado estás</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:16px">El tipo de cambio no es bueno ni malo en sí mismo — es una transferencia de poder adquisitivo entre distintos actores de la economía. El mismo movimiento que destruye el margen de un importador, es ganancia para un exportador de fruta o salmón.</p>
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      Para importadores, un dólar bajo es favorable porque pueden comprar más productos extranjeros con menos 
-      pesos. Para exportadores, un dólar alto es mejor porque reciben más pesos por cada dólar que ingresan. 
-      Los viajeros se benefician del dólar bajo (rinde más afuera), mientras que quienes reciben remesas del 
-      extranjero prefieren el dólar alto (más pesos por cada dólar enviado).
-    </p>
+  <div class="table-wrap" style="margin-bottom:28px">
+    <table>
+      <thead>
+        <tr>
+          <th>¿Quién eres?</th>
+          <th>Dólar alto (&gt; $950)</th>
+          <th>Dólar bajo (&lt; $800)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Importador (tecnología, ropa, autos)</td><td style="text-align:right;color:var(--red)">Pierde — costos suben</td><td style="text-align:right;color:var(--green)">Gana — compra más barato</td></tr>
+        <tr><td>Exportador (minería, fruta, vino)</td><td style="text-align:right;color:var(--green)">Gana — más pesos por USD</td><td style="text-align:right;color:var(--red)">Pierde — margen se comprime</td></tr>
+        <tr><td>Turista chileno en el extranjero</td><td style="text-align:right;color:var(--red)">Pierde — viaje sale más caro</td><td style="text-align:right;color:var(--green)">Gana — el peso rinde más</td></tr>
+        <tr><td>Turista extranjero en Chile</td><td style="text-align:right;color:var(--green)">Gana — Chile sale barato en USD</td><td style="text-align:right;color:var(--red)">Pierde — Chile sale caro</td></tr>
+        <tr><td>Quién recibe remesas del extranjero</td><td style="text-align:right;color:var(--green)">Gana — más pesos por envío</td><td style="text-align:right;color:var(--red)">Pierde — llegan menos pesos</td></tr>
+        <tr><td>Deudor hipotecario en pesos</td><td style="text-align:right">Neutral directo</td><td style="text-align:right">Neutral directo</td></tr>
+        <tr><td>Inflación en Chile</td><td style="text-align:right;color:var(--red)">Presión alcista — importados suben</td><td style="text-align:right;color:var(--green)">Presión bajista — importados bajan</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div style="margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: var(--radius);">
-      <p style="font-size: 13px; color: var(--text-3); margin: 0;">
-        <strong style="color: var(--accent);">Correlación histórica:</strong> En los últimos 10 años, cada vez 
-        que el cobre sube 10%, el dólar tiende a bajar entre 2–4% en promedio. Esta correlación no es perfecta 
-        pero es el mejor predictor individual del tipo de cambio en Chile.
-      </p>
+  <!-- SVG: momentos históricos del USD/CLP -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Contexto histórico — USD/CLP</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px">Hitos que movieron el tipo de cambio en Chile</div>
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:20px">Cada evento tiene nombre propio. El dólar en Chile no sube por azar.</p>
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" aria-label="Línea de tiempo del dólar observado en Chile entre 2011 y 2026">
+      <!-- Línea base -->
+      <line x1="30" y1="120" x2="580" y2="120" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <!-- Curva aproximada del USD/CLP -->
+      <polyline
+        points="30,60 100,65 160,80 230,115 280,118 340,125 390,40 430,50 480,65 540,75 580,72"
+        fill="none" stroke="rgba(34,197,94,0.5)" stroke-width="2" stroke-linejoin="round" stroke-dasharray="4 2"/>
+      <!-- Puntos de hitos -->
+      <g fill="#22c55e">
+        <circle cx="30"  cy="60"  r="4"/>
+        <circle cx="160" cy="80"  r="4"/>
+        <circle cx="280" cy="118" r="4"/>
+        <circle cx="340" cy="125" r="4"/>
+        <circle cx="390" cy="40"  r="5"/>
+        <circle cx="540" cy="75"  r="4"/>
+        <circle cx="580" cy="72"  r="4"/>
+      </g>
+      <!-- Etiquetas valores -->
+      <g font-family="monospace" font-size="10" text-anchor="middle">
+        <text x="30"  y="52"  fill="#22c55e" font-weight="bold">$470</text>
+        <text x="160" y="72"  fill="#94a3b8">$680</text>
+        <text x="280" y="110" fill="#94a3b8">$798</text>
+        <text x="340" y="117" fill="#f97316">$858</text>
+        <text x="390" y="32"  fill="#ef4444" font-weight="bold">$1.052</text>
+        <text x="540" y="67"  fill="#94a3b8">$960</text>
+        <text x="580" y="64"  fill="#22c55e">~hoy</text>
+      </g>
+      <!-- Etiquetas años/eventos -->
+      <g font-family="monospace" font-size="9" fill="#4b5563" text-anchor="middle">
+        <text x="30"  y="138">2012</text>
+        <text x="160" y="138">2015</text>
+        <text x="280" y="138">Oct 2019</text>
+        <text x="340" y="138">Mar 2020</text>
+        <text x="390" y="138">Oct 2022</text>
+        <text x="540" y="138">2025</text>
+        <text x="580" y="138">2026</text>
+      </g>
+      <!-- Notas de eventos -->
+      <g font-family="monospace" font-size="8" fill="#6b7280">
+        <text x="30"  y="155">Boom cobre</text>
+        <text x="160" y="155">Cobre cae</text>
+        <text x="280" y="155">Estallido</text>
+        <text x="340" y="155">Pandemia</text>
+        <text x="390" y="155">Máx histórico</text>
+        <text x="540" y="155">Aranceles</text>
+      </g>
+    </svg>
+    <p style="font-size:12px;color:var(--text-3);margin:12px 0 0;font-family:var(--font-mono)">Valores referenciales USD/CLP en hitos clave. Fuente: Banco Central de Chile.</p>
+  </div>
+
+  <!-- Cobre y dólar -->
+  <div style="background:var(--bg2);border-left:3px solid var(--green);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">La regla del cobre</div>
+    <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Chile exporta más de USD 40.000 millones anuales en cobre — cerca del 50% de sus exportaciones totales. Cuando el cobre sube en la Bolsa de Metales de Londres, entran más dólares al país, la oferta aumenta y el tipo de cambio baja. La correlación inversa es clara:</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px">
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">COBRE SUBE 10%</div>
+        <div style="font-family:var(--font-mono);font-size:16px;color:var(--green)">Dólar ↓ 2–4%</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px">en promedio histórico</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">CRISIS GLOBAL</div>
+        <div style="font-family:var(--font-mono);font-size:16px;color:var(--red)">Dólar ↑ 20–30%</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px">fuga a activos seguros</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">FED SUBE TASAS</div>
+        <div style="font-family:var(--font-mono);font-size:16px;color:var(--red)">Dólar ↑ en CLP</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px">capitales migran al USD</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:12px 16px">
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:4px">RIESGO POLÍTICO</div>
+        <div style="font-family:var(--font-mono);font-size:16px;color:var(--red)">Dólar ↑ instantáneo</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px">oct 2019: +$100 en días</div>
+      </div>
     </div>
+    <p style="font-size:13px;color:var(--text-3);margin:0">El Banco Central interviene solo en casos de <strong style="color:var(--text)">volatilidad extrema</strong> — no para defender un nivel de precio, sino para evitar saltos bruscos que dañen la economía real. Lo hizo en 2022 vendiendo hasta USD 25.000 millones de sus reservas.</p>
+  </div>
+
+  <!-- Cuándo se publica el dólar observado -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:40px">
+    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">Cómo funciona el dólar observado</div>
+    <ul style="font-size:14px;color:var(--text-2);line-height:1.9;padding-left:20px;margin:0">
+      <li>El Banco Central publica el dólar observado cada <strong style="color:var(--text)">día hábil ~10:00 AM</strong>. El valor de hoy refleja las transacciones del día hábil anterior.</li>
+      <li>No es el precio al que el banco te vende dólares: ese incluye un <strong style="color:var(--text)">spread de $20 a $80 por dólar</strong> según el canal.</li>
+      <li>Para <strong style="color:var(--text)">importaciones y contratos en USD</strong>, el SII y Aduanas usan el dólar observado del día de la operación como base de cálculo.</li>
+      <li>Los fines de semana y feriados no se publica — se usa el <strong style="color:var(--text)">último valor publicado</strong>.</li>
+      <li>Para comprar dólares: fintech y casas de cambio superan a los bancos tradicionales. <strong style="color:var(--text)">El aeropuerto tiene siempre el spread más alto</strong>.</li>
+    </ul>
   </div>
 
   <!-- TABLA POR MES -->
@@ -658,10 +743,12 @@
     try {
       data = await fetchIndicador('dolar', anio);
     } catch {
+      document.getElementById('meses-container').innerHTML =
+        '<p style="color:var(--red);font-size:14px;padding:16px 0">Error al cargar datos — reintenta en unos segundos.</p>';
       return;
     }
 
-    const serie = data.serie
+    const serie = (data?.serie || [])
       .filter(r => new Date(r.fecha).getFullYear() === anio)
       .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
