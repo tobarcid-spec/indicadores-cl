@@ -314,40 +314,84 @@
   <!-- FAQ -->
   <span class="section-label" style="margin-top:16px">Preguntas frecuentes</span>
 
-  <!-- CONTENIDO ÚNICO UTM -->
-  <div style="margin: 0 0 32px; padding: 24px; background: var(--bg2); border-radius: var(--radius-lg); border-left: 3px solid var(--accent);">
-    <h2 style="font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 16px;">
-      ¿Para qué se usa la UTM en Chile?
-    </h2>
-    
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      La Unidad Tributaria Mensual es la unidad de medida que usa el Servicio de Impuestos Internos (SII) 
-      y otras instituciones del Estado para calcular multas, impuestos, y trámites. A diferencia de la UF 
-      que se actualiza diariamente, la UTM se actualiza <strong>una vez al mes</strong>, siempre el primer 
-      día de cada mes, y se mantiene fija durante esos 30 días.
-    </p>
+  <!-- CONTENIDO EDITORIAL -->
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      Los casos de uso más comunes son: <strong>multas del SII</strong> por declaraciones fuera de plazo 
-      (desde 0,2 UTM por día de atraso hasta 30 UTM o más por infracciones graves), <strong>patentes 
-      comerciales</strong> (1–50 UTM según el giro y comuna), <strong>permisos municipales</strong> (construcción, 
-      alcohol, eventos), y <strong>multas laborales</strong> de la Dirección del Trabajo. Por ejemplo, una 
-      empresa que no paga cotizaciones previsionales puede recibir multas de hasta 20 UTM por trabajador afectado.
-    </p>
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:48px 0 12px">Multas del SII en UTM — referencia por artículo 97</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:16px">El Código Tributario fija las sanciones en rangos de UTM para que no pierdan valor con la inflación. Una multa de 10 UTM hace 10 años tenía el mismo peso económico que 10 UTM hoy, aunque en pesos sea casi el doble. El tope en $ se calcula con la UTM del mes en que se notifica la infracción.</p>
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      A diferencia de multas fijas en pesos que pierden valor con la inflación, las multas en UTM mantienen 
-      su valor real porque la UTM se reajusta mensualmente según el IPC del mes anterior. Esto significa que 
-      una multa de 5 UTM hace 10 años tenía el mismo "peso económico" que 5 UTM hoy, aunque el valor en pesos 
-      sea muy diferente ($150.000 vs $310.000 aproximadamente).
-    </p>
+  <div class="table-wrap" style="margin-bottom:8px">
+    <table>
+      <thead>
+        <tr><th>Infracción</th><th>Art. 97</th><th>Rango UTM</th><th>Tope en $ (UTM vigente)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>No presentar declaración de impuestos</td><td style="text-align:center">N° 1</td><td style="text-align:right">1 – 12 UTM</td><td style="text-align:right;color:var(--amber)" id="m-1">—</td></tr>
+        <tr><td>No llevar libros contables obligatorios</td><td style="text-align:center">N° 2</td><td style="text-align:right">1 – 10 UTM</td><td style="text-align:right;color:var(--amber)" id="m-2">—</td></tr>
+        <tr><td>No emitir boleta o factura electrónica</td><td style="text-align:center">N° 10</td><td style="text-align:right">1 – 20 UTM</td><td style="text-align:right;color:var(--amber)" id="m-3">—</td></tr>
+        <tr><td>Declaración maliciosamente falsa</td><td style="text-align:center">N° 4</td><td style="text-align:right">hasta 60 UTM</td><td style="text-align:right;color:var(--red)" id="m-4">—</td></tr>
+        <tr><td>No conservar documentos tributarios (6 años)</td><td style="text-align:center">N° 7</td><td style="text-align:right">hasta 20 UTM</td><td style="text-align:right;color:var(--amber)" id="m-5">—</td></tr>
+        <tr><td>Clausura por infracción reiterada</td><td style="text-align:center">N° 10</td><td style="text-align:right">hasta 100 UTM</td><td style="text-align:right;color:var(--red)" id="m-6">—</td></tr>
+        <tr><td>No pago oportuno de salarios (Dir. del Trabajo)</td><td style="text-align:center">Cód. Trabajo</td><td style="text-align:right">1 – 60 UTM</td><td style="text-align:right;color:var(--red)" id="m-7">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text-3);margin:0 0 36px;font-family:var(--font-mono)">Tope calculado con UTM del mes actual. Fuente: Código Tributario art. 97 y Código del Trabajo.</p>
 
-    <div style="margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: var(--radius);">
-      <p style="font-size: 13px; color: var(--text-3); margin: 0;">
-        <strong style="color: var(--accent);">Trámite frecuente:</strong> Si necesitas un permiso de alcohol 
-        en tu local comercial, el costo base parte en 3 UTM ($186.000 aprox) más un porcentaje según el tipo 
-        de licencia. Consulta siempre el valor UTM del mes en que realizas el trámite.
-      </p>
+  <!-- SVG: evolución UTM 2015-2026 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Evolución histórica — UTM Chile</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px">De $43.500 a $67.000: la UTM en 11 años</div>
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:20px">El salto de 2022 no es casualidad: refleja el IPC acumulado más alto en 30 años (+12,8%).</p>
+    <svg viewBox="0 0 600 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" aria-label="Evolución del valor de la UTM en Chile entre 2015 y 2026">
+      <line x1="30" y1="118" x2="580" y2="118" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <polygon
+        points="30,110 80,105 130,99 180,92 230,86 280,79 330,75 380,58 430,39 480,27 530,22 580,20 580,118 30,118"
+        fill="rgba(251,191,36,0.07)"/>
+      <!-- Curva proporcional: y = 110 - ((valor-43500)/23500)*90 -->
+      <polyline
+        points="30,110 80,105 130,99 180,92 230,86 280,79 330,75 380,58 430,39 480,27 530,22 580,20"
+        fill="none" stroke="rgba(251,191,36,0.7)" stroke-width="2" stroke-linejoin="round"/>
+      <g fill="#fbbf24">
+        <circle cx="30"  cy="110" r="4"/>
+        <circle cx="380" cy="58"  r="4"/>
+        <circle cx="580" cy="20"  r="5"/>
+      </g>
+      <g font-family="monospace" font-size="10" text-anchor="middle">
+        <text x="30"  y="102" fill="#94a3b8">$43.500</text>
+        <text x="380" y="50"  fill="#f97316">$57.200</text>
+        <text x="580" y="12"  fill="#fbbf24" font-weight="bold">~$67.000</text>
+      </g>
+      <g font-family="monospace" font-size="9" fill="#4b5563" text-anchor="middle">
+        <text x="30"  y="132">2015</text>
+        <text x="130" y="132">2017</text>
+        <text x="230" y="132">2019</text>
+        <text x="330" y="132">2021</text>
+        <text x="430" y="132">2023</text>
+        <text x="530" y="132">2025</text>
+        <text x="580" y="132">2026</text>
+      </g>
+      <g font-family="monospace" font-size="8" fill="#6b7280">
+        <text x="380" y="148">IPC 2022: +12,8%</text>
+      </g>
+    </svg>
+    <p style="font-size:12px;color:var(--text-3);margin:12px 0 0;font-family:var(--font-mono)">Valores UTM anuales aproximados 2015–2026. Fuente: SII Chile / Banco Central.</p>
+  </div>
+
+  <!-- UTM vs UF -->
+  <div style="background:var(--bg2);border-left:3px solid var(--amber);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin-bottom:40px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">UTM vs UF — no son lo mismo</div>
+    <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Ambas se indexan al IPC, pero tienen ritmos, propósitos y usos distintos. Confundirlas en un contrato puede costar caro:</p>
+    <div class="table-wrap" style="margin:0">
+      <table>
+        <thead><tr><th>Característica</th><th>UTM</th><th>UF</th></tr></thead>
+        <tbody>
+          <tr><td>Actualización</td><td style="text-align:right">Mensual — día 1</td><td style="text-align:right">Diaria</td></tr>
+          <tr><td>Quién la fija</td><td style="text-align:right">SII (resolución)</td><td style="text-align:right">Banco Central</td></tr>
+          <tr><td>Usos principales</td><td style="text-align:right">Multas, impuestos, sanciones</td><td style="text-align:right">Contratos, arriendos, hipotecas</td></tr>
+          <tr><td>Varía dentro del mes</td><td style="text-align:right">No — fija 30 días</td><td style="text-align:right">Sí — sube cada día</td></tr>
+          <tr><td>Valor actual</td><td style="text-align:right;color:var(--amber)" id="utm-vs-uf-utm">—</td><td style="text-align:right;color:var(--accent)" id="utm-vs-uf-uf">—</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="faq-list">
@@ -454,6 +498,18 @@
     document.getElementById('eq-5').textContent   = fmt.clp(utmHoy * 5);
     document.getElementById('eq-10').textContent  = fmt.clp(utmHoy * 10);
     document.getElementById('eq-50').textContent  = fmt.clp(utmHoy * 50);
+
+    /* Tabla multas art.97 — topes en pesos con UTM vigente */
+    [[1,12],[2,10],[3,20],[4,60],[5,20],[6,100],[7,60]].forEach(([i, f]) => {
+      const el = document.getElementById('m-' + i);
+      if (el) el.textContent = fmt.clp(Math.round(utmHoy * f));
+    });
+
+    /* UTM vs UF comparación */
+    const elUtmCmp = document.getElementById('utm-vs-uf-utm');
+    const elUfCmp  = document.getElementById('utm-vs-uf-uf');
+    if (elUtmCmp) elUtmCmp.textContent = fmt.clp(utmHoy);
+    if (elUfCmp && todos.uf) elUfCmp.textContent = fmt.clp(todos.uf.valor);
 
     /* Calculadora multas */
     const inpUtm = document.getElementById('inp-utm');
