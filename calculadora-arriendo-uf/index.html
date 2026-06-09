@@ -531,6 +531,7 @@
         scales: {
           x: { ticks: { color: '#4a5568', font: { size: 11 } }, grid: { display: false } },
           y: {
+            min: Math.floor(Math.min(...hist.map(h => h.clp)) * 0.995 / 10000) * 10000,
             ticks: { color: '#4a5568', font: { size: 11 }, callback: v => '$' + Math.round(v / 1000) + 'k' },
             grid: { color: 'rgba(255,255,255,0.04)' }
           }
