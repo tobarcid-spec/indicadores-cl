@@ -15,6 +15,35 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cómo se calcula el valor de la UF cada día?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El Banco Central distribuye el IPC del mes anterior entre los días del mes siguiente. Si el IPC fue +0,3% y el mes tiene 30 días, la UF sube cada día aproximadamente 0,01% respecto al día anterior. El valor se publica en bcentral.cl y rige como referencia legal desde 1967." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Puede bajar la UF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí, cuando el IPC del mes anterior es negativo (deflación). En Chile ha ocurrido pocas veces — los meses de invierno son los más propensos. La tendencia de largo plazo es siempre al alza: desde su creación la UF ha pasado de $100 a más de $39.000." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuándo conviene firmar un contrato en UF y cuándo en pesos?",
+        "acceptedAnswer": { "@type": "Answer", "text": "En pesos fijos conviene para contratos cortos (menos de 1 año). En UF conviene para contratos largos (hipotecas, arriendos de plazo fijo) porque ninguna parte asume el riesgo inflacionario. En años de inflación alta como 2022, un arriendo en UF puede subir $50.000–$80.000 pesos mensuales en 12 meses." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿La UF de hoy es la misma en todo Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí. La UF tiene el mismo valor en todo el territorio chileno. El Banco Central publica un único valor diario que rige para todo contrato o trámite en el país." }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
     "@type": "Dataset",
     "name": "Valor UF Chile 2026",
     "description": "Valores históricos diarios de la Unidad de Fomento (UF) en Chile",
@@ -117,6 +146,26 @@
 
     .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
 
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .ed-table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 8px; }
+    .ed-table-wrap table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    .ed-table-wrap thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    .ed-table-wrap thead th:not(:first-child) { text-align: right; }
+    .ed-table-wrap tbody tr { border-bottom: 1px solid var(--border); }
+    .ed-table-wrap tbody tr:last-child { border-bottom: none; }
+    .ed-table-wrap tbody tr:hover { background: var(--bg3); }
+    .ed-table-wrap tbody td { padding: 10px 16px; color: var(--text-2); }
+    .ed-table-wrap tbody td:not(:first-child) { text-align: right; }
+
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+
     @media (max-width: 480px) {
       .month-meta { display: none; }
     }
@@ -199,47 +248,159 @@
 
   <div class="ad-slot">Publicidad</div>
 
-  <!-- Contenido único UF -->
-  <div style="margin: 48px 0; padding: 24px; background: var(--bg2); border-radius: var(--radius-lg); border-left: 3px solid var(--accent);">
-    <h2 style="font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 16px;">
-      ¿Qué factores determinan el valor de la UF?
-    </h2>
-    
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      La Unidad de Fomento se reajusta diariamente en función de la variación del Índice de Precios al 
-      Consumidor (IPC) del mes anterior. El Instituto Nacional de Estadísticas (INE) publica el IPC 
-      mensualmente alrededor del día 8, y el Banco Central de Chile distribuye ese porcentaje de variación 
-      entre todos los días del mes siguiente de forma proporcional.
-    </p>
+  <!-- CONTENIDO EDITORIAL -->
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      Por ejemplo, si el IPC de marzo fue +0,4%, la UF de abril aumentará ese 0,4% total, pero dividido 
-      entre los 30 días del mes. Esto resulta en un incremento diario de aproximadamente $1,50 pesos. 
-      Los productos que más influyen en el IPC son alimentos frescos (frutas, verduras, carnes), transporte 
-      (combustibles, pasajes), y vivienda (arriendos). Una sequía que encarece las verduras puede impulsar 
-      el IPC al alza, lo que se refleja en la UF del mes siguiente.
-    </p>
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:48px 0 12px">Cómo sube la UF cada día: el mecanismo con números reales</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:16px">La UF no sube por decreto. El INE publica el IPC del mes anterior (alrededor del día 8), y el Banco Central distribuye ese porcentaje exacto entre todos los días del mes siguiente. Si junio tiene 30 días y el IPC de mayo fue +0,3%, la UF de julio sube $3,90/día (base ~$39.000). El año 2022 rompió todos los registros:</p>
 
-    <p style="font-size: 15px; line-height: 1.8; color: var(--text-2); margin-bottom: 16px;">
-      Este mecanismo protege el poder adquisitivo de contratos a largo plazo. Si firmaste un arriendo en UF 
-      hace 5 años, el valor en pesos ha subido exactamente lo mismo que la inflación acumulada, manteniendo 
-      el valor real constante. Por eso se usa en hipotecas, arriendos, y contratos comerciales donde ambas 
-      partes quieren certeza de que el valor no se erosiona con la inflación.
-    </p>
+  <div class="ed-table-wrap">
+    <table>
+      <thead>
+        <tr><th>IPC del mes</th><th>Incremento diario UF</th><th>Total en 30 días</th><th>Contexto</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0,1%</td><td>~$1,30/día</td><td style="color:var(--green)">+$39</td><td>Inflación baja — meses de otoño</td></tr>
+        <tr><td>0,3%</td><td>~$3,90/día</td><td>+$117</td><td>Inflación normal 2024–2025</td></tr>
+        <tr><td>0,5%</td><td>~$6,50/día</td><td>+$195</td><td>Alza en alimentos o energía</td></tr>
+        <tr><td>1,0%</td><td>~$13,00/día</td><td style="color:var(--red)">+$390</td><td>Presión inflacionaria alta</td></tr>
+        <tr><td style="color:var(--red);font-weight:500">12,8% (IPC dic. 2022)</td><td style="color:var(--red)">~$165/día</td><td style="color:var(--red)">+$4.992</td><td>IPC más alto en 30 años</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text-3);margin:0 0 36px;font-family:var(--font-mono)">Incrementos calculados sobre base UF ~$39.000. Fuente: Banco Central / INE Chile.</p>
 
-    <div style="margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: var(--radius);">
-      <p style="font-size: 13px; color: var(--text-3); margin: 0;">
-         <strong style="color: var(--accent);">Dato clave:</strong> La UF puede bajar si el IPC 
-del mes anterior es negativo (deflación), aunque esto es poco frecuente en Chile — ha 
-ocurrido en menos de 15 meses en los últimos 30 años. En la práctica, la tendencia de 
-largo plazo es siempre al alza: desde su creación en 1967, la UF ha pasado de $100 pesos 
-a más de $38.000, reflejando la inflación acumulada de casi 60 años.
-      </p>
+  <!-- SVG: evolución UF 2015-2026 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Evolución histórica — UF Chile</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px">De $24.800 a $39.000: la UF en 11 años</div>
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:20px">La pendiente de 2022 es la más pronunciada desde la crisis de los 80.</p>
+    <svg viewBox="0 0 600 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" aria-label="Evolución del valor de la UF en Chile entre 2015 y 2026">
+      <line x1="30" y1="118" x2="580" y2="118" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <polygon
+        points="30,110 80,101 130,98 180,95 230,90 280,85 330,76 380,49 430,36 480,28 530,23 580,20 580,118 30,118"
+        fill="rgba(59,158,255,0.07)"/>
+      <!-- Curva proporcional: y = 110 - ((valor-24800)/14200)*90 -->
+      <polyline
+        points="30,110 80,101 130,98 180,95 230,90 280,85 330,76 380,49 430,36 480,28 530,23 580,20"
+        fill="none" stroke="rgba(59,158,255,0.8)" stroke-width="2" stroke-linejoin="round"/>
+      <g fill="#3b9eff">
+        <circle cx="30"  cy="110" r="4"/>
+        <circle cx="380" cy="49"  r="4"/>
+        <circle cx="580" cy="20"  r="5"/>
+      </g>
+      <g font-family="monospace" font-size="10" text-anchor="middle">
+        <text x="30"  y="102" fill="#94a3b8">$24.800</text>
+        <text x="380" y="41"  fill="#f97316">$34.500</text>
+        <text x="580" y="12"  fill="#3b9eff" font-weight="bold">~$39.000</text>
+      </g>
+      <g font-family="monospace" font-size="9" fill="#4b5563" text-anchor="middle">
+        <text x="30"  y="132">2015</text>
+        <text x="130" y="132">2017</text>
+        <text x="230" y="132">2019</text>
+        <text x="330" y="132">2021</text>
+        <text x="430" y="132">2023</text>
+        <text x="530" y="132">2025</text>
+        <text x="580" y="132">2026</text>
+      </g>
+      <g font-family="monospace" font-size="8" fill="#6b7280">
+        <text x="380" y="148">IPC 2022: +12,8%</text>
+      </g>
+    </svg>
+    <p style="font-size:12px;color:var(--text-3);margin:12px 0 0;font-family:var(--font-mono)">Valores UF aproximados a inicio de año 2015–2026. Fuente: Banco Central de Chile.</p>
+  </div>
+
+  <!-- UF en contratos reales -->
+  <div style="background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin-bottom:40px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">UF en contratos — equivalencias hoy</div>
+    <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Las UF pactadas no cambian, pero su equivalente en pesos sí cambia cada día. Así luce hoy lo más común:</p>
+    <div class="ed-table-wrap" style="margin:0">
+      <table>
+        <thead><tr><th>Uso habitual</th><th>UF típicas</th><th>En pesos hoy</th></tr></thead>
+        <tbody>
+          <tr><td>Garantía arriendo (1 mes renta estudio/depto)</td><td>15 UF</td><td style="color:var(--accent)" id="uf-garantia">—</td></tr>
+          <tr><td>Cuota hipoteca mensual (casa ~$120M pesos)</td><td>50 UF</td><td style="color:var(--accent)" id="uf-hipoteca">—</td></tr>
+          <tr><td>Multa mora arriendo — 0,1 UF por día de atraso</td><td>0,1 UF/día</td><td style="color:var(--red)" id="uf-mora">—</td></tr>
+          <tr><td>Crédito consumo ~$5 millones de pesos</td><td>~130 UF</td><td style="color:var(--accent)" id="uf-credito">—</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <!-- Tablas por mes -->
   <div id="meses-container"></div>
+
+  <!-- FAQ -->
+  <span class="section-label" style="margin-top:48px">Preguntas frecuentes</span>
+  <div class="faq-list">
+
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo se calcula el valor de la UF cada día?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El Banco Central toma el IPC del mes anterior (publicado por el INE ~día 8 de cada mes) y distribuye ese porcentaje de variación entre los días del mes siguiente. Si el IPC fue +0,3% y el mes tiene 30 días, la UF sube cada día aproximadamente 0,3% / 30 ≈ 0,01% respecto al día anterior. El valor se publica oficialmente en <strong>bcentral.cl</strong> y se usa como referencia legal desde 1967.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Puede bajar la UF?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Sí, pero es raro. La UF baja cuando el IPC del mes anterior es negativo (deflación). En Chile ha ocurrido pocas veces en los últimos 30 años — los meses de invierno (junio–agosto) son los más propensos, porque la canasta de alimentos baja estacionalmente. En 2020 la UF tuvo meses en baja por la caída del consumo durante la pandemia. La tendencia de largo plazo es siempre al alza: desde su creación la UF ha pasado de $100 a más de $39.000.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuándo conviene firmar un contrato en UF y cuándo en pesos?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        En pesos fijos conviene cuando la inflación es baja o estás en un período corto (menos de 1 año): pagas siempre lo mismo aunque la inflación suba. En UF conviene para contratos largos (hipotecas de 20 años, arriendos de plazo fijo) porque ninguna de las partes asume el riesgo inflacionario: el arrendador no pierde poder adquisitivo ni el arrendatario se expone a renegociaciones. <strong>La trampa</strong>: en años de inflación alta como 2022, un arriendo en UF puede subir $50.000–$80.000 pesos mensuales en 12 meses.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿La UF de hoy es la misma en todo Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Sí. La UF tiene el mismo valor en <strong>todo el territorio chileno</strong>, sin diferencias regionales. El Banco Central publica un único valor diario que rige para todo contrato o trámite en el país. No existe una "UF de Santiago" distinta a la de Antofagasta o Punta Arenas.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cuál es la diferencia entre la UF y el dólar como indexación?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        La UF indexa al IPC chileno — sigue la inflación local. El dólar sigue el mercado cambiario internacional, que puede subir o bajar por razones ajenas a la economía chilena (Fed, cobre, política). Para contratos de largo plazo entre partes en Chile, la UF es más predecible: ambos saben que la obligación mantiene su poder adquisitivo real. Los contratos en dólares tienen volatilidad cambiaria adicional — una empresa importadora puede verse muy afectada si el dólar sube 20% en un año.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ENLACES RELACIONADOS -->
+  <span class="section-label">Herramientas relacionadas</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
+    <a href="/calculadora-arriendo-uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">🏠</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">Calculadora arriendo UF</div><div style="font-size:12px;color:var(--text-2)">Compara arriendo en UF vs pesos</div></div>
+    </a>
+    <a href="/ipc/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📈</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">IPC — Inflación Chile</div><div style="font-size:12px;color:var(--text-2)">El índice que mueve la UF</div></div>
+    </a>
+    <a href="/utm/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none;transition:border-color 0.18s" onmouseover="this.style.borderColor='var(--border-em)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:24px">📋</span>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text)">UTM — Tributaria Mensual</div><div style="font-size:12px;color:var(--text-2)">Multas e impuestos del SII</div></div>
+    </a>
+  </div>
 
 </main>
 
@@ -261,6 +422,15 @@ a más de $38.000, reflejando la inflación acumulada de casi 60 años.
   const ANIOS = [anioActual, anioActual - 1, anioActual - 2];
   let chartInstance = null;
   let anioActivo = anioActual;
+  let ufHoy = null;
+
+  function poblarTablaContratos(uf) {
+    [[`uf-garantia`, 15], [`uf-hipoteca`, 50], [`uf-mora`, 0.1], [`uf-credito`, 130]]
+      .forEach(([id, f]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = fmt.clp(Math.round(uf * f));
+      });
+  }
 
   /* ---- Tabs de año ---- */
   const tabsEl = document.getElementById('year-tabs');
@@ -300,6 +470,11 @@ a más de $38.000, reflejando la inflación acumulada de casi 60 años.
 
     /* Stats */
     document.getElementById('s-hoy').textContent = hoyDato ? fmt.clp(hoyDato.valor) : fmt.clp(ultimo);
+
+    if (anio === anioActual) {
+      ufHoy = hoyDato?.valor || ultimo;
+      poblarTablaContratos(ufHoy);
+    }
     document.getElementById('s-min').textContent = fmt.clp(min);
     document.getElementById('s-max').textContent = fmt.clp(max);
     document.getElementById('s-var').textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
