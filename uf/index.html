@@ -170,6 +170,10 @@
 
     @media (max-width: 480px) {
       .month-meta { display: none; }
+      .ed-table-wrap table { font-size: 11px; }
+      .ed-table-wrap thead th,
+      .ed-table-wrap tbody td { padding: 7px 10px; }
+      .col-contexto { display: none; }
     }
   </style>
   <!-- Google Analytics 4 -->
@@ -221,7 +225,7 @@
 <header class="page-header">
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Unidad de Fomento</p>
-    <h1><strong>Valor UF</strong> — Hoy y Historial</h1>
+    <h1><strong>Valor UF</strong> — Hoy e Historial</h1>
     <p>Tabla completa, gráfico anual y conversor. Fuente oficial: Banco Central de Chile.</p>
   </div>
 </header>
@@ -258,14 +262,14 @@
   <div class="ed-table-wrap">
     <table>
       <thead>
-        <tr><th>IPC del mes</th><th>Incremento diario UF</th><th>Total en 30 días</th><th>Contexto</th></tr>
+        <tr><th>IPC del mes</th><th>Incremento diario UF</th><th>Total en 30 días</th><th class="col-contexto">Contexto</th></tr>
       </thead>
       <tbody>
-        <tr><td>0,1%</td><td>~$1,30/día</td><td style="color:var(--green)">+$39</td><td>Inflación baja — meses de otoño</td></tr>
-        <tr><td>0,3%</td><td>~$3,90/día</td><td>+$117</td><td>Inflación normal 2024–2025</td></tr>
-        <tr><td>0,5%</td><td>~$6,50/día</td><td>+$195</td><td>Alza en alimentos o energía</td></tr>
-        <tr><td>1,0%</td><td>~$13,00/día</td><td style="color:var(--red)">+$390</td><td>Presión inflacionaria alta</td></tr>
-        <tr><td style="color:var(--red);font-weight:500">12,8% (IPC dic. 2022)</td><td style="color:var(--red)">~$165/día</td><td style="color:var(--red)">+$4.992</td><td>IPC más alto en 30 años</td></tr>
+        <tr><td>0,1%</td><td>~$1,30/día</td><td style="color:var(--green)">+$39</td><td class="col-contexto">Inflación baja — meses de otoño</td></tr>
+        <tr><td>0,3%</td><td>~$3,90/día</td><td>+$117</td><td class="col-contexto">Inflación normal 2024–2025</td></tr>
+        <tr><td>0,5%</td><td>~$6,50/día</td><td>+$195</td><td class="col-contexto">Alza en alimentos o energía</td></tr>
+        <tr><td>1,0%</td><td>~$13,00/día</td><td style="color:var(--red)">+$390</td><td class="col-contexto">Presión inflacionaria alta</td></tr>
+        <tr><td style="color:var(--red);font-weight:500">12,8% (IPC dic. 2022)</td><td style="color:var(--red)">~$165/día</td><td style="color:var(--red)">+$4.992</td><td class="col-contexto">IPC más alto en 30 años</td></tr>
       </tbody>
     </table>
   </div>
