@@ -2,7 +2,8 @@
    indicadores.cl — Utilidades JS compartidas
    ========================================= */
 
-const API_BASE = 'https://mindicador.cl/api';
+// Proxy en el Worker de Cloudflare — cachea 30 min en edge, mismo dominio
+const API_BASE = '/api-proxy';
 
 /* ---- Formateo de números ---- */
 const fmt = {
@@ -35,13 +36,25 @@ async function fetchIndicador(tipo, fecha = '') {
 /* ---- Fetch de todos los indicadores de hoy ---- */
 async function fetchHoy() {
   const key = 'ind_hoy_all';
+
+  // Prioridad 1: datos pre-inyectados por el Worker (cero latencia)
+  if (window.__SSR__) {
+    const data = window.__SSR__;
+    window.__SSR__ = null; // consumir una sola vez
+    try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+    return data;
+  }
+
+  // Prioridad 2: cache localStorage (30 min)
   try {
     const cached = localStorage.getItem(key);
     if (cached) {
       const { ts, data } = JSON.parse(cached);
-      if (Date.now() - ts < 1800_000) return data; // 30 min de cache para el dashboard
+      if (Date.now() - ts < 1800_000) return data;
     }
-  } catch { localStorage.removeItem(key); } // entrada corrupta — descarta y recarga
+  } catch { localStorage.removeItem(key); }
+
+  // Prioridad 3: llamada al proxy en edge
   const res = await fetch(API_BASE);
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   const data = await res.json();
