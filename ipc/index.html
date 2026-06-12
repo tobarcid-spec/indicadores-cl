@@ -580,9 +580,13 @@
     }
 
     ipcSerie = (data?.serie || [])
-      .filter(r => new Date(r.fecha).getUTCFullYear() === anio)
       .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
+    if (!ipcSerie.length && anio === anioActual) {
+      // Sin datos del año actual — cargar el anterior automáticamente
+      const btnAnterior = document.querySelectorAll('.year-tab')[1];
+      if (btnAnterior) { cargarAnio(anio - 1, btnAnterior); return; }
+    }
     if (!ipcSerie.length) {
       document.getElementById('ipc-acum').textContent = '—';
       document.getElementById('tabla-ipc').innerHTML =
