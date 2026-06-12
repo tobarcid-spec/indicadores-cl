@@ -556,36 +556,36 @@
     document.getElementById('ipc-badge').textContent = 'Sin conexión a la API';
   }
 
-  /* ─── Tabs ─── */
+  /* ─── Cargar toda la serie base y construir tabs dinámicos ─── */
+  let serieCompleta = [];
+  try {
+    const data = await fetchIndicador('ipc', '');
+    serieCompleta = (data?.serie || []).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  } catch {
+    document.getElementById('tabla-ipc').innerHTML =
+      '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--red)">Error al cargar datos</td></tr>';
+  }
+
+  // Años disponibles según los datos reales
+  const aniosDisponibles = [...new Set(serieCompleta.map(r => new Date(r.fecha).getUTCFullYear()))].sort((a,b) => b-a);
+
   const tabsEl = document.getElementById('year-tabs');
-  ANIOS.forEach(a => {
+  aniosDisponibles.forEach((a, i) => {
     const btn = document.createElement('button');
-    btn.className = 'year-tab' + (a === anioActual ? ' active' : '');
+    btn.className = 'year-tab' + (i === 0 ? ' active' : '');
     btn.textContent = a;
     btn.onclick = () => cargarAnio(a, btn);
     tabsEl.appendChild(btn);
   });
 
   /* ─── Cargar año ─── */
-  async function cargarAnio(anio, btn) {
+  function cargarAnio(anio, btn) {
     document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
 
-    let data;
-    try { data = await fetchIndicador('ipc', anio); } catch {
-      document.getElementById('ipc-acum').textContent = '—';
-      document.getElementById('tabla-ipc').innerHTML =
-        '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--red)">Error al cargar datos — reintenta en unos segundos</td></tr>';
-      return;
-    }
+    ipcSerie = serieCompleta.filter(r => new Date(r.fecha).getUTCFullYear() === anio);
 
-    ipcSerie = (data?.serie || [])
-      .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-
-    if (!ipcSerie.length && anio === anioActual) {
-      // Sin datos del año actual — cargar el anterior automáticamente
-      const btnAnterior = document.querySelectorAll('.year-tab')[1];
-      if (btnAnterior) { cargarAnio(anio - 1, btnAnterior); return; }
+    if (!ipcSerie.length) {
     }
     if (!ipcSerie.length) {
       document.getElementById('ipc-acum').textContent = '—';
@@ -733,7 +733,9 @@
   document.getElementById('inp-monto').addEventListener('input', calcReajuste);
   document.getElementById('inp-meses').addEventListener('input', calcReajuste);
 
-  await cargarAnio(anioActual, document.querySelector('.year-tab'));
+  if (aniosDisponibles.length) {
+    cargarAnio(aniosDisponibles[0], document.querySelector('.year-tab'));
+  }
 })();
 </script>
 </body>
