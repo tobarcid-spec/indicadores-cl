@@ -566,8 +566,16 @@
       '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--red)">Error al cargar datos</td></tr>';
   }
 
-  // Años disponibles según los datos reales
-  const aniosDisponibles = [...new Set(serieCompleta.map(r => new Date(r.fecha).getUTCFullYear()))].sort((a,b) => b-a);
+  // Años disponibles: solo años con 12 meses completos, más el más reciente aunque sea parcial
+  const porAnio = {};
+  serieCompleta.forEach(r => {
+    const a = new Date(r.fecha).getUTCFullYear();
+    porAnio[a] = (porAnio[a] || 0) + 1;
+  });
+  const anioMasReciente = Math.max(...Object.keys(porAnio).map(Number));
+  const aniosDisponibles = Object.keys(porAnio).map(Number)
+    .filter(a => porAnio[a] >= 12 || a === anioMasReciente)
+    .sort((a, b) => b - a);
 
   const tabsEl = document.getElementById('year-tabs');
   aniosDisponibles.forEach((a, i) => {
