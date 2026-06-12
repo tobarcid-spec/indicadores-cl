@@ -542,7 +542,7 @@
     if (!ipc || ipc.valor == null) throw new Error('sin datos ipc');
     const valMen = ipc.valor;
     const d = new Date(ipc.fecha);
-    const mesNombre = MESES[d.getMonth()];
+    const mesNombre = MESES[d.getUTCMonth()];
 
     document.getElementById('ipc-mensual').textContent = `${valMen > 0 ? '+' : ''}${fmt.num(valMen, 1)}%`;
     document.getElementById('ipc-mes-label').textContent =
@@ -580,7 +580,7 @@
     }
 
     ipcSerie = (data?.serie || [])
-      .filter(r => new Date(r.fecha).getFullYear() === anio)
+      .filter(r => new Date(r.fecha).getUTCFullYear() === anio)
       .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     if (!ipcSerie.length) {
@@ -601,7 +601,7 @@
     /* Acumulado hero */
     document.getElementById('ipc-acum').textContent = `${acum > 0 ? '+' : ''}${fmt.num(acum, 1)}%`;
     document.getElementById('ipc-acum-label').textContent =
-      `Acumulado enero–${MESES[new Date(ipcSerie[ipcSerie.length-1].fecha).getMonth()]} ${anio}`;
+      `Acumulado enero–${MESES[new Date(ipcSerie[ipcSerie.length-1].fecha).getUTCMonth()]} ${anio}`;
 
     /* Variación 12 meses — estimar con acumulado si mismo año */
     document.getElementById('ipc-12m').textContent = `${acum > 0 ? '+' : ''}${fmt.num(acum, 1)}%`;
@@ -609,11 +609,11 @@
     /* Stats */
     const ult = ipcSerie[ipcSerie.length - 1];
     document.getElementById('s-ult').textContent = `${ult.valor > 0 ? '+' : ''}${fmt.num(ult.valor, 1)}%`;
-    document.getElementById('s-ult-mes').textContent = MESES[new Date(ult.fecha).getMonth()].slice(0, 3) + ' ' + anio;
+    document.getElementById('s-ult-mes').textContent = MESES[new Date(ult.fecha).getUTCMonth()].slice(0, 3) + ' ' + anio;
     document.getElementById('s-max').textContent = `+${fmt.num(max, 1)}%`;
-    document.getElementById('s-max-f').textContent = maxFila ? MESES[new Date(maxFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-max-f').textContent = maxFila ? MESES[new Date(maxFila.fecha).getUTCMonth()].slice(0, 3) : '';
     document.getElementById('s-min').textContent = `${fmt.num(min, 1)}%`;
-    document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getUTCMonth()].slice(0, 3) : '';
     document.getElementById('s-prom').textContent = `${ipcPromMensual > 0 ? '+' : ''}${fmt.num(ipcPromMensual, 2)}%`;
 
     /* Actualizar calculadora */
@@ -621,7 +621,7 @@
 
     /* Gráfico dual: barras IPC mensual + línea acumulado */
     document.getElementById('chart-subtitle').textContent = `IPC mensual y acumulado — ${anio}`;
-    const labels = ipcSerie.map(r => MESES[new Date(r.fecha).getMonth()].slice(0, 3));
+    const labels = ipcSerie.map(r => MESES[new Date(r.fecha).getUTCMonth()].slice(0, 3));
     let acumArr = [];
     let running = 0;
     for (const r of ipcSerie) { running += r.valor; acumArr.push(parseFloat(running.toFixed(2))); }
@@ -706,7 +706,7 @@
       const cls = r.valor >= 0 ? 'ipc-pos' : 'ipc-neg';
       const interanual = arr.length >= 12 ? fmt.num(arr.slice(0, 12).reduce((s, x) => s + x.valor, 0), 2) + '%' : '—';
       return `<tr class="${isLast ? 'td-last' : ''}">
-        <td>${MESES[d.getMonth()]} ${anio}${isLast ? ' — último' : ''}</td>
+        <td>${MESES[d.getUTCMonth()]} ${anio}${isLast ? ' — último' : ''}</td>
         <td><span class="${cls}">${r.valor > 0 ? '+' : ''}${fmt.num(r.valor, 2)}%</span></td>
         <td>${r.acum > 0 ? '+' : ''}${fmt.num(r.acum, 2)}%</td>
         <td>${interanual}</td>
