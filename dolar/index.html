@@ -663,12 +663,14 @@
   let todos;
   try {
     todos = await fetchHoy();
+    if (!todos?.dolar?.valor) throw new Error('Sin datos de dólar');
+    dolarHoy = todos.dolar.valor;
   } catch (e) {
     document.getElementById('dolar-val').textContent = 'Error al cargar';
+    document.getElementById('dolar-fecha').textContent = 'Intenta recargar la página';
     return;
   }
 
-  dolarHoy = todos.dolar.valor;
   const euroHoy = todos.euro?.valor ?? null;
 
   /* Hero */
