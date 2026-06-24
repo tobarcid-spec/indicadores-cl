@@ -1,0 +1,41 @@
+name: Actualizar valores fallback SEO
+
+on:
+  schedule:
+    # Día 1 de cada mes a las 13:00 UTC (10:00 hora Chile)
+    - cron: '0 13 1 * *'
+    # Día 10 de cada mes — IPC suele publicarse entre día 8-10
+    - cron: '0 13 10 * *'
+
+  # Ejecución manual desde GitHub Actions → pestaña Actions → "Run workflow"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-fallback:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Crear página mensual UF si no existe
+        run: python create-monthly-uf-page.py
+
+      - name: Actualizar valores fallback en HTML
+        run: python prebuild-fallback.py
+
+      - name: Commit y push (si hubo cambios)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: actualizar valores fallback SEO (automatico)'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
