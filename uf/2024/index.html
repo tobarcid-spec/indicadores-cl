@@ -277,7 +277,7 @@
   catch { document.getElementById('meses-container').innerHTML = '<p style="color:var(--text-3);padding:24px 0">Error al cargar datos. Intenta recargar la página.</p>'; return; }
 
   const serie = data.serie
-    .filter(r => new Date(r.fecha).getFullYear() === anio)
+    .filter(r => new Date(r.fecha).getUTCFullYear() === anio)
     .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
   if (!serie.length) return;

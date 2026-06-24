@@ -550,7 +550,7 @@
     try { data = await fetchIndicador('utm', anio); } catch { return; }
 
     const serie = data.serie
-      .filter(r => new Date(r.fecha).getFullYear() === anio)
+      .filter(r => new Date(r.fecha).getUTCFullYear() === anio)
       .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     if (!serie.length) return;
