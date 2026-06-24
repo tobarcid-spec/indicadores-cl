@@ -1,0 +1,60 @@
+[33mcommit 895dfcda640c11647a1d977e825feec04183a536[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: unknown <tobarcid@gmail.com>
+Date:   Wed Jun 24 13:21:36 2026 -0400
+
+    feat: automatizacion mensual — GitHub Actions + creador de paginas UF
+    
+    - .github/workflows/prebuild.yml: cron dia 1 y dia 10 de cada mes
+      ejecuta create-monthly-uf-page.py + prebuild-fallback.py y hace
+      auto-commit de los cambios (via stefanzweifel/git-auto-commit-action)
+    - create-monthly-uf-page.py: detecta el mes en curso, copia la plantilla
+      del mes mas reciente disponible y actualiza title, canonical, h1, breadcrumb,
+      contexto editorial y stats placeholder; prebuild llena los stats reales
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+[33mcommit f13a8f4f66fefe754d28f2a5450b611b93905064[m
+Author: unknown <tobarcid@gmail.com>
+Date:   Wed Jun 24 13:13:08 2026 -0400
+
+    fix: write fallback values as plain text, not HTML comment markers
+    
+    Previous approach wrapped values in <!-- #FB:KEY# -->value<!-- /#FB:KEY# -->
+    comments, which audit tools and some crawlers strip, making elements appear
+    empty. Rewrote prebuild-fallback.py to use set_el() which replaces element
+    content directly by id — no comment wrappers, values visible as plain text.
+    
+    Removes all existing FB comment markers and writes clean values:
+    - uf/: $40.804, min $39.683, max $40.845, var +2.8%, prom $40.100
+    - dolar/: $916, min $854 (10 feb), max $932, var +0.9%, prom $892
+    - utm/: $71.506, UTA $858.072, min/max/var for year
+    - ipc/: -0.2%, acum +0.0% (no 2026 IPC data yet)
+    - calculadora/: result $612.060, chip-uf $40.804
+    - 6 monthly UF pages: full ini/fin/min/max/var/prom per month
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+[33mcommit 638795a2d109caca620749c0256f7ace79bb6b17[m
+Author: unknown <tobarcid@gmail.com>
+Date:   Wed Jun 24 12:32:03 2026 -0400
+
+    perf/seo: SSR serie injection + annual stats in prebuild
+    
+    Worker (worker.js):
+    - Fetch UF or dolar year serie in parallel with page HTML (no added latency)
+    - Inject window.__SSR_SERIES__ so fetchIndicador reads it at zero cost:
+      / -> "uf" key (dashboard table), /uf/* -> "uf_2026", /dolar/* -> "dolar_2026"
+    
+    Utils (assets/js/utils.js):
+    - fetchIndicador checks window.__SSR_SERIES__ before localStorage and API
+    - Consumes entry once, saves to localStorage for subsequent navigations
+    - Tables and annual stats now render instantly with no second HTTP request
+    
+    Prebuild (prebuild-fallback.py):
+    - Fetches UF/dolar/UTM annual series from mindicador.cl
+    - Injects s-min, s-max, s-var, s-prom stats on uf/, dolar/, utm/ pages
+    - Injects ipc-acum on ipc/ page (+0.0%, no 2026 data yet)
+    - Injects ini/fin/min/max/var/prom on all 6 monthly UF pages
+      (enero: $39.329/$39.579, ..., junio: partial month data)
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
