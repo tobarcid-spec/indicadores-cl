@@ -234,7 +234,7 @@
   const urlAnio = parseInt(pathParts[pathParts.length - 1]);
   const anio = (!isNaN(urlAnio) && urlAnio >= 2000 && urlAnio <= anioActual) ? urlAnio : anioActual;
 
-  const ANIOS_DISP = [anioActual, anioActual - 1, anioActual - 2, anioActual - 3];
+  const ANIOS_DISP = [anioActual, anioActual - 1, anioActual - 2];
   let chartInstance = null;
 
   /* ─── Meta dinámico ─── */
