@@ -380,19 +380,24 @@
     </tr>`;
   }).join('');
 
-  /* Nav mes anterior/siguiente */
+  /* Nav mes anterior/siguiente — solo muestra botón si la página existe */
   const prevMonth = mesNum === 1 ? 12 : mesNum - 1;
-  const prevYear = mesNum === 1 ? año - 1 : año;
+  const prevYear  = mesNum === 1 ? año - 1 : año;
   const nextMonth = mesNum === 12 ? 1 : mesNum + 1;
-  const nextYear = mesNum === 12 ? año + 1 : año;
-  const prevSlug = `${MESES[prevMonth - 1].toLowerCase()}-${prevYear}`;
-  const nextSlug = `${MESES[nextMonth - 1].toLowerCase()}-${nextYear}`;
+  const nextYear  = mesNum === 12 ? año + 1 : año;
+  const prevSlug  = `${MESES[prevMonth - 1].toLowerCase()}-${prevYear}`;
+  const nextSlug  = `${MESES[nextMonth - 1].toLowerCase()}-${nextYear}`;
+
+  const pageExists = async slug => {
+    try { const r = await fetch(`/uf/${slug}/`, { method: 'HEAD' }); return r.ok; }
+    catch { return false; }
+  };
+  const [hasPrev, hasNext] = await Promise.all([pageExists(prevSlug), pageExists(nextSlug)]);
 
   const nav = document.getElementById('month-nav');
-  nav.innerHTML = `
-    <a href="/uf/${prevSlug}/" class="month-nav-btn">← ${MESES[prevMonth - 1]} ${prevYear}</a>
-    <a href="/uf/${nextSlug}/" class="month-nav-btn next">${MESES[nextMonth - 1]} ${nextYear} →</a>
-  `;
+  nav.innerHTML =
+    (hasPrev ? `<a href="/uf/${prevSlug}/" class="month-nav-btn">← ${MESES[prevMonth - 1]} ${prevYear}</a>` : '') +
+    (hasNext ? `<a href="/uf/${nextSlug}/" class="month-nav-btn next">${MESES[nextMonth - 1]} ${nextYear} →</a>` : '');
 })();
 </script>
 
