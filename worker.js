@@ -26,17 +26,36 @@ export default {
       return assetRes;
     }
 
-    // ── SSR: inyectar datos de hoy en el HTML ───────────────────────────
-    const [html, hoy] = await Promise.all([
+    // ── SSR: inyectar datos de hoy + serie relevante en el HTML ────────
+    const year = new Date().getFullYear();
+    const path = url.pathname;
+
+    // Determinar qué serie pre-cargar según la URL
+    let serieKey  = null;
+    let serieType = null;
+    if (path === '/' || path === '/index.html') {
+      serieKey = 'uf';          // dashboard usa fetchIndicador('uf') sin año
+      serieType = 'uf';
+    } else if (path.startsWith('/uf/')) {
+      serieKey  = `uf_${year}`; // UF page y mensuales usan fetchIndicador('uf', año)
+      serieType = 'uf';
+    } else if (path.startsWith('/dolar/')) {
+      serieKey  = `dolar_${year}`;
+      serieType = 'dolar';
+    }
+
+    const [html, hoy, serie] = await Promise.all([
       assetRes.text(),
       fetchHoy(),
+      serieType ? fetchSerie(serieType, year) : Promise.resolve(null),
     ]);
 
-    const inyectado = hoy
-      ? html.replace(
-          '</head>',
-          `<script>window.__SSR__=${JSON.stringify(hoy)};</script></head>`
-        )
+    let script = '';
+    if (hoy)               script += `window.__SSR__=${JSON.stringify(hoy)};`;
+    if (serie && serieKey) script += `window.__SSR_SERIES__={"${serieKey}":${JSON.stringify(serie)}};`;
+
+    const inyectado = script
+      ? html.replace('</head>', `<script>${script}</script></head>`)
       : html;
 
     return new Response(inyectado, {
@@ -44,7 +63,7 @@ export default {
       headers: {
         'Content-Type': 'text/html;charset=UTF-8',
         'Cache-Control': 'public, max-age=300, stale-while-revalidate=60',
-        'X-SSR': hoy ? 'injected' : 'fallback',
+        'X-SSR': hoy ? (serie ? 'injected+serie' : 'injected') : 'fallback',
       },
     });
   },
@@ -93,6 +112,37 @@ async function proxyApi(url) {
   const h = new Headers(toStore.headers);
   h.set('X-Cache', 'MISS');
   return new Response(body, { status: 200, headers: h });
+}
+
+// ── Fetch serie anual de un indicador con cache en edge ──────────────────
+async function fetchSerie(indicador, year) {
+  const apiUrl = `https://mindicador.cl/api/${indicador}/${year}`;
+  const cacheKey = new Request(apiUrl);
+  const cache = caches.default;
+
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    try {
+      const data = await cached.json();
+      return data.serie || null;
+    } catch { /* continúa */ }
+  }
+
+  try {
+    const res = await fetch(apiUrl);
+    if (!res.ok) return null;
+    const body = await res.text();
+    const data = JSON.parse(body);
+    const toStore = new Response(body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': `public, max-age=${CACHE_TTL}`,
+      },
+    });
+    await cache.put(cacheKey, toStore);
+    return data.serie || null;
+  } catch { return null; }
 }
 
 // ── Fetch "todos los indicadores de hoy" con cache en edge ───────────────

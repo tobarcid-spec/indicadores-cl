@@ -16,13 +16,26 @@ const fmt = {
 /* ---- Fetch con cache en localStorage (TTL 1 hora) ---- */
 async function fetchIndicador(tipo, fecha = '') {
   const key = `ind_${tipo}_${fecha || 'hoy'}`;
+
+  // Prioridad 0: serie pre-inyectada por el Worker (cero latencia, render instantáneo)
+  const ssrKey = fecha ? `${tipo}_${fecha}` : tipo;
+  if (window.__SSR_SERIES__?.[ssrKey]) {
+    const data = { serie: window.__SSR_SERIES__[ssrKey] };
+    delete window.__SSR_SERIES__[ssrKey]; // consumir una sola vez
+    try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+    return data;
+  }
+
+  // Prioridad 1: cache localStorage (1 hora)
   try {
     const cached = localStorage.getItem(key);
     if (cached) {
       const { ts, data } = JSON.parse(cached);
-      if (Date.now() - ts < 3600_000) return data; // 1 hora de cache
+      if (Date.now() - ts < 3600_000) return data;
     }
-  } catch { localStorage.removeItem(key); } // entrada corrupta — descarta y recarga
+  } catch { localStorage.removeItem(key); }
+
+  // Prioridad 2: llamada al proxy en edge (cachea 30 min en Cloudflare)
   const url = fecha
     ? `${API_BASE}/${tipo}/${fecha}`
     : `${API_BASE}/${tipo}`;
