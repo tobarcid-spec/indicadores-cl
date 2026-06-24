@@ -546,7 +546,7 @@
 
     document.getElementById('ipc-mensual').textContent = `${valMen > 0 ? '+' : ''}${fmt.num(valMen, 1)}%`;
     document.getElementById('ipc-mes-label').textContent =
-      `${mesNombre} ${d.getFullYear()} · Fuente: INE Chile`;
+      `${mesNombre} ${d.getUTCFullYear()} · Fuente: INE Chile`;
     document.getElementById('ipc-badge').textContent =
       valMen >= 0 ? `▲ Alza de precios en ${mesNombre}` : `▼ Baja de precios en ${mesNombre}`;
     document.getElementById('ipc-badge').style.color = valMen >= 0 ? 'var(--ipc)' : 'var(--green)';

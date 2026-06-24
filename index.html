@@ -629,7 +629,7 @@
   const filas = mesData.serie
     .filter(r => {
       const d = new Date(r.fecha);
-      return d.getFullYear() === anioActual && (d.getMonth() + 1) === mesActual;
+      return d.getUTCFullYear() === anioActual && (d.getUTCMonth() + 1) === mesActual;
     })
     .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 

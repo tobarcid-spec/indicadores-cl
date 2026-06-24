@@ -461,13 +461,13 @@
     const ahora = new Date();
     historial = [];
     for (let i = 11; i >= 0; i--) {
-      const d = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
-      const mesNum = d.getMonth() + 1;
-      const anio = d.getFullYear();
+      const d = new Date(Date.UTC(ahora.getUTCFullYear(), ahora.getUTCMonth() - i, 1));
+      const mesNum = d.getUTCMonth() + 1;
+      const anio = d.getUTCFullYear();
       // Buscar primer valor del mes
       const fila = serie.find(r => {
         const rd = new Date(r.fecha);
-        return rd.getFullYear() === anio && rd.getMonth() + 1 === mesNum;
+        return rd.getUTCFullYear() === anio && rd.getUTCMonth() + 1 === mesNum;
       });
       if (fila) {
         historial.push({

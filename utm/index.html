@@ -490,11 +490,11 @@
     utmHoy = todos.utm.valor;
     const fecha = todos.utm.fecha;
     const d = new Date(fecha);
-    const mesNombre = MESES[d.getMonth()];
+    const mesNombre = MESES[d.getUTCMonth()];
 
     document.getElementById('utm-val').textContent = fmt.clp(utmHoy);
     document.getElementById('utm-fecha').textContent =
-      `Vigente durante ${mesNombre} ${d.getFullYear()} · Fuente: SII Chile`;
+      `Vigente durante ${mesNombre} ${d.getUTCFullYear()} · Fuente: SII Chile`;
 
     /* Equivalencias */
     document.getElementById('eq-uta').textContent = fmt.clp(utmHoy * 12);
@@ -563,15 +563,13 @@
     const varPct = ((ultimo - primero) / primero * 100).toFixed(2);
     const minFila = serie.find(r => r.valor === min);
     const maxFila = serie.find(r => r.valor === max);
-    const mesActualIdx = new Date().getMonth();
-
     /* Stats */
     document.getElementById('s-hoy').textContent = fmt.clp(anio === anioActual ? (utmHoy || ultimo) : ultimo);
-    document.getElementById('s-mes').textContent = MESES[new Date(serie[serie.length - 1].fecha).getMonth()];
+    document.getElementById('s-mes').textContent = MESES[new Date(serie[serie.length - 1].fecha).getUTCMonth()];
     document.getElementById('s-min').textContent = fmt.clp(min);
-    document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getUTCMonth()].slice(0, 3) : '';
     document.getElementById('s-max').textContent = fmt.clp(max);
-    document.getElementById('s-max-f').textContent = maxFila ? MESES[new Date(maxFila.fecha).getMonth()].slice(0, 3) : '';
+    document.getElementById('s-max-f').textContent = maxFila ? MESES[new Date(maxFila.fecha).getUTCMonth()].slice(0, 3) : '';
     const sVar = document.getElementById('s-var');
     sVar.textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
     sVar.style.color = varPct >= 0 ? 'var(--red)' : 'var(--green)';
@@ -579,7 +577,7 @@
 
     /* Gráfico */
     document.getElementById('chart-subtitle').textContent = `Valor UTM mensual — ${anio}`;
-    const labels = serie.map(r => MESES[new Date(r.fecha).getMonth()].slice(0, 3));
+    const labels = serie.map(r => MESES[new Date(r.fecha).getUTCMonth()].slice(0, 3));
 
     if (chartInstance) chartInstance.destroy();
     chartInstance = new Chart(document.getElementById('chart-utm'), {
@@ -622,12 +620,12 @@
 
     /* Tabla */
     document.getElementById('tabla-label').textContent = `UTM por mes — ${anio}`;
-    const mesActualNum = new Date().getMonth() + 1;
+    const mesActualNum = new Date().getUTCMonth() + 1;
     const tbody = document.getElementById('tabla-utm');
 
     tbody.innerHTML = [...serie].reverse().map((r, i, arr) => {
       const d = new Date(r.fecha);
-      const mesNum = d.getMonth() + 1;
+      const mesNum = d.getUTCMonth() + 1;
       const isActual = anio === anioActual && mesNum === mesActualNum;
       const prev = arr[i + 1];
       let cambio = '—';
@@ -638,7 +636,7 @@
         cambio = `<span class="${cls}">${diff > 0 ? '+' : ''}${fmt.clp(diff)} (${pct}%)</span>`;
       }
       return `<tr class="${isActual ? 'td-hoy' : ''}">
-        <td class="td-mes">${MESES[d.getMonth()]} ${anio}${isActual ? ' — actual' : ''}</td>
+        <td class="td-mes">${MESES[d.getUTCMonth()]} ${anio}${isActual ? ' — actual' : ''}</td>
         <td>${fmt.clp(r.valor)}</td>
         <td>${fmt.clp(r.valor * 12)}</td>
         <td>${cambio}</td>

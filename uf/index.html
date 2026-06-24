@@ -540,7 +540,7 @@
     const porMes = {};
     for (const r of serie) {
       const d = new Date(r.fecha);
-      const m = d.getMonth() + 1;
+      const m = d.getUTCMonth() + 1;
       if (!porMes[m]) porMes[m] = [];
       porMes[m].push(r);
     }
@@ -558,7 +558,7 @@
       const section = document.createElement('div');
       section.className = 'month-section';
 
-      const isCurrentMonth = (anio === anioActual && m === new Date().getMonth() + 1);
+      const isCurrentMonth = (anio === anioActual && m === new Date().getUTCMonth() + 1);
 
       const header = document.createElement('button');
       header.className = 'month-header' + (idx === 0 ? ' open' : '');

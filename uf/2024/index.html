@@ -357,7 +357,7 @@
   /* ─── Tablas por mes ─── */
   const porMes = {};
   for (const r of serie) {
-    const m = new Date(r.fecha).getMonth() + 1;
+    const m = new Date(r.fecha).getUTCMonth() + 1;
     if (!porMes[m]) porMes[m] = [];
     porMes[m].push(r);
   }
@@ -372,7 +372,7 @@
     const minM = Math.min(...valsM);
     const maxM = Math.max(...valsM);
     const varM = ((valsM[valsM.length - 1] - valsM[0]) / valsM[0] * 100).toFixed(2);
-    const isCurrentMonth = (anio === anioActual && m === new Date().getMonth() + 1);
+    const isCurrentMonth = (anio === anioActual && m === new Date().getUTCMonth() + 1);
 
     const section = document.createElement('div');
     section.className = 'month-section';
