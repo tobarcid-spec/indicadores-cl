@@ -4,11 +4,9 @@ prebuild-fallback.py - Inyecta valores reales en HTML para crawlers (SSR fallbac
 
 Uso: python prebuild-fallback.py
 
-Idempotente: usa marcadores <!-- #FB:KEY# -->valor<!-- /#FB:KEY# -->.
-- 1a ejecucion: detecta skeletons/placeholders y los reemplaza con marcadores.
-- Ejecuciones siguientes: actualiza el valor entre marcadores existentes.
-
-JS del cliente sobreescribe estos valores en tiempo real con datos frescos.
+Idempotente: reemplaza el contenido interno de cada elemento por su id.
+Funciona independientemente de lo que haya dentro (—, skeleton, valor anterior).
+El JS del cliente sobreescribe en tiempo real con datos frescos.
 """
 
 import json, re, sys
@@ -23,7 +21,6 @@ MESES_SHORT = ['ene','feb','mar','abr','may','jun',
                'jul','ago','sep','oct','nov','dic']
 MESES_SLUGS = {i+1: m for i, m in enumerate(MESES_ES)}
 
-# Valores de respaldo si la API no responde
 DEFAULTS_HOY = {
     'uf':    {'valor': 40804.0, 'fecha': '2026-06-01T03:00:00.000Z'},
     'dolar': {'valor':   916.0, 'fecha': '2026-06-01T03:00:00.000Z'},
@@ -32,7 +29,7 @@ DEFAULTS_HOY = {
     'ipc':   {'valor':    -0.2, 'fecha': '2025-12-01T03:00:00.000Z'},
 }
 
-# ─── Helpers de fetch ─────────────────────────────────────────────────────────
+# ─── Fetch ────────────────────────────────────────────────────────────────────
 
 def fetch_url(path=''):
     urls = [
@@ -45,7 +42,7 @@ def fetch_url(path=''):
             with urlopen(req, timeout=12) as r:
                 return json.loads(r.read())
         except Exception as e:
-            print(f'  (fallo {url}: {type(e).__name__}: {e})')
+            print(f'  (fallo {url}: {type(e).__name__})')
     return None
 
 def fetch_api():
@@ -56,14 +53,13 @@ def fetch_api():
     return DEFAULTS_HOY
 
 def fetch_serie(indicador, year=None):
-    """Retorna lista ordenada de {fecha, valor} para indicador/year."""
     path = f'{indicador}/{year}' if year else indicador
     data = fetch_url(path)
     if not data or not data.get('serie'):
         return []
     return sorted(data['serie'], key=lambda r: r['fecha'])
 
-# ─── Helpers de formato ───────────────────────────────────────────────────────
+# ─── Formato ──────────────────────────────────────────────────────────────────
 
 def clp(v):
     return '$' + f'{round(v):,}'.replace(',', '.')
@@ -80,84 +76,71 @@ def mes_label(fecha_str):
         return fecha_str[:7]
 
 def date_short(fecha_str):
-    """'2026-04-03T...' -> '03 abr'"""
     dt = datetime.fromisoformat(fecha_str.replace('Z', '+00:00'))
     return f'{dt.day:02d} {MESES_SHORT[dt.month-1]}'
 
 def fecha_year(f): return int(f[:4])
 def fecha_mes(f):  return int(f[5:7])
+def fecha_dia(f):  return str(int(f[8:10]))
 
-# ─── Computo de estadisticas ──────────────────────────────────────────────────
+# ─── Stats ────────────────────────────────────────────────────────────────────
 
-def compute_year_stats(serie, year):
-    """Min/max/var/prom de una serie filtrada al year dado."""
-    rows = [r for r in serie if fecha_year(r['fecha']) == year]
+def year_stats(serie):
+    rows = [r for r in serie if fecha_year(r['fecha']) == YEAR]
     if not rows:
         return None
     vals = [r['valor'] for r in rows]
-    min_v = min(vals); max_v = max(vals)
-    min_r = next(r for r in rows if r['valor'] == min_v)
-    max_r = next(r for r in rows if r['valor'] == max_v)
-    var   = (rows[-1]['valor'] - rows[0]['valor']) / rows[0]['valor'] * 100
+    mn = min(vals); mx = max(vals)
+    mn_r = next(r for r in rows if r['valor'] == mn)
+    mx_r = next(r for r in rows if r['valor'] == mx)
     return {
-        'min': min_v, 'min_f': min_r['fecha'],
-        'max': max_v, 'max_f': max_r['fecha'],
+        'min': mn, 'min_f': mn_r['fecha'],
+        'max': mx, 'max_f': mx_r['fecha'],
         'prom': sum(vals) / len(vals),
-        'var': var,
-        'first': rows[0]['valor'],
-        'last':  rows[-1]['valor'],
+        'var': (rows[-1]['valor'] - rows[0]['valor']) / rows[0]['valor'] * 100,
     }
 
-def compute_month_stats(serie, year, mes):
-    """Stats para un mes especifico."""
+def month_stats(serie, mes):
     rows = [r for r in serie
-            if fecha_year(r['fecha']) == year and fecha_mes(r['fecha']) == mes]
+            if fecha_year(r['fecha']) == YEAR and fecha_mes(r['fecha']) == mes]
     if not rows:
         return None
     vals = [r['valor'] for r in rows]
-    min_v = min(vals); max_v = max(vals)
-    min_r = next(r for r in rows if r['valor'] == min_v)
-    max_r = next(r for r in rows if r['valor'] == max_v)
-    var   = (rows[-1]['valor'] - rows[0]['valor']) / rows[0]['valor'] * 100
+    mn = min(vals); mx = max(vals)
+    mn_r = next(r for r in rows if r['valor'] == mn)
+    mx_r = next(r for r in rows if r['valor'] == mx)
     return {
-        'ini': rows[0]['valor'],  'ini_day': fecha_mes_dia(rows[0]['fecha']),
-        'fin': rows[-1]['valor'], 'fin_day': fecha_mes_dia(rows[-1]['fecha']),
-        'min': min_v, 'min_day': fecha_mes_dia(min_r['fecha']),
-        'max': max_v, 'max_day': fecha_mes_dia(max_r['fecha']),
+        'ini': rows[0]['valor'],  'ini_day': fecha_dia(rows[0]['fecha']),
+        'fin': rows[-1]['valor'], 'fin_day': fecha_dia(rows[-1]['fecha']),
+        'min': mn, 'min_day': fecha_dia(mn_r['fecha']),
+        'max': mx, 'max_day': fecha_dia(mx_r['fecha']),
         'prom': sum(vals) / len(vals),
-        'var': var,
+        'var': (rows[-1]['valor'] - rows[0]['valor']) / rows[0]['valor'] * 100,
     }
 
-def fecha_mes_dia(f):
-    """'2026-04-03T...' -> '3' (dia del mes)"""
-    return str(int(f[8:10]))
+# ─── Core: reemplazar contenido de elemento por id ────────────────────────────
 
-# ─── Nucleo: reemplazo idempotente con marcadores ─────────────────────────────
+TAGS = ['div', 'p', 'span', 'h1', 'h2', 'h3', 'h4']
 
-def fb_set(html, key, value, frp=None, frt=None):
+def set_el(html, el_id, value, tag=None):
     """
-    Actualiza <!-- #FB:KEY# -->valor<!-- /#FB:KEY# --> si existe.
-    Si no, aplica patron frp/frt para insertar el marcador.
-    frt usa {MARKER} como placeholder.
+    Reemplaza el contenido interno del elemento con id=el_id con value.
+    Funciona con cualquier contenido previo: —, skeleton spans, marcadores FB, etc.
+    Idempotente: siempre produce el mismo resultado independientemente del estado previo.
     """
-    mk_o = f'<!-- #FB:{key}# -->'
-    mk_c = f'<!-- /#FB:{key}# -->'
-    mk   = f'{mk_o}{value}{mk_c}'
-    existing = re.compile(re.escape(mk_o) + r'.*?' + re.escape(mk_c), re.DOTALL)
-    if existing.search(html):
-        return existing.sub(mk, html)
-    if frp and frt:
-        result = re.sub(frp, frt.replace('{MARKER}', mk), html, count=1, flags=re.DOTALL)
-        if result != html:
-            return result
-    print(f'    WARN: no encontrado key={key}')
+    tags = [tag] if tag else TAGS
+    for t in tags:
+        pattern = re.compile(
+            rf'(<{t}(?:\s[^>]*)?\bid="{re.escape(el_id)}"[^>]*>)(.*?)</{t}>',
+            re.DOTALL
+        )
+        m = pattern.search(html)
+        if m:
+            def replacer(match, v=value, t=t):
+                return f'{match.group(1)}{v}</{t}>'
+            return pattern.sub(replacer, html, count=1)
+    print(f'    WARN: id="{el_id}" no encontrado')
     return html
-
-def stat_dash(html, key, value, el_id):
-    """Reemplaza — en un stat-chip-val/span con el id dado."""
-    return fb_set(html, key, value,
-        rf'(<[^>]+\bid="{el_id}"[^>]*>)—(<)',
-        r'\g<1>{MARKER}\g<2>')
 
 def process(path, fn, label=None):
     print(f'\n[{label or path}]')
@@ -172,8 +155,7 @@ def process(path, fn, label=None):
     except FileNotFoundError:
         print(f'  SKIP (no existe {path})')
 
-
-# ─── Fetch de datos ───────────────────────────────────────────────────────────
+# ─── Fetch de todos los datos ─────────────────────────────────────────────────
 
 print('Consultando mindicador.cl/api...')
 hoy = fetch_api()
@@ -184,8 +166,8 @@ euro_val= hoy['euro']['valor']
 utm_val = hoy['utm']['valor'];   utm_f = hoy['utm']['fecha']
 ipc_val = hoy['ipc']['valor'];   ipc_f = hoy['ipc']['fecha']
 
-uf_s  = clp(uf_val);  dol_s = clp(dol_val); euro_s = clp(euro_val)
-utm_s = clp(utm_val); ipc_s = pct(ipc_val); uta_s  = clp(utm_val * 12)
+uf_s  = clp(uf_val);   dol_s  = clp(dol_val); euro_s = clp(euro_val)
+utm_s = clp(utm_val);  ipc_s  = pct(ipc_val);  uta_s  = clp(utm_val * 12)
 
 print(f'  UF {uf_s} | Dolar {dol_s} | UTM {utm_s} | IPC {ipc_s}')
 
@@ -193,53 +175,53 @@ print('\nFetching series anuales...')
 uf_serie  = fetch_serie('uf',    YEAR)
 dol_serie = fetch_serie('dolar', YEAR)
 utm_serie = fetch_serie('utm',   YEAR)
-ipc_base  = fetch_serie('ipc')          # base endpoint (todos los meses)
-
-uf_stats  = compute_year_stats(uf_serie,  YEAR)
-dol_stats = compute_year_stats(dol_serie, YEAR)
-utm_stats = compute_year_stats(utm_serie, YEAR)
+ipc_base  = fetch_serie('ipc')
 ipc_2026  = [r for r in ipc_base if fecha_year(r['fecha']) == YEAR]
 ipc_acum  = sum(r['valor'] for r in ipc_2026)
 
-print(f'  UF serie: {len(uf_serie)} entradas | Dolar: {len(dol_serie)} | UTM: {len(utm_serie)} | IPC base: {len(ipc_base)}')
-if uf_stats:
-    print(f'  UF year: min={clp(uf_stats["min"])} max={clp(uf_stats["max"])} var={pct(uf_stats["var"])} prom={clp(uf_stats["prom"])}')
+uf_st  = year_stats(uf_serie)
+dol_st = year_stats(dol_serie)
+utm_st = year_stats(utm_serie)
 
+print(f'  UF {len(uf_serie)} | Dolar {len(dol_serie)} | UTM {len(utm_serie)} | IPC base {len(ipc_base)}')
+if uf_st:
+    print(f'  UF min={clp(uf_st["min"])} max={clp(uf_st["max"])} var={pct(uf_st["var"])} prom={clp(uf_st["prom"])}')
 
 # ─── 1. Dashboard ─────────────────────────────────────────────────────────────
 
 otros_cards = (
     f'<a href="/dolar/" class="ind-card">'
-    f'<div class="ind-card-label">🇺🇸 Dólar USD</div>'
+    f'<div class="ind-card-label">\U0001f1fa\U0001f1f8 Dólar USD</div>'
     f'<div class="ind-card-value">{dol_s}</div>'
     f'<div class="ind-card-name">{mes_label(dol_f)}</div></a>'
     f'\n    <a href="/dolar/" class="ind-card">'
-    f'<div class="ind-card-label">🇪🇺 Euro EUR</div>'
+    f'<div class="ind-card-label">\U0001f1ea\U0001f1fa Euro EUR</div>'
     f'<div class="ind-card-value">{euro_s}</div>'
     f'<div class="ind-card-name">{mes_label(dol_f)}</div></a>'
     f'\n    <a href="/utm/" class="ind-card">'
-    f'<div class="ind-card-label">📋 UTM</div>'
+    f'<div class="ind-card-label">\U0001f4cb UTM</div>'
     f'<div class="ind-card-value">{utm_s}</div>'
     f'<div class="ind-card-name">{mes_label(utm_f)}</div></a>'
     f'\n    <a href="/ipc/" class="ind-card">'
-    f'<div class="ind-card-label">📊 IPC mensual</div>'
+    f'<div class="ind-card-label">\U0001f4ca IPC mensual</div>'
     f'<div class="ind-card-value">{ipc_s}</div>'
     f'<div class="ind-card-name">{mes_label(ipc_f)}</div></a>'
 )
 
 def fix_dashboard(html):
-    html = fb_set(html, 'UF_VAL', uf_s,
-        r'(<div[^>]*\bid="uf-val"[^>]*>)<span class="skel"[^>]*></span>(</div>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'UF_FECHA', f'Valor al {mes_label(uf_f)}',
-        r'(<p[^>]*\bid="uf-fecha"[^>]*>)<span class="skel"[^>]*></span>(</p>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'OTROS_GRID', otros_cards,
-        r'(id="otros-grid"[^>]*>)\s*<!-- JS los inserta -->\s*'
-        r'<div class="ind-card">.*?</div>\s*'
-        r'<div class="ind-card">.*?</div>\s*'
-        r'<div class="ind-card">.*?</div>',
-        r'\g<1>\n    {MARKER}')
+    html = set_el(html, 'uf-val',  uf_s,                        'div')
+    html = set_el(html, 'uf-fecha', f'Valor al {mes_label(uf_f)}', 'p')
+    # otros-grid: reemplazar todo el contenido del div grid
+    grid_pat = re.compile(
+        r'(<div[^>]*\bid="otros-grid"[^>]*>)\s*(?:<!--.*?-->)?\s*([\s\S]*?)(\s*\n  </div>)',
+        re.DOTALL
+    )
+    m = grid_pat.search(html)
+    if m:
+        html = grid_pat.sub(
+            lambda _: f'{m.group(1)}\n    {otros_cards}\n  </div>',
+            html, count=1
+        )
     return html
 
 process('index.html', fix_dashboard, 'index.html (dashboard)')
@@ -248,20 +230,16 @@ process('index.html', fix_dashboard, 'index.html (dashboard)')
 # ─── 2. Dolar ─────────────────────────────────────────────────────────────────
 
 def fix_dolar(html):
-    html = fb_set(html, 'DOLAR_VAL', dol_s,
-        r'(<div[^>]*\bid="dolar-val"[^>]*>)<span class="skel"[^>]*></span>(</div>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'DOLAR_FECHA', f'Valor al {mes_label(dol_f)}',
-        r'(<p[^>]*\bid="dolar-fecha"[^>]*>)<span class="skel"[^>]*></span>(</p>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = stat_dash(html, 'DOLAR_S_HOY',  dol_s, 's-hoy')
-    if dol_stats:
-        html = stat_dash(html, 'DOLAR_S_MIN',  clp(dol_stats['min']),       's-min')
-        html = stat_dash(html, 'DOLAR_S_MIN_F',date_short(dol_stats['min_f']), 's-min-f')
-        html = stat_dash(html, 'DOLAR_S_MAX',  clp(dol_stats['max']),       's-max')
-        html = stat_dash(html, 'DOLAR_S_MAX_F',date_short(dol_stats['max_f']), 's-max-f')
-        html = stat_dash(html, 'DOLAR_S_VAR',  pct(dol_stats['var']),       's-var')
-        html = stat_dash(html, 'DOLAR_S_PROM', clp(dol_stats['prom']),      's-prom')
+    html = set_el(html, 'dolar-val',   dol_s,                         'div')
+    html = set_el(html, 'dolar-fecha', f'Valor al {mes_label(dol_f)}', 'p')
+    html = set_el(html, 's-hoy',  dol_s,  'div')
+    if dol_st:
+        html = set_el(html, 's-min',   clp(dol_st['min']),          'div')
+        html = set_el(html, 's-min-f', date_short(dol_st['min_f']), 'div')
+        html = set_el(html, 's-max',   clp(dol_st['max']),          'div')
+        html = set_el(html, 's-max-f', date_short(dol_st['max_f']), 'div')
+        html = set_el(html, 's-var',   pct(dol_st['var']),          'div')
+        html = set_el(html, 's-prom',  clp(dol_st['prom']),         'div')
     return html
 
 process('dolar/index.html', fix_dolar)
@@ -270,20 +248,16 @@ process('dolar/index.html', fix_dolar)
 # ─── 3. UTM ───────────────────────────────────────────────────────────────────
 
 def fix_utm(html):
-    html = fb_set(html, 'UTM_VAL', utm_s,
-        r'(<div[^>]*\bid="utm-val"[^>]*>)<span class="skel"[^>]*></span>(</div>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'UTM_FECHA', f'Actualizado {mes_label(utm_f)}',
-        r'(<p[^>]*\bid="utm-fecha"[^>]*>)<span class="skel"[^>]*></span>(</p>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = stat_dash(html, 'UTM_S_HOY', utm_s, 's-hoy')
-    html = stat_dash(html, 'UTM_S_UTA', uta_s, 's-uta')
-    if utm_stats:
-        html = stat_dash(html, 'UTM_S_MIN',   clp(utm_stats['min']),        's-min')
-        html = stat_dash(html, 'UTM_S_MIN_F', date_short(utm_stats['min_f']),'s-min-f')
-        html = stat_dash(html, 'UTM_S_MAX',   clp(utm_stats['max']),        's-max')
-        html = stat_dash(html, 'UTM_S_MAX_F', date_short(utm_stats['max_f']),'s-max-f')
-        html = stat_dash(html, 'UTM_S_VAR',   pct(utm_stats['var']),        's-var')
+    html = set_el(html, 'utm-val',   utm_s,                           'div')
+    html = set_el(html, 'utm-fecha', f'Actualizado {mes_label(utm_f)}', 'p')
+    html = set_el(html, 's-hoy', utm_s, 'div')
+    html = set_el(html, 's-uta', uta_s, 'div')
+    if utm_st:
+        html = set_el(html, 's-min',   clp(utm_st['min']),          'div')
+        html = set_el(html, 's-min-f', date_short(utm_st['min_f']), 'div')
+        html = set_el(html, 's-max',   clp(utm_st['max']),          'div')
+        html = set_el(html, 's-max-f', date_short(utm_st['max_f']), 'div')
+        html = set_el(html, 's-var',   pct(utm_st['var']),          'div')
     return html
 
 process('utm/index.html', fix_utm)
@@ -292,12 +266,12 @@ process('utm/index.html', fix_utm)
 # ─── 4. UF page ───────────────────────────────────────────────────────────────
 
 def fix_uf(html):
-    html = stat_dash(html, 'UF_S_HOY', uf_s, 's-hoy')
-    if uf_stats:
-        html = stat_dash(html, 'UF_S_MIN',  clp(uf_stats['min']),  's-min')
-        html = stat_dash(html, 'UF_S_MAX',  clp(uf_stats['max']),  's-max')
-        html = stat_dash(html, 'UF_S_VAR',  pct(uf_stats['var']),  's-var')
-        html = stat_dash(html, 'UF_S_PROM', clp(uf_stats['prom']), 's-prom')
+    html = set_el(html, 's-hoy', uf_s, 'div')
+    if uf_st:
+        html = set_el(html, 's-min',  clp(uf_st['min']),  'div')
+        html = set_el(html, 's-max',  clp(uf_st['max']),  'div')
+        html = set_el(html, 's-var',  pct(uf_st['var']),  'div')
+        html = set_el(html, 's-prom', clp(uf_st['prom']), 'div')
     return html
 
 process('uf/index.html', fix_uf, 'uf/index.html')
@@ -306,16 +280,10 @@ process('uf/index.html', fix_uf, 'uf/index.html')
 # ─── 5. IPC ───────────────────────────────────────────────────────────────────
 
 def fix_ipc(html):
-    html = fb_set(html, 'IPC_MENSUAL', ipc_s,
-        r'(<div[^>]*\bid="ipc-mensual"[^>]*>)<span class="skel"[^>]*></span>(</div>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'IPC_MES_LABEL', mes_label(ipc_f),
-        r'(<p[^>]*\bid="ipc-mes-label"[^>]*>)<span class="skel"[^>]*></span>(</p>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'IPC_ACUM', pct(ipc_acum),
-        r'(<div[^>]*\bid="ipc-acum"[^>]*>)<span class="skel"[^>]*></span>(</div>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = stat_dash(html, 'IPC_S_ULT', ipc_s, 's-ult')
+    html = set_el(html, 'ipc-mensual',  ipc_s,              'div')
+    html = set_el(html, 'ipc-mes-label', mes_label(ipc_f),  'p')
+    html = set_el(html, 'ipc-acum',     pct(ipc_acum),      'div')
+    html = set_el(html, 's-ult',        ipc_s,              'div')
     return html
 
 process('ipc/index.html', fix_ipc)
@@ -324,12 +292,8 @@ process('ipc/index.html', fix_ipc)
 # ─── 6. Calculadora arriendo ──────────────────────────────────────────────────
 
 def fix_calc(html):
-    html = fb_set(html, 'CALC_RESULT', clp(uf_val * 15),
-        r'(<div[^>]*\bid="result-clp"[^>]*>)Calculando…(</div>)',
-        r'\g<1>{MARKER}\g<2>')
-    html = fb_set(html, 'CALC_UF', uf_s,
-        r'(<span\s+id="chip-uf">)—(</span>)',
-        r'\g<1>{MARKER}\g<2>')
+    html = set_el(html, 'result-clp', clp(uf_val * 15), 'div')
+    html = set_el(html, 'chip-uf',    uf_s,             'span')
     return html
 
 process('calculadora-arriendo-uf/index.html', fix_calc, 'calculadora-arriendo-uf/index.html')
@@ -341,37 +305,35 @@ print('\n[Paginas mensuales UF]')
 for mes_num in range(1, 13):
     slug = MESES_SLUGS.get(mes_num)
     path = f'uf/{slug}-{YEAR}/index.html'
-    stats = compute_month_stats(uf_serie, YEAR, mes_num)
-    if not stats:
+    st = month_stats(uf_serie, mes_num)
+    if not st:
         continue
 
-    def make_fix_mes(st):
-        def fix_mes(html):
-            html = stat_dash(html, 'M_S_INI',   clp(st['ini']),      's-ini')
-            html = stat_dash(html, 'M_S_INI_F', st['ini_day'],       's-ini-f')
-            html = stat_dash(html, 'M_S_FIN',   clp(st['fin']),      's-fin')
-            html = stat_dash(html, 'M_S_FIN_F', st['fin_day'],       's-fin-f')
-            html = stat_dash(html, 'M_S_MIN',   clp(st['min']),      's-min')
-            html = stat_dash(html, 'M_S_MIN_F', st['min_day'],       's-min-f')
-            html = stat_dash(html, 'M_S_MAX',   clp(st['max']),      's-max')
-            html = stat_dash(html, 'M_S_MAX_F', st['max_day'],       's-max-f')
-            html = stat_dash(html, 'M_S_VAR',   pct(st['var'], 2),   's-var')
-            html = stat_dash(html, 'M_S_PROM',  clp(round(st['prom'])), 's-prom')
+    def make_fn(s):
+        def fn(html):
+            html = set_el(html, 's-ini',   clp(s['ini']),       'div')
+            html = set_el(html, 's-ini-f', s['ini_day'],        'div')
+            html = set_el(html, 's-fin',   clp(s['fin']),       'div')
+            html = set_el(html, 's-fin-f', s['fin_day'],        'div')
+            html = set_el(html, 's-min',   clp(s['min']),       'div')
+            html = set_el(html, 's-min-f', s['min_day'],        'div')
+            html = set_el(html, 's-max',   clp(s['max']),       'div')
+            html = set_el(html, 's-max-f', s['max_day'],        'div')
+            html = set_el(html, 's-var',   pct(s['var'], 2),    'div')
+            html = set_el(html, 's-prom',  clp(round(s['prom'])), 'div')
             return html
-        return fix_mes
+        return fn
 
-    process(path, make_fix_mes(stats), f'  uf/{slug}-{YEAR}/')
+    process(path, make_fn(st), f'  uf/{slug}-{YEAR}/')
 
 
 # ─── Resumen ──────────────────────────────────────────────────────────────────
 print('\n' + '-' * 44)
-print('Valores inyectados:')
 print(f'  UF     {uf_s:<12} ({mes_label(uf_f)})')
 print(f'  Dolar  {dol_s:<12} ({mes_label(dol_f)})')
 print(f'  Euro   {euro_s:<12}')
-print(f'  UTM    {utm_s:<12} ({mes_label(utm_f)})')
-print(f'  UTA    {uta_s:<12}')
+print(f'  UTM    {utm_s:<12} | UTA {uta_s}')
 print(f'  IPC    {ipc_s:<12} ({mes_label(ipc_f)})')
-print(f'  IPC acum {YEAR}: {pct(ipc_acum)} ({len(ipc_2026)} meses con datos)')
-if uf_stats:
-    print(f'  UF min/max: {clp(uf_stats["min"])} / {clp(uf_stats["max"])} | var: {pct(uf_stats["var"])}')
+print(f'  IPC acum {YEAR}: {pct(ipc_acum)}')
+if uf_st:
+    print(f'  UF min/max: {clp(uf_st["min"])} / {clp(uf_st["max"])} | var {pct(uf_st["var"])}')
