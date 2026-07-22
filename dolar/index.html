@@ -784,7 +784,7 @@
     const maxFila = serie.find(r => r.valor === max);
 
     /* Stats */
-    document.getElementById('s-hoy').textContent = fmt.clp(anio === anioActual ? dolarHoy : ultimo);
+    if (anio === anioActual) document.getElementById('s-hoy').textContent = fmt.clp(dolarHoy);
     document.getElementById('s-min').textContent = fmt.clp(min);
     document.getElementById('s-min-f').textContent = minFila ? fmt.date(minFila.fecha) : '';
     document.getElementById('s-max').textContent = fmt.clp(max);
