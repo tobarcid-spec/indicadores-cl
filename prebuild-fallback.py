@@ -265,6 +265,38 @@ process('utm/index.html', fix_utm)
 
 # ─── 4. UF page ───────────────────────────────────────────────────────────────
 
+def build_uf_mes_html(serie, mes_num, anio):
+    filas = [r for r in serie
+             if fecha_year(r['fecha']) == anio and fecha_mes(r['fecha']) == mes_num]
+    filas.sort(key=lambda r: r['fecha'])
+    if not filas:
+        return None
+    vals = [r['valor'] for r in filas]
+    mn, mx = min(vals), max(vals)
+    rows_html = '\n'.join(
+        f'<tr><td>{fecha_dia(r["fecha"])}</td>'
+        f'<td>{int(fecha_dia(r["fecha"])):02d}/{mes_num:02d}/{anio}</td>'
+        f'<td>{clp(r["valor"])}</td></tr>'
+        for r in filas
+    )
+    nombre_mes = MESES_ES[mes_num - 1].capitalize()
+    return (
+        f'<div class="month-section">'
+        f'<button class="month-header open">'
+        f'<span>{nombre_mes} {anio} '
+        f'<span style="color:var(--accent);font-size:11px;margin-left:8px">(mes actual)</span></span>'
+        f'<span class="month-meta">'
+        f'<span>Mín: {clp(mn)}</span>'
+        f'<span>Máx: {clp(mx)}</span>'
+        f'<span>{len(filas)} días</span>'
+        f'</span></button>'
+        f'<div class="month-body">'
+        f'<div class="table-wrap"><table>'
+        f'<thead><tr><th>Día</th><th>Fecha</th><th>Valor UF</th></tr></thead>'
+        f'<tbody>{rows_html}</tbody>'
+        f'</table></div></div></div>'
+    )
+
 def fix_uf(html):
     html = set_el(html, 's-hoy',     uf_s, 'div')
     html = set_el(html, 'h1-uf-val', uf_s, 'span')
@@ -277,6 +309,9 @@ def fix_uf(html):
     html = set_el(html, 'uf-hipoteca', clp(uf_val * 50),  'td')
     html = set_el(html, 'uf-mora',     clp(uf_val * 0.1), 'td')
     html = set_el(html, 'uf-credito',  clp(uf_val * 130), 'td')
+    mes_html = build_uf_mes_html(uf_serie, datetime.now().month, YEAR)
+    if mes_html:
+        html = set_el(html, 'meses-container', mes_html, 'div')
     return html
 
 process('uf/index.html', fix_uf, 'uf/index.html')
