@@ -590,7 +590,7 @@
     /* Stats */
     const ufValStr = hoyDato ? fmt.clp(hoyDato.valor) : fmt.clp(ultimo);
     document.getElementById('s-hoy').textContent = ufValStr;
-    document.getElementById('h1-uf-val').textContent = ufValStr;
+    if (anio === anioActual) document.getElementById('h1-uf-val').textContent = ufValStr;
 
     if (anio === anioActual) {
       ufHoy = hoyDato?.valor || ultimo;
