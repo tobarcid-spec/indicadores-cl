@@ -486,7 +486,7 @@
   </div>
 </footer>
 
-<script src="/assets/js/chart.min.js"></script>
+<script src="/assets/js/chart.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';document.head.appendChild(s)"></script>
 <script src="/assets/js/utils.js"></script>
 <script>
 (async () => {
@@ -495,6 +495,11 @@
   let chartInstance = null;
   let anioActivo = anioActual;
   let ufHoy = null;
+
+  /* Inicializar conversor con valor estático del prebuild — responde inmediatamente */
+  const convValEl = document.getElementById('conv-uf-val');
+  const convUfInit = convValEl ? parseFloat(convValEl.textContent.replace(/[^0-9,]/g, '').replace(',', '.')) : null;
+  if (convUfInit) iniciarConversor(convUfInit);
 
   function poblarTablaContratos(uf) {
     [[`uf-garantia`, 15], [`uf-hipoteca`, 50], [`uf-mora`, 0.1], [`uf-credito`, 130]]
@@ -575,6 +580,7 @@
     document.getElementById('chart-title').textContent = `Evolución UF — ${anio}`;
     const labels = serie.map(r => fmt.dateShort(r.fecha));
 
+    try {
     if (chartInstance) chartInstance.destroy();
     chartInstance = new Chart(document.getElementById('chart-uf'), {
       type: 'line',
@@ -619,6 +625,9 @@
         }
       }
     });
+    } catch(chartErr) {
+      console.warn('Chart.js no disponible:', chartErr.message);
+    }
 
     /* Tablas por mes */
     const porMes = {};
@@ -684,22 +693,23 @@
 
   /* Conversor UF ↔ CLP */
   function iniciarConversor(ufVal) {
-    const inUF  = document.getElementById('conv-uf');
-    const inCLP = document.getElementById('conv-clp');
-    const ref   = document.getElementById('conv-uf-val');
+    const ref = document.getElementById('conv-uf-val');
     if (ref) ref.textContent = fmt.clp(ufVal);
-    let lock = false;
+    /* Clonar para remover listeners anteriores si se llama más de una vez */
+    const oldUF  = document.getElementById('conv-uf');
+    const oldCLP = document.getElementById('conv-clp');
+    if (!oldUF || !oldCLP) return;
+    const inUF  = oldUF.cloneNode(true);
+    const inCLP = oldCLP.cloneNode(true);
+    oldUF.replaceWith(inUF);
+    oldCLP.replaceWith(inCLP);
     inUF.addEventListener('input', () => {
-      if (lock) return; lock = true;
       const v = parseFloat(inUF.value);
       inCLP.value = isNaN(v) ? '' : Math.round(v * ufVal);
-      lock = false;
     });
     inCLP.addEventListener('input', () => {
-      if (lock) return; lock = true;
       const v = parseFloat(inCLP.value);
       inUF.value = isNaN(v) ? '' : (v / ufVal).toFixed(4);
-      lock = false;
     });
   }
 
