@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dólar Hoy Chile 2026 — Tipo de Cambio Observado y Conversor | indicadoreschile.cl</title>
-  <meta name="description" content="Valor del dólar observado hoy en Chile actualizado. Conversor dólar a pesos chilenos, gráfico histórico, tabla del mes y euro. Fuente oficial Banco Central de Chile.">
-  <meta name="keywords" content="dólar hoy Chile, tipo de cambio Chile, dólar observado Chile, conversor dólar pesos, dólar peso chileno 2026">
+  <meta name="description" id="meta-desc" content="Dólar observado hoy $933 (julio 2026). Conversor USD a pesos chilenos, gráfico histórico y tabla del mes. Fuente oficial Banco Central de Chile.">
   <link rel="canonical" href="https://indicadoreschile.cl/dolar/">
   <meta property="og:title" content="Dólar Hoy Chile 2026 — Tipo de Cambio y Conversor">
   <meta property="og:description" content="Dólar observado actualizado. Conversor USD/CLP, gráfico anual, tabla del mes. Banco Central de Chile.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://indicadoreschile.cl/dolar/">
   <meta property="og:locale" content="es_CL">
-  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/dolar-og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="preconnect" href="https://mindicador.cl">
@@ -254,6 +256,12 @@
 
     /* ---- Acordeón meses ---- */
     .month-section { margin-bottom: 8px; }
+    .month-section--actual > .month-header {
+      border-color: var(--green);
+      background: rgba(34,197,94,0.06);
+    }
+    .month-section--actual > .month-header:hover { background: rgba(34,197,94,0.12); }
+    .month-section--actual > .month-body { border-color: var(--green); border-top: none; }
     .month-header {
       width: 100%; background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 14px 20px;
@@ -306,18 +314,20 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Inicio",
-        "item": "https://indicadoreschile.cl/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Dólar"
-      }
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://indicadoreschile.cl/" },
+      { "@type": "ListItem", "position": 2, "name": "Dólar", "item": "https://indicadoreschile.cl/dolar/" }
     ]
+  }
+  </script>
+  <script id="ld-webpage" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Dólar Hoy Chile 2026 — Tipo de Cambio Observado",
+    "description": "Dólar observado hoy $933. Conversor USD/CLP, gráfico anual y tabla del mes.",
+    "url": "https://indicadoreschile.cl/dolar/",
+    "inLanguage": "es-CL",
+    "publisher": { "@type": "Organization", "name": "indicadoreschile.cl", "url": "https://indicadoreschile.cl" }
   }
   </script>
 
@@ -342,7 +352,7 @@
 <header class="page-header">
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">🇺🇸 Tipo de cambio</p>
-    <h1><strong>Dólar hoy</strong> en Chile</h1>
+    <h1><strong>Dólar hoy: <span id="h1-dolar-val">$933</span></strong> en Chile</h1>
     <p>Tipo de cambio observado oficial. Fuente: Banco Central de Chile.</p>
   </div>
 </header>
@@ -612,6 +622,7 @@
       </button>
       <div class="faq-a">
        Depende de lo que necesites. Hay tres opciones principales: Los bancos son la alternativa más cómoda y segura, especialmente si ya tienes cuenta en dólares. El problema es que suelen aplicar un margen sobre el dólar observado que encarece la operación sin que sea tan evidente. Las casas de cambio físicas, concentradas en el Paseo Ahumada y zonas comerciales de Santiago, son una buena opción si necesitas efectivo para un viaje. Los precios varían de un local a otro, así que vale la pena comparar antes de cerrar la operación. Las plataformas digitales son donde generalmente encontrarás el tipo de cambio más competitivo. Aplican márgenes menores, muestran los costos antes de confirmar y permitir operar desde el celular. Son ideales si no necesitas dólares en efectivo, sino para pagar al exterior, invertir o recibir pagos internacionales. La clave en todos los casos es fijarse no solo en el precio final, sino en si ese valor ya incluye comisión o spread, porque ahí es donde muchas veces se pierde plata sin darse cuenta.
+      </div>
     </div>
 
   </div>
@@ -650,7 +661,7 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/assets/js/utils.js"></script>
 <script>
 (async () => {
@@ -674,7 +685,9 @@
   const euroHoy = todos.euro?.valor ?? null;
 
   /* Hero */
-  document.getElementById('dolar-val').textContent = fmt.clp(dolarHoy);
+  const dolarStr = fmt.clp(dolarHoy);
+  document.getElementById('dolar-val').textContent = dolarStr;
+  document.getElementById('h1-dolar-val').textContent = dolarStr;
   document.getElementById('dolar-fecha').textContent =
     `Publicado ${fmt.date(todos.dolar.fecha)} · Dólar observado oficial`;
 
@@ -743,11 +756,13 @@
     btn.classList.add('active');
 
     let data;
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 10000));
     try {
-      data = await fetchIndicador('dolar', anio);
-    } catch {
+      data = await Promise.race([fetchIndicador('dolar', anio), timeout]);
+    } catch(e) {
       document.getElementById('meses-container').innerHTML =
-        '<p style="color:var(--red);font-size:14px;padding:16px 0">Error al cargar datos — reintenta en unos segundos.</p>';
+        `<div style="padding:24px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius);font-family:var(--font-mono);font-size:13px;color:#f87171">⚠ ${e.message === 'timeout' ? 'No se pudo cargar el historial. Revisa tu conexión e intenta de nuevo.' : 'Error al cargar datos — reintenta en unos segundos.'}</div>`;
       return;
     }
 
@@ -864,7 +879,7 @@
       const isCurrentMonth = (anio === anioActual && m === new Date().getUTCMonth() + 1);
 
       const section = document.createElement('div');
-      section.className = 'month-section';
+      section.className = 'month-section' + (isCurrentMonth ? ' month-section--actual' : '');
 
       const header = document.createElement('button');
       header.className = 'month-header' + (idx === 0 ? ' open' : '');

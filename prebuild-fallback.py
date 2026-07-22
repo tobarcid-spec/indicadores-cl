@@ -263,6 +263,7 @@ process('index.html', fix_dashboard, 'index.html (dashboard)')
 def fix_dolar(html):
     html = set_el(html, 'dolar-val',   dol_s,                         'div')
     html = set_el(html, 'dolar-fecha', f'Valor al {mes_label(dol_f)}', 'p')
+    html = set_el(html, 'h1-dolar-val', dol_s,                        'span')
     html = set_el(html, 's-hoy',  dol_s,  'div')
     if dol_st:
         html = set_el(html, 's-min',   clp(dol_st['min']),          'div')
@@ -271,9 +272,26 @@ def fix_dolar(html):
         html = set_el(html, 's-max-f', date_short(dol_st['max_f']), 'div')
         html = set_el(html, 's-var',   pct(dol_st['var']),          'div')
         html = set_el(html, 's-prom',  clp(dol_st['prom']),         'div')
+    mes_label_actual = MESES_ES[datetime.now().month - 1]
+    desc = (f'Dólar observado hoy {dol_s} ({mes_label_actual} {YEAR}). '
+            f'Conversor USD a pesos chilenos, gráfico histórico y tabla del mes. '
+            f'Fuente oficial Banco Central de Chile.')
+    html = set_meta_content(html, 'meta-desc', desc)
+    html = set_ld_value(html, 'ld-webpage', 'description',
+                        f'Dólar observado hoy {dol_s}. Conversor USD/CLP, gráfico anual y tabla del mes.')
     return html
 
 process('dolar/index.html', fix_dolar)
+
+def fix_dolar_og(svg):
+    mes_actual = MESES_ES[datetime.now().month - 1].capitalize()
+    svg = re.sub(r'(<text[^>]*\bid="og-dolar-val"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{dol_s}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-dolar-fecha"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{mes_actual} {YEAR}\g<2>', svg)
+    return svg
+
+process('assets/img/dolar-og.svg', fix_dolar_og, 'assets/img/dolar-og.svg')
 
 
 # ─── 3. UTM ───────────────────────────────────────────────────────────────────
