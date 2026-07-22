@@ -122,6 +122,37 @@ def month_stats(serie, mes):
 
 TAGS = ['div', 'p', 'span', 'h1', 'h2', 'h3', 'h4']
 
+def set_meta_content(html, meta_id, value):
+    """Reemplaza atributo content de <meta id=meta_id content="...">."""
+    pattern = re.compile(
+        rf'(<meta\b[^>]*\bid="{re.escape(meta_id)}"[^>]*\bcontent=")[^"]*(")',
+        re.DOTALL
+    )
+    if pattern.search(html):
+        return pattern.sub(lambda m: f'{m.group(1)}{value}{m.group(2)}', html, count=1)
+    # orden invertido: content antes del id
+    pattern2 = re.compile(
+        rf'(<meta\b[^>]*\bcontent=")[^"]*("[^>]*\bid="{re.escape(meta_id)}")',
+        re.DOTALL
+    )
+    if pattern2.search(html):
+        return pattern2.sub(lambda m: f'{m.group(1)}{value}{m.group(2)}', html, count=1)
+    print(f'    WARN: meta id="{meta_id}" no encontrado')
+    return html
+
+def set_ld_value(html, script_id, key, value):
+    """Reemplaza un valor en un bloque JSON-LD identificado por id."""
+    pattern = re.compile(
+        rf'(<script[^>]*\bid="{re.escape(script_id)}"[^>]*>)(.*?)(</script>)',
+        re.DOTALL
+    )
+    m = pattern.search(html)
+    if not m:
+        print(f'    WARN: script id="{script_id}" no encontrado')
+        return html
+    updated = re.sub(rf'("{re.escape(key)}":\s*")[^"]*(")', rf'\g<1>{value}\g<2>', m.group(2))
+    return html[:m.start()] + m.group(1) + updated + m.group(3) + html[m.end():]
+
 def set_el(html, el_id, value, tag=None):
     """
     Reemplaza el contenido interno del elemento con id=el_id con value.
@@ -312,9 +343,32 @@ def fix_uf(html):
     mes_html = build_uf_mes_html(uf_serie, datetime.now().month, YEAR)
     if mes_html:
         html = set_el(html, 'meses-container', mes_html, 'div')
+    # meta description con valor numérico
+    mes_label_actual = MESES_ES[datetime.now().month - 1]
+    desc = (f'UF hoy {uf_s} ({mes_label_actual} {YEAR}). '
+            f'Tabla completa del mes, gráfico histórico anual y conversor UF↔pesos. '
+            f'Fuente oficial Banco Central de Chile.')
+    html = set_meta_content(html, 'meta-desc', desc)
+    # JSON-LD WebPage description con valor
+    html = set_ld_value(html, 'ld-webpage', 'description',
+                        f'UF hoy {uf_s}. Tabla completa del mes, gráfico histórico anual y conversor UF↔pesos.')
+    # JSON-LD Dataset variableMeasured value
+    html = re.sub(r'("value":\s*")\d+(")', rf'\g<1>{round(uf_val)}\g<2>', html, count=2)
+    # conversor ref
+    html = set_el(html, 'conv-uf-val', uf_s, 'span')
     return html
 
 process('uf/index.html', fix_uf, 'uf/index.html')
+
+def fix_uf_og(svg):
+    mes_actual = MESES_ES[datetime.now().month - 1].capitalize()
+    svg = re.sub(r'(<text[^>]*\bid="og-uf-val"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{uf_s}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-uf-fecha"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{mes_actual} {YEAR}\g<2>', svg)
+    return svg
+
+process('assets/img/uf-og.svg', fix_uf_og, 'assets/img/uf-og.svg')
 
 
 # ─── 5. IPC ───────────────────────────────────────────────────────────────────

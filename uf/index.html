@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Valor UF Hoy 2026 — Tabla Completa e Historial | indicadoreschile.cl</title>
-  <meta name="description" content="Valor de la UF hoy en Chile actualizado. Tabla completa del mes, gráfico histórico anual y conversor UF a pesos. Fuente oficial Banco Central.">
+  <meta name="description" id="meta-desc" content="UF hoy $40.845 (julio 2026). Tabla completa del mes, gráfico histórico anual y conversor UF↔pesos. Fuente oficial Banco Central de Chile.">
   <link rel="canonical" href="https://indicadoreschile.cl/uf/">
   <meta property="og:title" content="Valor UF Hoy Chile 2026 — Tabla e Historial">
   <meta property="og:description" content="UF actualizada diariamente. Tabla del mes completa, gráfico anual y conversor instantáneo.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CL">
   <meta property="og:url" content="https://indicadoreschile.cl/uf/">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/uf-og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="preconnect" href="https://mindicador.cl">
@@ -54,7 +58,32 @@
     "description": "Valores históricos diarios de la Unidad de Fomento (UF) en Chile",
     "url": "https://indicadoreschile.cl/uf/",
     "creator": { "@type": "Organization", "name": "Banco Central de Chile" },
-    "license": "https://www.bcch.cl"
+    "license": "https://www.bcch.cl",
+    "variableMeasured": {
+      "@type": "PropertyValue",
+      "name": "Valor UF",
+      "value": "40845",
+      "unitCode": "CLP",
+      "valueReference": { "@type": "QuantitativeValue", "value": "40845", "unitText": "Pesos chilenos" }
+    }
+  }
+  </script>
+  <script id="ld-webpage" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Valor UF Hoy Chile 2026",
+    "description": "UF hoy $40.845. Tabla completa del mes, gráfico histórico anual y conversor UF↔pesos.",
+    "url": "https://indicadoreschile.cl/uf/",
+    "inLanguage": "es-CL",
+    "publisher": { "@type": "Organization", "name": "indicadoreschile.cl", "url": "https://indicadoreschile.cl" },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://indicadoreschile.cl/" },
+        { "@type": "ListItem", "position": 2, "name": "UF", "item": "https://indicadoreschile.cl/uf/" }
+      ]
+    }
   }
   </script>
 
@@ -335,6 +364,30 @@
     </div>
   </div>
 
+  <!-- Conversor UF ↔ CLP -->
+  <span class="section-label" style="margin-top:40px">Conversor UF ↔ Pesos</span>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:40px">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
+      <div>
+        <label style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:8px">UF</label>
+        <input id="conv-uf" type="number" min="0" step="0.01" placeholder="ej. 100"
+          style="width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:18px;font-family:var(--font-mono);box-sizing:border-box;outline:none"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="font-size:20px;color:var(--text-3);padding-top:24px;user-select:none">⇄</div>
+      <div>
+        <label style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:8px">Pesos (CLP)</label>
+        <input id="conv-clp" type="number" min="0" step="1" placeholder="ej. 4.084.500"
+          style="width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:18px;font-family:var(--font-mono);box-sizing:border-box;outline:none"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+    </div>
+    <p id="conv-ref" style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin:14px 0 0">1 UF = <span id="conv-uf-val">$40.845</span> · Ingresa un valor en cualquier campo</p>
+  </div>
+
+  <!-- Link mes actual -->
+  <div id="mes-actual-link" style="margin-bottom:16px"></div>
+
   <!-- Tablas por mes -->
   <div id="meses-container"></div>
 
@@ -486,6 +539,8 @@
     if (anio === anioActual) {
       ufHoy = hoyDato?.valor || ultimo;
       poblarTablaContratos(ufHoy);
+      iniciarConversor(ufHoy);
+      mostrarLinkMesActual();
     }
     document.getElementById('s-min').textContent = fmt.clp(min);
     document.getElementById('s-max').textContent = fmt.clp(max);
@@ -601,6 +656,45 @@
       section.appendChild(body);
       cont.appendChild(section);
     });
+  }
+
+  /* Conversor UF ↔ CLP */
+  function iniciarConversor(ufVal) {
+    const inUF  = document.getElementById('conv-uf');
+    const inCLP = document.getElementById('conv-clp');
+    const ref   = document.getElementById('conv-uf-val');
+    if (ref) ref.textContent = fmt.clp(ufVal);
+    let lock = false;
+    inUF.addEventListener('input', () => {
+      if (lock) return; lock = true;
+      const v = parseFloat(inUF.value);
+      inCLP.value = isNaN(v) ? '' : Math.round(v * ufVal);
+      lock = false;
+    });
+    inCLP.addEventListener('input', () => {
+      if (lock) return; lock = true;
+      const v = parseFloat(inCLP.value);
+      inUF.value = isNaN(v) ? '' : (v / ufVal).toFixed(4);
+      lock = false;
+    });
+  }
+
+  /* Link al mes actual */
+  function mostrarLinkMesActual() {
+    const ahora = new Date();
+    const mesSlug = MESES[ahora.getUTCMonth()].toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const anio = ahora.getUTCFullYear();
+    const href = `/uf/${mesSlug}-${anio}/`;
+    const contenedor = document.getElementById('mes-actual-link');
+    if (!contenedor) return;
+    contenedor.innerHTML =
+      `<a href="${href}" style="display:inline-flex;align-items:center;gap:8px;`
+      + `font-family:var(--font-mono);font-size:13px;color:var(--accent);`
+      + `text-decoration:none;padding:8px 14px;border:1px solid var(--accent);`
+      + `border-radius:var(--radius);transition:background 0.15s"`
+      + ` onmouseover="this.style.background='rgba(59,158,255,0.08)'" onmouseout="this.style.background=''">`
+      + `Ver tabla completa de ${MESES[ahora.getUTCMonth()]} ${anio} →</a>`;
   }
 
   /* Cargar año actual al inicio */
