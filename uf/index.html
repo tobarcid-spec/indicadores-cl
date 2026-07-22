@@ -228,7 +228,7 @@
 <header class="page-header">
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Unidad de Fomento</p>
-    <h1><strong>Valor UF</strong> — Hoy e Historial</h1>
+    <h1><strong>Valor UF Hoy: <span id="h1-uf-val">$40.845</span></strong> — Tabla e Historial 2026</h1>
     <p>Tabla completa, gráfico anual y conversor. Fuente oficial: Banco Central de Chile.</p>
   </div>
 </header>
@@ -479,7 +479,9 @@
     const hoyDato = serie.find(r => r.fecha.split('T')[0] === todayStr);
 
     /* Stats */
-    document.getElementById('s-hoy').textContent = hoyDato ? fmt.clp(hoyDato.valor) : fmt.clp(ultimo);
+    const ufValStr = hoyDato ? fmt.clp(hoyDato.valor) : fmt.clp(ultimo);
+    document.getElementById('s-hoy').textContent = ufValStr;
+    document.getElementById('h1-uf-val').textContent = ufValStr;
 
     if (anio === anioActual) {
       ufHoy = hoyDato?.valor || ultimo;

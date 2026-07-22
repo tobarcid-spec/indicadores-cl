@@ -266,7 +266,8 @@ process('utm/index.html', fix_utm)
 # ─── 4. UF page ───────────────────────────────────────────────────────────────
 
 def fix_uf(html):
-    html = set_el(html, 's-hoy', uf_s, 'div')
+    html = set_el(html, 's-hoy',     uf_s, 'div')
+    html = set_el(html, 'h1-uf-val', uf_s, 'span')
     if uf_st:
         html = set_el(html, 's-min',  clp(uf_st['min']),  'div')
         html = set_el(html, 's-max',  clp(uf_st['max']),  'div')
