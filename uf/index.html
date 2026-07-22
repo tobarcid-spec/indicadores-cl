@@ -379,14 +379,14 @@
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
       <div>
         <label style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:8px">UF</label>
-        <input id="conv-uf" type="number" min="0" step="0.01" placeholder="ej. 100"
+        <input id="conv-uf" type="number" min="0" step="0.01" value="1"
           style="width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:18px;font-family:var(--font-mono);box-sizing:border-box;outline:none"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
       <div style="font-size:20px;color:var(--text-3);padding-top:24px;user-select:none">⇄</div>
       <div>
         <label style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:8px">Pesos (CLP)</label>
-        <input id="conv-clp" type="number" min="0" step="1" placeholder="ej. 4.084.500"
+        <input id="conv-clp" type="text" inputmode="numeric" placeholder="ej. $40.845"
           style="width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:18px;font-family:var(--font-mono);box-sizing:border-box;outline:none"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
@@ -428,7 +428,7 @@
 <tr><td>28</td><td>28/07/2026</td><td>$40.845</td></tr>
 <tr><td>29</td><td>29/07/2026</td><td>$40.845</td></tr>
 <tr><td>30</td><td>30/07/2026</td><td>$40.845</td></tr>
-<tr><td>31</td><td>31/07/2026</td><td>$40.845</td></tr></tbody></table></div></div></div></div></div></div></div>
+<tr><td>31</td><td>31/07/2026</td><td>$40.845</td></tr></tbody></table></div></div></div></div></div></div></div></div></div></div>
 
   <!-- FAQ -->
   <span class="section-label" style="margin-top:48px">Preguntas frecuentes</span>
@@ -670,19 +670,22 @@
     cont.innerHTML = '';
 
     const mesesOrdenados = Object.keys(porMes).map(Number).sort((a, b) => b - a);
+    const mesActualNum = new Date().getUTCMonth() + 1;
+    const mesAbrir = (anio === anioActual && mesesOrdenados.includes(mesActualNum))
+      ? mesActualNum : mesesOrdenados[0];
 
-    mesesOrdenados.forEach((m, idx) => {
+    mesesOrdenados.forEach((m) => {
       const filas = porMes[m].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
       const minM = Math.min(...filas.map(r => r.valor));
       const maxM = Math.max(...filas.map(r => r.valor));
 
-      const isCurrentMonth = (anio === anioActual && m === new Date().getUTCMonth() + 1);
+      const isCurrentMonth = (anio === anioActual && m === mesActualNum);
 
       const section = document.createElement('div');
       section.className = 'month-section' + (isCurrentMonth ? ' month-section--actual' : '');
 
       const header = document.createElement('button');
-      header.className = 'month-header' + (idx === 0 ? ' open' : '');
+      header.className = 'month-header' + (m === mesAbrir ? ' open' : '');
       header.innerHTML = `
         <span>${MESES[m - 1]} ${anio} ${isCurrentMonth ? '<span style="color:var(--accent);font-size:11px;margin-left:8px">(mes actual)</span>' : ''}</span>
         <span class="month-meta">
@@ -723,7 +726,6 @@
   function iniciarConversor(ufVal) {
     const ref = document.getElementById('conv-uf-val');
     if (ref) ref.textContent = fmt.clp(ufVal);
-    /* Clonar para remover listeners anteriores si se llama más de una vez */
     const oldUF  = document.getElementById('conv-uf');
     const oldCLP = document.getElementById('conv-clp');
     if (!oldUF || !oldCLP) return;
@@ -731,12 +733,15 @@
     const inCLP = oldCLP.cloneNode(true);
     oldUF.replaceWith(inUF);
     oldCLP.replaceWith(inCLP);
+    if (!inUF.value) inUF.value = 1;
+    inCLP.value = fmt.clp(Math.round((parseFloat(inUF.value) || 1) * ufVal));
     inUF.addEventListener('input', () => {
       const v = parseFloat(inUF.value);
-      inCLP.value = isNaN(v) ? '' : Math.round(v * ufVal);
+      inCLP.value = isNaN(v) ? '' : fmt.clp(Math.round(v * ufVal));
     });
     inCLP.addEventListener('input', () => {
-      const v = parseFloat(inCLP.value);
+      const raw = inCLP.value.replace(/[^0-9]/g, '');
+      const v = parseInt(raw, 10);
       inUF.value = isNaN(v) ? '' : (v / ufVal).toFixed(4);
     });
   }

@@ -375,7 +375,7 @@
       <div class="swap-btn" onclick="swapConv()" title="Intercambiar">⇄</div>
       <div class="conv-field">
         <span class="conv-label"><span class="conv-flag">🇨🇱</span> Pesos (CLP)</span>
-        <input class="input" id="inp-clp" type="number" min="0" step="1" placeholder="0">
+        <input class="input" id="inp-clp" type="text" inputmode="numeric" placeholder="$0">
       </div>
     </div>
     <div class="conv-result">
@@ -711,14 +711,15 @@
   function calcUSDtoCLP() {
     const v = parseFloat(inpUSD.value) || 0;
     const r = Math.round(v * dolarHoy);
-    inpCLP.value = r;
+    inpCLP.value = fmt.clp(r);
     document.getElementById('conv-texto').textContent =
       `${fmt.num(v, 2)} USD = ${fmt.clp(r)}`;
     document.getElementById('conv-rate').textContent =
       `Tipo de cambio: 1 USD = ${fmt.clp(dolarHoy)}`;
   }
   function calcCLPtoUSD() {
-    const v = parseFloat(inpCLP.value) || 0;
+    const raw = inpCLP.value.replace(/[^0-9]/g, '');
+    const v = parseInt(raw, 10) || 0;
     const r = (v / dolarHoy).toFixed(4);
     inpUSD.value = r;
     document.getElementById('conv-texto').textContent =
@@ -733,9 +734,6 @@
 
   window.swapConv = () => {
     swapped = !swapped;
-    const tmp = inpUSD.value;
-    inpUSD.value = inpCLP.value;
-    inpCLP.value = tmp;
     swapped ? calcCLPtoUSD() : calcUSDtoCLP();
   };
 

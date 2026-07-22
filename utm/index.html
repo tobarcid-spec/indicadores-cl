@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Valor UTM 2026 Chile — Unidad Tributaria Mensual Actualizada | indicadoreschile.cl</title>
-  <meta name="description" content="Valor de la UTM (Unidad Tributaria Mensual) en Chile 2026 actualizado. Tabla histórica, calculadora de multas y equivalencias. Fuente oficial SII y Banco Central.">
-  <meta name="keywords" content="UTM 2026 Chile, unidad tributaria mensual, valor UTM hoy, UTM en pesos, UTM SII Chile, UTA, multas en UTM, tabla histórica UTM, calculadora UTM, equivalencias UTM, indicadores económicos Chile">
+  <meta name="description" id="meta-desc" content="UTM julio 2026: $71.649. Tabla histórica, calculadora de multas en UTM y equivalencias. Fuente oficial SII Chile.">
   <link rel="canonical" href="https://indicadoreschile.cl/utm/">
   <meta property="og:title" content="Valor UTM 2026 Chile — Unidad Tributaria Mensual">
   <meta property="og:description" content="UTM actualizada mensualmente. Tabla histórica, calculadora de multas y UTA. Fuente SII Chile.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://indicadoreschile.cl/utm/">
   <meta property="og:locale" content="es_CL">
-  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/utm-og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="preconnect" href="https://mindicador.cl">
@@ -203,9 +205,22 @@
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "UTM"
+        "name": "UTM",
+        "item": "https://indicadoreschile.cl/utm/"
       }
     ]
+  }
+  </script>
+
+  <script type="application/ld+json" id="ld-webpage">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Valor UTM 2026 Chile — Unidad Tributaria Mensual",
+    "url": "https://indicadoreschile.cl/utm/",
+    "description": "UTM julio 2026: $71.649. Tabla histórica, calculadora de multas y equivalencias.",
+    "inLanguage": "es-CL",
+    "isPartOf": { "@type": "WebSite", "url": "https://indicadoreschile.cl/" }
   }
   </script>
 
@@ -475,7 +490,7 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/assets/js/utils.js"></script>
 <script>
 (async () => {
@@ -547,7 +562,14 @@
     btn.classList.add('active');
 
     let data;
-    try { data = await fetchIndicador('utm', anio); } catch { return; }
+    try {
+      const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000));
+      data = await Promise.race([fetchIndicador('utm', anio), timeout]);
+    } catch(e) {
+      document.getElementById('tabla-utm').innerHTML =
+        '<tr><td colspan="4" style="text-align:center;padding:24px;color:#f87171">No se pudo cargar datos de ' + anio + '. Intenta de nuevo.</td></tr>';
+      return;
+    }
 
     const serie = data.serie
       .filter(r => new Date(r.fecha).getUTCFullYear() === anio)
@@ -564,7 +586,7 @@
     const minFila = serie.find(r => r.valor === min);
     const maxFila = serie.find(r => r.valor === max);
     /* Stats */
-    document.getElementById('s-hoy').textContent = fmt.clp(anio === anioActual ? (utmHoy || ultimo) : ultimo);
+    if (anio === anioActual) document.getElementById('s-hoy').textContent = fmt.clp(utmHoy || ultimo);
     document.getElementById('s-mes').textContent = MESES[new Date(serie[serie.length - 1].fecha).getUTCMonth()];
     document.getElementById('s-min').textContent = fmt.clp(min);
     document.getElementById('s-min-f').textContent = minFila ? MESES[new Date(minFila.fecha).getUTCMonth()].slice(0, 3) : '';
@@ -573,14 +595,14 @@
     const sVar = document.getElementById('s-var');
     sVar.textContent = `${varPct > 0 ? '+' : ''}${varPct}%`;
     sVar.style.color = varPct >= 0 ? 'var(--red)' : 'var(--green)';
-    document.getElementById('s-uta').textContent = fmt.clp(Math.round((anio === anioActual ? (utmHoy || ultimo) : ultimo) * 12));
+    if (anio === anioActual) document.getElementById('s-uta').textContent = fmt.clp(Math.round((utmHoy || ultimo) * 12));
 
     /* Gráfico */
     document.getElementById('chart-subtitle').textContent = `Valor UTM mensual — ${anio}`;
     const labels = serie.map(r => MESES[new Date(r.fecha).getUTCMonth()].slice(0, 3));
 
     if (chartInstance) chartInstance.destroy();
-    chartInstance = new Chart(document.getElementById('chart-utm'), {
+    try { chartInstance = new Chart(document.getElementById('chart-utm'), {
       type: 'bar',
       data: {
         labels,
@@ -616,7 +638,7 @@
           }
         }
       }
-    });
+    }); } catch(e) { console.error('Chart error', e); }
 
     /* Tabla */
     document.getElementById('tabla-label').textContent = `UTM por mes — ${anio}`;

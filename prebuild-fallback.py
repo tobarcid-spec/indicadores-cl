@@ -306,9 +306,26 @@ def fix_utm(html):
         html = set_el(html, 's-max',   clp(utm_st['max']),          'div')
         html = set_el(html, 's-max-f', date_short(utm_st['max_f']), 'div')
         html = set_el(html, 's-var',   pct(utm_st['var']),          'div')
+    mes_label_actual = MESES_ES[datetime.now().month - 1]
+    desc = (f'UTM {mes_label_actual} {YEAR}: {utm_s}. '
+            f'Tabla histórica, calculadora de multas en UTM y equivalencias. '
+            f'Fuente oficial SII Chile.')
+    html = set_meta_content(html, 'meta-desc', desc)
+    html = set_ld_value(html, 'ld-webpage', 'description',
+                        f'UTM {mes_label_actual} {YEAR}: {utm_s}. Tabla histórica, calculadora de multas y equivalencias.')
     return html
 
 process('utm/index.html', fix_utm)
+
+def fix_utm_og(svg):
+    mes_actual = MESES_ES[datetime.now().month - 1].capitalize()
+    svg = re.sub(r'(<text[^>]*\bid="og-utm-val"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{utm_s}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-utm-fecha"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{mes_actual} {YEAR}\g<2>', svg)
+    return svg
+
+process('assets/img/utm-og.svg', fix_utm_og, 'assets/img/utm-og.svg')
 
 
 # ─── 4. UF page ───────────────────────────────────────────────────────────────
