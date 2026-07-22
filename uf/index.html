@@ -742,13 +742,17 @@
     });
   }
 
-  /* Link al mes actual */
-  function mostrarLinkMesActual() {
+  /* Link al mes actual — solo si la página existe */
+  async function mostrarLinkMesActual() {
     const ahora = new Date();
     const mesSlug = MESES[ahora.getUTCMonth()].toLowerCase()
       .normalize('NFD').replace(/[̀-ͯ]/g, '');
     const anio = ahora.getUTCFullYear();
     const href = `/uf/${mesSlug}-${anio}/`;
+    try {
+      const r = await fetch(href, { method: 'HEAD' });
+      if (!r.ok) return;
+    } catch { return; }
     const contenedor = document.getElementById('mes-actual-link');
     if (!contenedor) return;
     contenedor.innerHTML =
