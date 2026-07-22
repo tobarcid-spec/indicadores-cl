@@ -352,7 +352,7 @@
 <header class="page-header">
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">🇺🇸 Tipo de cambio</p>
-    <h1><strong>Dólar hoy: <span id="h1-dolar-val">$933</span></strong> en Chile</h1>
+    <h1><strong>Dólar hoy</strong> en Chile</h1>
     <p>Tipo de cambio observado oficial. Fuente: Banco Central de Chile.</p>
   </div>
 </header>
@@ -687,7 +687,6 @@
   /* Hero */
   const dolarStr = fmt.clp(dolarHoy);
   document.getElementById('dolar-val').textContent = dolarStr;
-  document.getElementById('h1-dolar-val').textContent = dolarStr;
   document.getElementById('dolar-fecha').textContent =
     `Publicado ${fmt.date(todos.dolar.fecha)} · Dólar observado oficial`;
 

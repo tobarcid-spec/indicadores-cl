@@ -263,7 +263,6 @@ process('index.html', fix_dashboard, 'index.html (dashboard)')
 def fix_dolar(html):
     html = set_el(html, 'dolar-val',   dol_s,                         'div')
     html = set_el(html, 'dolar-fecha', f'Valor al {mes_label(dol_f)}', 'p')
-    html = set_el(html, 'h1-dolar-val', dol_s,                        'span')
     html = set_el(html, 's-hoy',  dol_s,  'div')
     if dol_st:
         html = set_el(html, 's-min',   clp(dol_st['min']),          'div')
