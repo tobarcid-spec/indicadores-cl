@@ -139,6 +139,15 @@
 
     /* Month accordion */
     .month-section { margin-bottom: 8px; }
+    .month-section--actual > .month-header {
+      border-color: var(--accent);
+      background: rgba(59,158,255,0.06);
+    }
+    .month-section--actual > .month-header:hover { background: rgba(59,158,255,0.12); }
+    .month-section--actual > .month-body {
+      border-color: var(--accent);
+      border-top: none;
+    }
     .month-header {
       width: 100%;
       background: var(--bg2);
@@ -505,18 +514,33 @@
     tabsEl.appendChild(btn);
   });
 
+  function mostrarError(msg) {
+    const cont = document.getElementById('meses-container');
+    if (!cont) return;
+    cont.innerHTML =
+      `<div style="padding:24px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);`
+      + `border-radius:var(--radius);font-family:var(--font-mono);font-size:13px;color:#f87171">`
+      + `⚠ ${msg}</div>`;
+  }
+
   /* ---- Cargar datos de un año ---- */
   async function cargarAnio(anio, btn) {
-    // Actualizar tab activo
     document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
     anioActivo = anio;
 
+    const cont = document.getElementById('meses-container');
+    if (cont) cont.innerHTML = '<div style="padding:24px;font-family:var(--font-mono);font-size:13px;color:var(--text-3)">Cargando datos…</div>';
+
     let data;
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 10000));
     try {
-      data = await fetchIndicador('uf', anio);
+      data = await Promise.race([fetchIndicador('uf', anio), timeout]);
     } catch(e) {
-      alert('Error cargando datos de ' + anio);
+      mostrarError(e.message === 'timeout'
+        ? `No se pudo cargar el historial de ${anio}. Revisa tu conexión e intenta de nuevo.`
+        : `Error al cargar datos de ${anio}: ${e.message}`);
       return;
     }
 
@@ -615,10 +639,10 @@
       const minM = Math.min(...filas.map(r => r.valor));
       const maxM = Math.max(...filas.map(r => r.valor));
 
-      const section = document.createElement('div');
-      section.className = 'month-section';
-
       const isCurrentMonth = (anio === anioActual && m === new Date().getUTCMonth() + 1);
+
+      const section = document.createElement('div');
+      section.className = 'month-section' + (isCurrentMonth ? ' month-section--actual' : '');
 
       const header = document.createElement('button');
       header.className = 'month-header' + (idx === 0 ? ' open' : '');
