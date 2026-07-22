@@ -13,6 +13,12 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // ── Redirect www → sin www (301 permanente) ─────────────────────────
+    if (url.hostname.startsWith('www.')) {
+      url.hostname = url.hostname.slice(4);
+      return Response.redirect(url.toString(), 301);
+    }
+
     // ── Proxy de API con cache en edge ──────────────────────────────────
     if (url.pathname.startsWith('/api-proxy')) {
       return proxyApi(url);
