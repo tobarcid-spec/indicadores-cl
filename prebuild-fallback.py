@@ -272,6 +272,10 @@ def fix_uf(html):
         html = set_el(html, 's-max',  clp(uf_st['max']),  'div')
         html = set_el(html, 's-var',  pct(uf_st['var']),  'div')
         html = set_el(html, 's-prom', clp(uf_st['prom']), 'div')
+    html = set_el(html, 'uf-garantia', clp(uf_val * 15),  'td')
+    html = set_el(html, 'uf-hipoteca', clp(uf_val * 50),  'td')
+    html = set_el(html, 'uf-mora',     clp(uf_val * 0.1), 'td')
+    html = set_el(html, 'uf-credito',  clp(uf_val * 130), 'td')
     return html
 
 process('uf/index.html', fix_uf, 'uf/index.html')
