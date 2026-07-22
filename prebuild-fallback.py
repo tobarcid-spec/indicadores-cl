@@ -421,9 +421,26 @@ process('ipc/index.html', fix_ipc)
 def fix_calc(html):
     html = set_el(html, 'result-clp', clp(uf_val * 15), 'div')
     html = set_el(html, 'chip-uf',    uf_s,             'span')
+    mes_label_actual = MESES_ES[datetime.now().month - 1]
+    desc = (f'Calculadora de arriendo en UF a pesos Chile. '
+            f'UF hoy {uf_s}: 15 UF = {clp(uf_val * 15)}. '
+            f'Historial 12 meses y gráfico. Fuente Banco Central.')
+    html = set_meta_content(html, 'meta-desc', desc)
+    html = set_ld_value(html, 'ld-webpage', 'description',
+                        f'Convierte tu arriendo en UF a pesos al instante. UF hoy {uf_s}. Historial 12 meses y gráfico.')
     return html
 
 process('calculadora-arriendo-uf/index.html', fix_calc, 'calculadora-arriendo-uf/index.html')
+
+def fix_arriendo_og(svg):
+    mes_actual = MESES_ES[datetime.now().month - 1].capitalize()
+    svg = re.sub(r'(<text[^>]*\bid="og-arriendo-val"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{clp(uf_val * 15)}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-arriendo-uf"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>UF {uf_s} · {mes_actual} {YEAR}\g<2>', svg)
+    return svg
+
+process('assets/img/arriendo-og.svg', fix_arriendo_og, 'assets/img/arriendo-og.svg')
 
 
 # ─── 7. Paginas mensuales UF ─────────────────────────────────────────────────
