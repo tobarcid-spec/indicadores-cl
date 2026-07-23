@@ -27,7 +27,6 @@
     gtag("js", new Date());
     gtag("config", "G-WDW33KBK92");
   </script>
-  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
 </head>
 <body>
 <nav class="navbar">
@@ -82,40 +81,16 @@
 </footer>
 
 <script>
-// Formulario sin backend — usar Formspree.io (gratis)
-// 1. Ir a https://formspree.io → crear cuenta
-// 2. Crear nuevo form → obtener endpoint como https://formspree.io/f/XXXXXXXX
-// 3. Reemplazar el action del form con ese endpoint
-
-async function handleSubmit(e) {
+function handleSubmit(e) {
   e.preventDefault();
-  const btn = e.target.querySelector('button[type=submit]');
-  btn.textContent = 'Enviando…';
-  btn.disabled = true;
-
-  // REEMPLAZAR con tu endpoint de Formspree:
-  const FORMSPREE = 'https://formspree.io/f/XXXXXXXX';
-
-  try {
-    const res = await fetch(FORMSPREE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        message: document.getElementById('msg').value,
-      })
-    });
-    if (res.ok) {
-      document.getElementById('contact-form').style.display = 'none';
-      document.getElementById('success').style.display = 'block';
-    } else {
-      throw new Error();
-    }
-  } catch {
-    btn.textContent = 'Error — intenta de nuevo';
-    btn.disabled = false;
-  }
+  const name    = document.getElementById('name').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const message = document.getElementById('msg').value.trim();
+  const subject = encodeURIComponent('Contacto indicadoreschile.cl — ' + name);
+  const body    = encodeURIComponent('Nombre: ' + name + '\nEmail: ' + email + '\n\nMensaje:\n' + message);
+  window.location.href = 'mailto:tobarcid@gmail.com?subject=' + subject + '&body=' + body;
+  document.getElementById('contact-form').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
 }
 </script>
 </body>
