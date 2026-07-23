@@ -8,8 +8,8 @@
 
   <!-- UF por año -->
   <url><loc>https://indicadoreschile.cl/uf/2026/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://indicadoreschile.cl/uf/2025/</loc><lastmod>2026-04-24</lastmod><changefreq>yearly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://indicadoreschile.cl/uf/2024/</loc><lastmod>2026-04-24</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://indicadoreschile.cl/uf/2025/</loc><lastmod>2026-07-22</lastmod><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://indicadoreschile.cl/uf/2024/</loc><lastmod>2026-07-22</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
 
   <!-- UF por mes 2026 — long tail SEO -->
   <url><loc>https://indicadoreschile.cl/uf/enero-2026/</loc><lastmod>2026-07-22</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
