@@ -4,17 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>¿Qué es la UF en Chile? — Guía Completa 2026 | indicadoreschile.cl</title>
-  <meta name="description" content="Guía completa sobre la Unidad de Fomento (UF) en Chile. Qué es, cómo funciona, para qué se usa, cómo afecta arriendos e hipotecas. Con ejemplos claros y actualizados.">
-  <meta name="keywords" content="qué es la UF Chile, unidad de fomento explicación, para qué sirve la UF, UF arriendo hipoteca Chile, cómo funciona la UF">
+  <meta name="description" id="meta-desc" content="Guía completa sobre la Unidad de Fomento (UF) en Chile. Qué es, cómo funciona, para qué se usa, cómo afecta arriendos e hipotecas. Con ejemplos claros y actualizados.">
   <link rel="canonical" href="https://indicadoreschile.cl/que-es-la-uf/">
   <meta property="og:title" content="¿Qué es la UF en Chile? Guía Completa 2026">
   <meta property="og:description" content="Todo sobre la Unidad de Fomento: qué es, cómo se calcula, para qué sirve y cómo afecta tu arriendo e hipoteca.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://indicadoreschile.cl/que-es-la-uf/">
   <meta property="og:locale" content="es_CL">
-  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/uf-og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
   <meta property="article:published_time" content="2026-04-21">
-  <meta property="article:modified_time" content="2026-05-12T15:30:00+00:00">
+  <meta property="article:modified_time" content="2026-07-22T00:00:00+00:00">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
   <link rel="stylesheet" href="/assets/css/base.css">
 
@@ -26,7 +28,7 @@
     "description": "Guía completa sobre la Unidad de Fomento (UF) en Chile. Qué es, cómo funciona, para qué se usa, cómo afecta arriendos e hipotecas.",
     "url": "https://indicadoreschile.cl/que-es-la-uf/",
     "datePublished": "2026-04-21",
-    "dateModified": "2026-05-12T15:30:00+00:00",
+    "dateModified": "2026-07-22T00:00:00+00:00",
     "author": { "@type": "Organization", "name": "indicadoreschile.cl" },
     "publisher": { "@type": "Organization", "name": "indicadoreschile.cl", "url": "https://indicadoreschile.cl" },
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://indicadoreschile.cl/que-es-la-uf/" }
@@ -218,9 +220,22 @@
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Guía UF"
+        "name": "Guía UF",
+        "item": "https://indicadoreschile.cl/que-es-la-uf/"
       }
     ]
+  }
+  </script>
+
+  <script type="application/ld+json" id="ld-webpage">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "¿Qué es la UF en Chile? — Guía Completa 2026",
+    "url": "https://indicadoreschile.cl/que-es-la-uf/",
+    "description": "Guía completa sobre la Unidad de Fomento (UF) en Chile: qué es, cómo funciona, para qué se usa y cómo afecta arriendos e hipotecas.",
+    "inLanguage": "es-CL",
+    "isPartOf": { "@type": "WebSite", "url": "https://indicadoreschile.cl/" }
   }
   </script>
 
@@ -248,14 +263,14 @@
     <div class="article-eyebrow">Guía — Educación financiera</div>
     <h1 class="article-h1"><strong>¿Qué es la UF</strong><br>en Chile?</h1>
     <div class="article-meta">
-      <span>📅 Actualizado abril 2026</span>
+      <span>📅 Actualizado julio 2026</span>
       <span>📖 Lectura: 8 min</span>
       <span>✅ Fuente: Banco Central de Chile</span>
     </div>
 
     <div class="prose">
 
-      <p>La <strong>UF (Unidad de Fomento)</strong> es una unidad de cuenta reajustable que existe en Chile desde 1967. No es una moneda física — es un número de referencia cuyo valor en pesos cambia todos los días según la inflación. Hoy vale aproximadamente $38.000–$39.000 pesos chilenos, aunque el valor exacto lo puedes consultar en tiempo real en nuestra <a href="/uf/">página de UF</a>.</p>
+      <p>La <strong>UF (Unidad de Fomento)</strong> es una unidad de cuenta reajustable que existe en Chile desde 1967. No es una moneda física — es un número de referencia cuyo valor en pesos cambia todos los días según la inflación. Hoy vale aproximadamente <span id="art-uf-aprox">$40.000–$41.000</span> pesos chilenos, aunque el valor exacto lo puedes consultar en tiempo real en nuestra <a href="/uf/">página de UF</a>.</p>
 
       <p>Si alguna vez firmaste un contrato de arriendo, solicitaste un crédito hipotecario o recibiste una multa del SII expresada en "UF", estás usando esta unidad sin quizás entender del todo cómo funciona. Esta guía te lo explica todo, con ejemplos concretos.</p>
 
@@ -506,11 +521,14 @@
 (async () => {
   const { fmt, fetchHoy } = window.IC;
   try {
-    const todos = await fetchHoy();
+    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000));
+    const todos = await Promise.race([fetchHoy(), timeout]);
     const uf = todos.uf;
     document.getElementById('sb-uf-val').textContent = fmt.clp(uf.valor);
     document.getElementById('sb-uf-date').textContent =
       'Al ' + new Date(uf.fecha).toLocaleDateString('es-CL', { day:'2-digit', month:'long', year:'numeric' });
+    const aprox = document.getElementById('art-uf-aprox');
+    if (aprox) aprox.textContent = fmt.clp(uf.valor);
   } catch {}
 })();
 </script>
