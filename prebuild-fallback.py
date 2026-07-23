@@ -253,9 +253,27 @@ def fix_dashboard(html):
             lambda _: f'{m.group(1)}\n    {otros_cards}\n  </div>',
             html, count=1
         )
+    mes_label_actual = MESES_ES[datetime.now().month - 1]
+    desc = (f'UF hoy {uf_s} · Dólar {dol_s} · UTM {utm_s}. '
+            f'Indicadores económicos Chile actualizados. '
+            f'Conversor UF a pesos en tiempo real. Fuente Banco Central.')
+    html = set_meta_content(html, 'meta-desc', desc)
+    html = set_ld_value(html, 'ld-webpage', 'description',
+                        f'UF hoy {uf_s} · Dólar {dol_s} · UTM {utm_s}. Indicadores económicos Chile actualizados.')
     return html
 
+
+def fix_dashboard_og(svg):
+    svg = re.sub(r'(<text[^>]*\bid="og-dash-uf"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{uf_s}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-dash-dolar"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{dol_s}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-dash-utm"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{utm_s}\g<2>', svg)
+    return svg
+
 process('index.html', fix_dashboard, 'index.html (dashboard)')
+process('assets/img/dashboard-og.svg', fix_dashboard_og, 'assets/img/dashboard-og.svg')
 
 
 # ─── 2. Dolar ─────────────────────────────────────────────────────────────────
