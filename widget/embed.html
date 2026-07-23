@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>UF Chile — Widget</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111720;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'DM Mono', monospace, monospace;
+    }
+    a {
+      display: inline-flex;
+      flex-direction: column;
+      background: #111720;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-decoration: none;
+      min-width: 180px;
+    }
+    .ey { font-size: 10px; color: rgba(138,153,179,0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .val { font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+    .dt { font-size: 11px; color: rgba(138,153,179,0.6); }
+    .ft { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(138,153,179,0.4); }
+  </style>
+</head>
+<body>
+<a href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
+  <div class="ey">Unidad de Fomento · Chile</div>
+  <div class="val" id="val">—</div>
+  <div class="dt" id="dt">—</div>
+  <div class="ft">indicadoreschile.cl</div>
+</a>
+<script>
+fetch('https://mindicador.cl/api/uf')
+  .then(r => r.json())
+  .then(d => {
+    const r = d.serie[0];
+    document.getElementById('val').textContent =
+      new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(r.valor);
+    document.getElementById('dt').textContent =
+      new Date(r.fecha).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      + ' · Banco Central';
+  })
+  .catch(() => {
+    document.getElementById('val').textContent = 'No disponible';
+  });
+</script>
+</body>
+</html>
