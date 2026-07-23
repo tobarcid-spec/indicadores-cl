@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPC Chile 2026 — Inflación Mensual y Acumulada | indicadoreschile.cl</title>
-  <meta name="description" content="IPC Chile actualizado. Inflación mensual y acumulada 2026. Calculadora de reajuste por IPC para contratos y arriendos en pesos. Fuente oficial INE y Banco Central.">
-  <meta name="keywords" content="IPC Chile 2026, inflación Chile hoy, IPC mensual Chile, reajuste IPC, índice precios consumidor Chile">
+  <meta name="description" id="meta-desc" content="IPC Chile -0,2% (diciembre 2025). Inflación mensual y acumulada 2026. Calculadora de reajuste por IPC para contratos y arriendos. Fuente INE y Banco Central.">
   <link rel="canonical" href="https://indicadoreschile.cl/ipc/">
   <meta property="og:title" content="IPC Chile 2026 — Inflación y Calculadora de Reajuste">
   <meta property="og:description" content="IPC mensual actualizado. Inflación acumulada, calculadora de reajuste y tabla histórica. Fuente INE Chile.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://indicadoreschile.cl/ipc/">
   <meta property="og:locale" content="es_CL">
-  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/ipc-og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="preconnect" href="https://mindicador.cl">
@@ -196,9 +198,22 @@
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "IPC"
+        "name": "IPC",
+        "item": "https://indicadoreschile.cl/ipc/"
       }
     ]
+  }
+  </script>
+
+  <script type="application/ld+json" id="ld-webpage">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "IPC Chile 2026 — Inflación Mensual y Acumulada",
+    "url": "https://indicadoreschile.cl/ipc/",
+    "description": "IPC Chile diciembre 2025: -0,2%. Inflación mensual y acumulada, calculadora de reajuste.",
+    "inLanguage": "es-CL",
+    "isPartOf": { "@type": "WebSite", "url": "https://indicadoreschile.cl/" }
   }
   </script>
 
@@ -525,7 +540,7 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/assets/js/utils.js"></script>
 <script>
 (async () => {
@@ -535,9 +550,11 @@
   let ipcSerie = [];
   let ipcPromMensual = 0;
 
+  const timeout10s = () => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000));
+
   /* ─── Datos del día ─── */
   try {
-    const todos = await fetchHoy();
+    const todos = await Promise.race([fetchHoy(), timeout10s()]);
     const ipc = todos?.ipc;
     if (!ipc || ipc.valor == null) throw new Error('sin datos ipc');
     const valMen = ipc.valor;
@@ -559,7 +576,7 @@
   /* ─── Cargar toda la serie base y construir tabs dinámicos ─── */
   let serieCompleta = [];
   try {
-    const data = await fetchIndicador('ipc', '');
+    const data = await Promise.race([fetchIndicador('ipc', ''), timeout10s()]);
     serieCompleta = (data?.serie || []).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
   } catch {
     document.getElementById('tabla-ipc').innerHTML =
@@ -593,8 +610,6 @@
 
     ipcSerie = serieCompleta.filter(r => new Date(r.fecha).getUTCFullYear() === anio);
 
-    if (!ipcSerie.length) {
-    }
     if (!ipcSerie.length) {
       document.getElementById('ipc-acum').textContent = '—';
       document.getElementById('tabla-ipc').innerHTML =
@@ -639,7 +654,7 @@
     for (const r of ipcSerie) { running += r.valor; acumArr.push(parseFloat(running.toFixed(2))); }
 
     if (chartInstance) chartInstance.destroy();
-    chartInstance = new Chart(document.getElementById('chart-ipc'), {
+    try { chartInstance = new Chart(document.getElementById('chart-ipc'), {
       data: {
         labels,
         datasets: [
@@ -701,7 +716,7 @@
           }
         }
       }
-    });
+    }); } catch(e) { console.error('Chart error', e); }
 
     /* Tabla */
     document.getElementById('tabla-label').textContent = `IPC mensual — ${anio}`;

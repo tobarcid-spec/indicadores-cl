@@ -411,9 +411,26 @@ def fix_ipc(html):
     html = set_el(html, 'ipc-mes-label', mes_label(ipc_f),  'p')
     html = set_el(html, 'ipc-acum',     pct(ipc_acum),      'div')
     html = set_el(html, 's-ult',        ipc_s,              'div')
+    mes_ipc = mes_label(ipc_f)
+    desc = (f'IPC Chile {ipc_s} ({mes_ipc}). '
+            f'Inflación mensual y acumulada 2026. '
+            f'Calculadora de reajuste por IPC para contratos y arriendos. Fuente INE y Banco Central.')
+    html = set_meta_content(html, 'meta-desc', desc)
+    html = set_ld_value(html, 'ld-webpage', 'description',
+                        f'IPC Chile {mes_ipc}: {ipc_s}. Inflación mensual y acumulada, calculadora de reajuste.')
     return html
 
 process('ipc/index.html', fix_ipc)
+
+def fix_ipc_og(svg):
+    mes_ipc_cap = mes_label(ipc_f).capitalize()
+    svg = re.sub(r'(<text[^>]*\bid="og-ipc-val"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{ipc_s}\g<2>', svg)
+    svg = re.sub(r'(<text[^>]*\bid="og-ipc-fecha"[^>]*>)[^<]*(</text>)',
+                 rf'\g<1>{mes_ipc_cap}\g<2>', svg)
+    return svg
+
+process('assets/img/ipc-og.svg', fix_ipc_og, 'assets/img/ipc-og.svg')
 
 
 # ─── 6. Calculadora arriendo ──────────────────────────────────────────────────
