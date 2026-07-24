@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git -C /c/procesos/personal/indicadores-cl log --oneline --all)"
+      "Bash(git -C /c/procesos/personal/indicadores-cl log --oneline --all)",
+      "Read(//c/procesos/personal/indicadores-cl/**)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
