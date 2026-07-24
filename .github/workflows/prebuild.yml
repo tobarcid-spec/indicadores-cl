@@ -39,3 +39,28 @@ jobs:
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+
+      - name: Notificar IndexNow (Bing) con URLs actualizadas
+        run: |
+          MESES=(enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre)
+          MES_NUM=$(date +%-m)
+          MES_NOMBRE=${MESES[$MES_NUM-1]}
+          ANIO=$(date +%Y)
+          MES_URL="https://indicadoreschile.cl/uf/${MES_NOMBRE}-${ANIO}/"
+          curl -s -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "{
+              \"host\": \"indicadoreschile.cl\",
+              \"key\": \"52cf498c33d348b8ba4f593067b4f3b0\",
+              \"keyLocation\": \"https://indicadoreschile.cl/52cf498c33d348b8ba4f593067b4f3b0.txt\",
+              \"urlList\": [
+                \"https://indicadoreschile.cl/\",
+                \"https://indicadoreschile.cl/uf/\",
+                \"https://indicadoreschile.cl/dolar/\",
+                \"https://indicadoreschile.cl/utm/\",
+                \"https://indicadoreschile.cl/ipc/\",
+                \"https://indicadoreschile.cl/uf/${ANIO}/\",
+                \"${MES_URL}\"
+              ]
+            }"
+          echo "IndexNow notificado: ${MES_URL}"
