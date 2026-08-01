@@ -5,6 +5,6 @@
   <text x="80" y="210" font-family="monospace" font-size="38" fill="#8899aa">Calculadora Arriendo en UF</text>
   <text x="80" y="330" font-family="monospace" font-size="22" fill="#4a5a6a">15 UF =</text>
   <text x="80" y="400" font-family="Arial,sans-serif" font-size="100" font-weight="700" fill="#ffffff" id="og-arriendo-val">$612.672</text>
-  <text x="80" y="460" font-family="monospace" font-size="28" fill="#3b9eff" id="og-arriendo-uf">UF $40.845 · Julio 2026</text>
+  <text x="80" y="460" font-family="monospace" font-size="28" fill="#3b9eff" id="og-arriendo-uf">UF $40.845 · Agosto 2026</text>
   <text x="80" y="575" font-family="monospace" font-size="20" fill="#4a5a6a">Fuente oficial: Banco Central de Chile</text>
 </svg>
