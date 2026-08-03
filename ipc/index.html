@@ -294,7 +294,8 @@
         <span class="calc-res-val" id="res-diff" style="color:var(--text-2)">—</span>
       </div>
     </div>
-    <p style="font-size:12px;color:var(--text-3);margin-top:12px">* Cálculo usando el IPC mensual real de los últimos meses (desde 2020). Para cálculos legales exactos consulte el INE.</p>
+    <p style="font-size:12px;color:var(--text-3);margin-top:12px">Período usado: <strong id="calc-periodo" style="color:var(--text-2)">—</strong></p>
+    <p style="font-size:12px;color:var(--text-3);margin-top:4px">* Cálculo usando el IPC mensual real de los últimos meses (desde 2020). Para cálculos legales exactos consulte el INE.</p>
   </div>
 
   <div class="ad-container" style="margin:24px 0;text-align:center;min-height:90px">
@@ -762,6 +763,13 @@
     const diff = reajustado - monto;
     document.getElementById('res-monto').textContent = fmt.clp(reajustado);
     document.getElementById('res-diff').textContent = `+${fmt.clp(diff)} (${fmt.num((factor - 1) * 100, 2)}%)`;
+
+    const dIni = new Date(ultimosMeses[0].fecha);
+    const dFin = new Date(ultimosMeses[ultimosMeses.length - 1].fecha);
+    const periodo = ultimosMeses.length < meses
+      ? `${MESES[dIni.getUTCMonth()]} ${dIni.getUTCFullYear()} – ${MESES[dFin.getUTCMonth()]} ${dFin.getUTCFullYear()} (solo ${ultimosMeses.length} meses disponibles)`
+      : `${MESES[dIni.getUTCMonth()]} ${dIni.getUTCFullYear()} – ${MESES[dFin.getUTCMonth()]} ${dFin.getUTCFullYear()}`;
+    document.getElementById('calc-periodo').textContent = periodo;
   }
 
   document.getElementById('inp-monto').addEventListener('input', calcReajuste);
