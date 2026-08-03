@@ -223,7 +223,10 @@ async function fetchBcentralIpcSerie(env, year) {
   const user   = env?.BCENTRAL_API_USER;
   const pass   = env?.BCENTRAL_API_PASS;
   const series = env?.BCENTRAL_IPC_SERIES;
-  if (!user || !pass || !series) return null;
+  if (!user || !pass || !series) {
+    console.error('[bcentral] faltan credenciales: BCENTRAL_API_USER/PASS/IPC_SERIES no configurados como secrets');
+    return null;
+  }
 
   const cacheKey = new Request('https://internal-cache.indicadoreschile.cl/bcentral-ipc');
   const cache = caches.default;
@@ -241,13 +244,21 @@ async function fetchBcentralIpcSerie(env, year) {
     const apiUrl = `https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx?${params}`;
     try {
       const res = await fetch(apiUrl);
-      if (!res.ok) return null;
+      if (!res.ok) {
+        console.error(`[bcentral] HTTP ${res.status} al consultar la API`);
+        return null;
+      }
       const buf = await res.arrayBuffer();
       let text;
       try { text = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
       catch { text = new TextDecoder('iso-8859-1').decode(buf); }
       const data = JSON.parse(text);
+      if (data?.Codigo !== 0) {
+        console.error(`[bcentral] respuesta con error: ${data?.Codigo} ${data?.Descripcion}`);
+        return null;
+      }
       obs = data?.Series?.Obs || [];
+      console.log(`[bcentral] OK: ${obs.length} observaciones recibidas`);
       const toStore = new Response(JSON.stringify(obs), {
         status: 200,
         headers: {
@@ -256,7 +267,10 @@ async function fetchBcentralIpcSerie(env, year) {
         },
       });
       await cache.put(cacheKey, toStore);
-    } catch { return null; }
+    } catch (e) {
+      console.error(`[bcentral] excepcion: ${e.message}`);
+      return null;
+    }
   }
 
   const serie = [];
