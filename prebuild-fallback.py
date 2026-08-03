@@ -93,26 +93,26 @@ def fetch_url(path=''):
 def fetch_api():
     data = fetch_url()
     if data:
-        return data
-    bc_serie = fetch_bcentral_ipc(YEAR)
+        data = dict(data)
+    else:
+        print('  AVISO: usando valores por defecto (API no disponible)')
+        data = dict(DEFAULTS_HOY)
+    # El IPC no se toma de mindicador.cl (dejo de actualizarse, se quedo en
+    # dic-2025): siempre se usa Banco Central. Si no hay credenciales o falla,
+    # cae al valor fijo de DEFAULTS_HOY.
+    bc_serie = fetch_bcentral_ipc()
     if bc_serie:
-        print('  AVISO: usando valores por defecto, IPC via Banco Central')
-        defaults = dict(DEFAULTS_HOY)
-        defaults['ipc'] = bc_serie[-1]
-        return defaults
-    print('  AVISO: usando valores por defecto (API no disponible)')
-    return DEFAULTS_HOY
+        data['ipc'] = bc_serie[-1]
+    elif 'ipc' not in data:
+        data['ipc'] = DEFAULTS_HOY['ipc']
+    return data
 
 def fetch_serie(indicador, year=None):
+    if indicador == 'ipc':
+        return fetch_bcentral_ipc(year)
     path = f'{indicador}/{year}' if year else indicador
     data = fetch_url(path)
-    if data and data.get('serie'):
-        return sorted(data['serie'], key=lambda r: r['fecha'])
-    if indicador == 'ipc':
-        bc_serie = fetch_bcentral_ipc(year)
-        if bc_serie:
-            return bc_serie
-    return []
+    return sorted(data['serie'], key=lambda r: r['fecha']) if data and data.get('serie') else []
 
 # ─── Formato ──────────────────────────────────────────────────────────────────
 

@@ -3,7 +3,7 @@
   <rect x="0" y="0" width="6" height="630" fill="#f97316"/>
   <text x="80" y="108" font-family="monospace" font-size="22" fill="#f97316" letter-spacing="3">INDICADORESCHILE.CL</text>
   <text x="80" y="210" font-family="monospace" font-size="38" fill="#8899aa">IPC — Inflación Chile</text>
-  <text x="80" y="370" font-family="Arial,sans-serif" font-size="130" font-weight="700" fill="#ffffff" id="og-ipc-val">-0,2%</text>
-  <text x="80" y="455" font-family="monospace" font-size="30" fill="#f97316" id="og-ipc-fecha">Diciembre 2025</text>
+  <text x="80" y="370" font-family="Arial,sans-serif" font-size="130" font-weight="700" fill="#ffffff" id="og-ipc-val">+0,0%</text>
+  <text x="80" y="455" font-family="monospace" font-size="30" fill="#f97316" id="og-ipc-fecha">Junio 2026</text>
   <text x="80" y="575" font-family="monospace" font-size="20" fill="#4a5a6a">Fuente oficial: INE Chile · Banco Central</text>
 </svg>
