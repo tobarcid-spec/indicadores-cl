@@ -6,6 +6,9 @@
  * 2. Páginas HTML  → sirve asset estático + inyecta window.__SSR__ con
  *                    valores del día para render instantáneo sin API call
  * 3. Todo lo demás → assets estáticos sin modificar
+ *
+ * Nota: el secret BCENTRAL_IPC_SERIES se renombro (antes IPC_SERIE); este
+ * comentario existe solo para forzar un redeploy y que el Worker lo tome.
  */
 
 const CACHE_TTL = 1800; // 30 minutos
