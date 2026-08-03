@@ -108,42 +108,64 @@ async function proxyApi(url, env) {
   const cacheKey = new Request(apiUrl);
   const cache = caches.default;
 
+  let body, status, cacheState;
+
   // Intentar desde cache de edge
   const cached = await cache.match(cacheKey);
   if (cached) {
-    const h = new Headers(cached.headers);
-    h.set('X-Cache', 'HIT');
-    return new Response(cached.body, { status: cached.status, headers: h });
-  }
+    body = await cached.text();
+    status = cached.status;
+    cacheState = 'HIT';
+  } else {
+    // Fetch desde origen
+    let res;
+    try {
+      res = await fetch(apiUrl);
+    } catch {
+      return new Response(JSON.stringify({ error: 'API no disponible' }), {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
-  // Fetch desde origen
-  let res;
-  try {
-    res = await fetch(apiUrl);
-  } catch {
-    return new Response(JSON.stringify({ error: 'API no disponible' }), {
-      status: 503,
-      headers: { 'Content-Type': 'application/json' },
+    if (!res.ok) return res;
+
+    body = await res.text();
+    status = 200;
+    cacheState = 'MISS';
+
+    // Guardar en cache de edge (respuesta original de mindicador.cl)
+    const toStore = new Response(body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Cache-Control': `public, max-age=${CACHE_TTL}`,
+      },
     });
+    await cache.put(cacheKey, toStore);
   }
 
-  if (!res.ok) return res;
+  // Endpoint base ("hoy", todos los indicadores): el campo ipc que trae
+  // mindicador.cl esta desactualizado, se reemplaza con Banco Central.
+  if (apiPath === '/') {
+    try {
+      const data = JSON.parse(body);
+      const ipcSerie = await fetchBcentralIpcSerie(env, null);
+      if (ipcSerie && ipcSerie.length) {
+        data.ipc = ipcSerie[ipcSerie.length - 1];
+        body = JSON.stringify(data);
+      }
+    } catch { /* si no es JSON valido, se devuelve tal cual */ }
+  }
 
-  const body = await res.text();
-
-  // Guardar en cache de edge
-  const toStore = new Response(body, {
-    status: 200,
+  return new Response(body, {
+    status,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       'Cache-Control': `public, max-age=${CACHE_TTL}`,
+      'X-Cache': cacheState,
     },
   });
-  await cache.put(cacheKey, toStore.clone());
-
-  const h = new Headers(toStore.headers);
-  h.set('X-Cache', 'MISS');
-  return new Response(body, { status: 200, headers: h });
 }
 
 // ── Fetch serie anual de un indicador con cache en edge ──────────────────
