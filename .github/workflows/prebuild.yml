@@ -30,6 +30,10 @@ jobs:
         run: python create-monthly-uf-page.py
 
       - name: Actualizar valores fallback en HTML
+        env:
+          BCENTRAL_API_USER: ${{ secrets.BCENTRAL_API_USER }}
+          BCENTRAL_API_PASS: ${{ secrets.BCENTRAL_API_PASS }}
+          BCENTRAL_IPC_SERIES: ${{ secrets.BCENTRAL_IPC_SERIES }}
         run: python prebuild-fallback.py
 
       - name: Commit y push (si hubo cambios)

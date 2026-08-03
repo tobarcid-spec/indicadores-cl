@@ -9,8 +9,9 @@ Funciona independientemente de lo que haya dentro (—, skeleton, valor anterior
 El JS del cliente sobreescribe en tiempo real con datos frescos.
 """
 
-import json, re, sys
+import json, os, re, sys
 from urllib.request import urlopen, Request
+from urllib.parse import urlencode
 from datetime import datetime
 
 YEAR = datetime.now().year
@@ -31,6 +32,50 @@ DEFAULTS_HOY = {
 
 # ─── Fetch ────────────────────────────────────────────────────────────────────
 
+# Fallback final para IPC: API BDE del Banco Central (si3.bcentral.cl).
+# Requiere credenciales gratuitas (solicitar a contacto_ws@bcentral.cl) y el
+# codigo exacto de la serie "IPC variacion mensual" (buscarlo en el catalogo
+# de si3.bcentral.cl una vez con acceso). Se activa solo si las 3 variables
+# de entorno estan configuradas; si no, se ignora sin afectar el resto.
+BCENTRAL_USER       = os.environ.get('BCENTRAL_API_USER')
+BCENTRAL_PASS       = os.environ.get('BCENTRAL_API_PASS')
+BCENTRAL_IPC_SERIES = os.environ.get('BCENTRAL_IPC_SERIES')
+
+def fetch_bcentral_ipc(year=None):
+    """Trae la serie completa (la API ignora firstdate/lastdate en la practica)
+    y filtra por año en Python, igual como se hace con las series de mindicador.cl."""
+    if not (BCENTRAL_USER and BCENTRAL_PASS and BCENTRAL_IPC_SERIES):
+        return []
+    params = {
+        'user': BCENTRAL_USER,
+        'pass': BCENTRAL_PASS,
+        'function': 'GetSeries',
+        'timeseries': BCENTRAL_IPC_SERIES,
+    }
+    url = 'https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx?' + urlencode(params)
+    try:
+        req = Request(url, headers={'User-Agent': 'prebuild-fallback/1.0 indicadoreschile.cl'})
+        with urlopen(req, timeout=12) as r:
+            raw = r.read()
+        try:
+            text = raw.decode('utf-8')
+        except UnicodeDecodeError:
+            text = raw.decode('latin-1')
+        data = json.loads(text)
+        obs = data.get('Series', {}).get('Obs', [])
+        serie = []
+        for o in obs:
+            if o.get('statusCode') != 'OK':
+                continue
+            d, m, y = o['indexDateString'].split('-')
+            if year and int(y) != year:
+                continue
+            serie.append({'valor': float(o['value']), 'fecha': f'{y}-{m}-{d}T03:00:00.000Z'})
+        return sorted(serie, key=lambda r: r['fecha'])
+    except Exception as e:
+        print(f'  (fallo Banco Central API: {type(e).__name__})')
+        return []
+
 def fetch_url(path=''):
     urls = [
         f'https://mindicador.cl/api/{path}'.rstrip('/') if path else 'https://mindicador.cl/api',
@@ -49,15 +94,25 @@ def fetch_api():
     data = fetch_url()
     if data:
         return data
+    bc_serie = fetch_bcentral_ipc(YEAR)
+    if bc_serie:
+        print('  AVISO: usando valores por defecto, IPC via Banco Central')
+        defaults = dict(DEFAULTS_HOY)
+        defaults['ipc'] = bc_serie[-1]
+        return defaults
     print('  AVISO: usando valores por defecto (API no disponible)')
     return DEFAULTS_HOY
 
 def fetch_serie(indicador, year=None):
     path = f'{indicador}/{year}' if year else indicador
     data = fetch_url(path)
-    if not data or not data.get('serie'):
-        return []
-    return sorted(data['serie'], key=lambda r: r['fecha'])
+    if data and data.get('serie'):
+        return sorted(data['serie'], key=lambda r: r['fecha'])
+    if indicador == 'ipc':
+        bc_serie = fetch_bcentral_ipc(year)
+        if bc_serie:
+            return bc_serie
+    return []
 
 # ─── Formato ──────────────────────────────────────────────────────────────────
 
@@ -185,6 +240,20 @@ def process(path, fn, label=None):
             print('  -- Sin cambios')
     except FileNotFoundError:
         print(f'  SKIP (no existe {path})')
+
+# ─── Test manual: python prebuild-fallback.py --test-bcentral ─────────────────
+
+if '--test-bcentral' in sys.argv:
+    print('Probando conexion a la API BDE del Banco Central...')
+    if not (BCENTRAL_USER and BCENTRAL_PASS and BCENTRAL_IPC_SERIES):
+        print('  FALTA CONFIGURAR: BCENTRAL_API_USER / BCENTRAL_API_PASS / BCENTRAL_IPC_SERIES')
+        sys.exit(1)
+    serie = fetch_bcentral_ipc(YEAR)
+    if serie:
+        print(f'  OK: {len(serie)} observaciones en {YEAR}. Ultima: {serie[-1]}')
+    else:
+        print(f'  Sin datos para {YEAR} (aun no se publica el IPC de este mes, o revisa el codigo de serie)')
+    sys.exit(0)
 
 # ─── Fetch de todos los datos ─────────────────────────────────────────────────
 
