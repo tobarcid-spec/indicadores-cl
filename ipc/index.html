@@ -294,7 +294,7 @@
         <span class="calc-res-val" id="res-diff" style="color:var(--text-2)">—</span>
       </div>
     </div>
-    <p style="font-size:12px;color:var(--text-3);margin-top:12px">* Cálculo estimado usando el IPC promedio mensual del período. Para cálculos legales exactos consulte el INE.</p>
+    <p style="font-size:12px;color:var(--text-3);margin-top:12px">* Cálculo usando el IPC mensual real de los últimos meses (desde 2020). Para cálculos legales exactos consulte el INE.</p>
   </div>
 
   <div class="ad-container" style="margin:24px 0;text-align:center;min-height:90px">
@@ -754,8 +754,10 @@
   function calcReajuste() {
     const monto = parseFloat(document.getElementById('inp-monto').value) || 0;
     const meses = parseInt(document.getElementById('inp-meses').value) || 0;
-    if (!monto || !meses || !ipcPromMensual) return;
-    const factor = Math.pow(1 + ipcPromMensual / 100, meses);
+    if (!monto || !meses || !serieCompleta.length) return;
+    const ultimosMeses = serieCompleta.slice(-meses);
+    if (!ultimosMeses.length) return;
+    const factor = ultimosMeses.reduce((f, r) => f * (1 + r.valor / 100), 1);
     const reajustado = Math.round(monto * factor);
     const diff = reajustado - monto;
     document.getElementById('res-monto').textContent = fmt.clp(reajustado);
