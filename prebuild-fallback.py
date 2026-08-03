@@ -68,8 +68,12 @@ def fetch_bcentral_ipc(year=None):
             if o.get('statusCode') != 'OK':
                 continue
             d, m, y = o['indexDateString'].split('-')
-            if year and int(y) != year:
-                continue
+            anio_obs = int(y)
+            if year:
+                if anio_obs != year:
+                    continue
+            elif anio_obs < 2020:
+                continue  # sin año especifico: recortar historial viejo (no hace falta desde 1928)
             serie.append({'valor': float(o['value']), 'fecha': f'{y}-{m}-{d}T03:00:00.000Z'})
         return sorted(serie, key=lambda r: r['fecha'])
     except Exception as e:

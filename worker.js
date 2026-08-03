@@ -12,6 +12,7 @@
  */
 
 const CACHE_TTL = 1800; // 30 minutos
+const MIN_YEAR = 2020;  // recorte del historial de IPC cuando se pide la serie completa
 
 export default {
   async fetch(request, env) {
@@ -302,7 +303,12 @@ async function fetchBcentralIpcSerie(env, year) {
   for (const o of obs) {
     if (o.statusCode !== 'OK') continue;
     const [d, m, y] = o.indexDateString.split('-');
-    if (year && parseInt(y, 10) !== year) continue;
+    const anioObs = parseInt(y, 10);
+    if (year) {
+      if (anioObs !== year) continue;
+    } else if (anioObs < MIN_YEAR) {
+      continue; // sin año especifico: recortar historial viejo (no hace falta desde 1928)
+    }
     serie.push({ valor: parseFloat(o.value), fecha: `${y}-${m}-${d}T03:00:00.000Z` });
   }
   serie.sort((a, b) => a.fecha.localeCompare(b.fecha));
