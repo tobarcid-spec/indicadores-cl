@@ -13,8 +13,8 @@ Datos oficiales vía API pública de [mindicador.cl](https://mindicador.cl) (Ban
 | Despliegue | Cloudflare Workers (wrangler) |
 | Dominio | indicadoreschile.cl |
 | Analytics | Google Analytics 4 — `G-WDW33KBK92` (activo) |
-| SEO | Search Console verificado, sitemap enviado |
-| AdSense | Pendiente de aprobación |
+| SEO | Search Console verificado, sitemap enviado, IndexNow (Bing) automático |
+| AdSense | Aprobado y activo — unidades Auto Ads en las 20 páginas |
 | Indexación | En proceso (contenido diferenciador agregado) |
 
 ---
@@ -45,7 +45,9 @@ indicadores-cl/
 │   ├── marzo-2026/index.html         ← UF diaria marzo 2026
 │   ├── abril-2026/index.html         ← UF diaria abril 2026
 │   ├── mayo-2026/index.html          ← UF diaria mayo 2026
-│   └── junio-2026/index.html         ← UF diaria junio 2026
+│   ├── junio-2026/index.html         ← UF diaria junio 2026
+│   ├── julio-2026/index.html         ← UF diaria julio 2026
+│   └── agosto-2026/index.html        ← UF diaria agosto 2026 (generada automática por cron)
 │
 ├── dolar/index.html                  ← Tipo de cambio USD/CLP
 ├── utm/index.html                    ← Valor UTM mensual
@@ -61,6 +63,18 @@ indicadores-cl/
 ---
 
 ## Historial de cambios relevantes
+
+### Agosto 2026
+- **IPC migrado a la API del Banco Central**: mindicador.cl dejó de actualizar la serie de IPC (quedó fija en dic-2025). El Worker ahora consulta directo `si3.bcentral.cl` (API BDE) para el IPC, con fallback a mindicador.cl si fallan las credenciales o la consulta. Requiere los secrets `BCENTRAL_API_USER`, `BCENTRAL_API_PASS` y `BCENTRAL_IPC_SERIES` en Cloudflare
+- La calculadora de reajuste ahora usa el IPC mensual real del Banco Central en vez de un valor extrapolado, y muestra el rango de meses usado
+- AdSense aprobado: reemplazo de placeholders "Publicidad" por unidades reales `<ins class="adsbygoogle">` (Auto Ads) en las 20 páginas del sitio
+- Página mensual `/uf/agosto-2026/` creada automáticamente por el cron de GitHub Actions
+
+### Julio 2026
+- Integración de Google AdSense (`ca-pub-9836008718052688`) + `ads.txt`
+- Clave de verificación IndexNow (Bing) agregada en la raíz
+- Notificación automática a IndexNow en cada deploy mensual (workflow `prebuild.yml`)
+- Página mensual `/uf/julio-2026/` creada
 
 ### Mayo 2026
 - Página mensual `/uf/mayo-2026/` creada con tabla diaria y gráfico
@@ -134,27 +148,21 @@ Cloudflare detecta el push desde GitHub y publica automáticamente en ~30 segund
 
 ---
 
-## Monetización — AdSense (pendiente)
+## Monetización — AdSense (activo)
 
-Cuando se reciba aprobación de AdSense, reemplazar en cada página los bloques:
-
-```html
-<!-- Google AdSense — insertar código aquí cuando sea aprobado -->
-```
-
-Por el código real:
+Publisher ID: `ca-pub-9836008718052688`. Cada página tiene el script SDK en el `<head>` y una unidad Auto Ads real en el cuerpo:
 
 ```html
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9836008718052688" crossorigin="anonymous"></script>
 <ins class="adsbygoogle" style="display:block"
-     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-     data-ad-slot="XXXXXXXXXX"
+     data-ad-client="ca-pub-9836008718052688"
+     data-ad-slot="auto"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 ```
 
-Existe el script `activar-adsense.py` para automatizar este reemplazo en todos los archivos.
+Existe el script `activar-adsense.py` que automatizó este reemplazo en todos los archivos.
 
 ---
 
@@ -167,5 +175,6 @@ Existe el script `activar-adsense.py` para automatizar este reemplazo en todos l
 - [x] Open Graph image configurada
 - [x] Contenido diferenciador agregado (resolver des-indexación)
 - [x] Google Analytics 4 activo
+- [x] AdSense aprobado y con unidades Auto Ads activas
+- [x] Notificación automática a IndexNow (Bing) en cada deploy mensual
 - [ ] PageSpeed Insights > 90 en móvil (verificar)
-- [ ] AdSense aprobado
