@@ -9,6 +9,8 @@ import re
 import shutil
 from datetime import datetime
 
+SITEMAP_PATH = os.path.join(os.path.dirname(__file__), 'sitemap.xml')
+
 MESES = ['enero','febrero','marzo','abril','mayo','junio',
          'julio','agosto','septiembre','octubre','noviembre','diciembre']
 MESES_TITULO = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -77,6 +79,49 @@ def set_tag_content(html, el_id, value, tag=None):
 
 def set_title_tag(html, value):
     return re.sub(r'<title[^>]*>.*?</title>', f'<title id="page-title">{value}</title>', html, flags=re.DOTALL)
+
+def update_sitemap(mes, year, prev_slug):
+    """Agrega la URL del mes nuevo al sitemap y baja de prioridad la del mes anterior."""
+    if not os.path.exists(SITEMAP_PATH):
+        print('AVISO: sitemap.xml no encontrado, se omite.')
+        return
+
+    with open(SITEMAP_PATH, encoding='utf-8') as f:
+        sitemap = f.read()
+
+    slug = f'{slug_mes(mes)}-{year}'
+    today = datetime.now().strftime('%Y-%m-%d')
+
+    if f'/uf/{slug}/' in sitemap:
+        print(f'Sitemap: uf/{slug}/ ya esta presente — sin cambios.')
+        return
+
+    # Bajar de prioridad la entrada del mes anterior (pasa a yearly/0.8)
+    prev_pattern = re.compile(
+        rf'(<url><loc>https://indicadoreschile\.cl/uf/{re.escape(prev_slug)}/</loc><lastmod>)'
+        rf'[^<]+(</lastmod><changefreq>)[^<]+(</changefreq><priority>)[^<]+(</priority></url>)'
+    )
+    new_prev_entry = rf'\g<1>{today}\g<2>yearly\g<3>0.8\g<4>'
+    sitemap, n = prev_pattern.subn(new_prev_entry, sitemap)
+    if not n:
+        print(f'AVISO: no se encontro la entrada de uf/{prev_slug}/ en el sitemap para bajarla de prioridad.')
+
+    # Insertar la entrada del mes nuevo justo despues de la del mes anterior
+    new_entry = (
+        f'  <url><loc>https://indicadoreschile.cl/uf/{slug}/</loc>'
+        f'<lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n'
+    )
+    insert_after = re.compile(
+        rf'(<url><loc>https://indicadoreschile\.cl/uf/{re.escape(prev_slug)}/</loc>.*?</url>\n)'
+    )
+    sitemap, n = insert_after.subn(lambda m: m.group(1) + new_entry, sitemap)
+    if not n:
+        print(f'AVISO: no se pudo insertar uf/{slug}/ en el sitemap (no se hallo referencia).')
+        return
+
+    with open(SITEMAP_PATH, 'w', encoding='utf-8') as f:
+        f.write(sitemap)
+    print(f'OK: sitemap.xml actualizado con uf/{slug}/')
 
 def main():
     now = datetime.now()
@@ -202,6 +247,8 @@ def main():
 
     print(f'OK: creada uf/{slug_mes(mes)}-{year}/index.html')
     print(f'    Siguiente paso: prebuild-fallback.py llenara los stats con valores reales.')
+
+    update_sitemap(mes, year, prev_slug)
 
 if __name__ == '__main__':
     main()
