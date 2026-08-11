@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Reajuste de Arriendo por IPC Chile 2026 | indicadoreschile.cl</title>
+  <meta name="description" id="meta-desc" content="Calcula el reajuste de tu arriendo en pesos por IPC. IPC julio 2026: +0,1%. Reajuste anual y semestral, con la serie oficial del Banco Central de Chile.">
+  <link rel="canonical" href="https://indicadoreschile.cl/reajuste-arriendo-ipc/">
+  <meta property="og:title" content="Calculadora de Reajuste de Arriendo por IPC — Chile 2026">
+  <meta property="og:description" content="Calcula cuánto sube tu arriendo en pesos al reajustarlo por IPC. Reajuste anual o semestral con datos oficiales del Banco Central.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:url" content="https://indicadoreschile.cl/reajuste-arriendo-ipc/">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/ipc-og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="preconnect" href="https://mindicador.cl">
+  <link rel="dns-prefetch" href="https://mindicador.cl">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cada cuánto se reajusta un arriendo en pesos por IPC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Depende exclusivamente de lo pactado en el contrato de arriendo. Lo más común en Chile es un reajuste anual, aunque algunos contratos establecen reajuste semestral (cada 6 meses). Si el contrato no dice nada sobre reajuste, el arrendador no puede subir el precio hasta la renovación." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Es obligatorio reajustar el arriendo por IPC en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. La ley de arriendo (N° 18.101) no obliga a incluir una cláusula de reajuste por IPC. Si el contrato no la incluye explícitamente, el monto se mantiene fijo en pesos hasta que ambas partes acuerden un cambio o el contrato termine." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cómo se calcula el reajuste de un arriendo por IPC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Se multiplica el monto del arriendo por (1 + IPC acumulado del período). Por ejemplo, si el arriendo es $450.000 y el IPC acumulado de los últimos 12 meses es 4,2%, el nuevo valor es $450.000 × 1,042 = $468.900. Usa la calculadora de esta página ingresando el monto y el período de reajuste." }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué diferencia hay entre reajustar por IPC y por UF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El reajuste por UF es diario y automático: el valor en pesos cambia cada día según la UF. El reajuste por IPC en un arriendo en pesos ocurre solo en las fechas pactadas en el contrato (anual o semestral) y debe solicitarse explícitamente aplicando el IPC acumulado del período, no el del día." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+
+    .calc-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .calc-wrap::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .calc-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
+    .calc-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .calc-field { display: flex; flex-direction: column; gap: 6px; }
+
+    .period-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .period-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 14px; font-size: 13px; color: var(--text-2); cursor: pointer; font-family: var(--font-body); transition: all 0.15s; }
+    .period-btn:hover { border-color: var(--border-em); }
+    .period-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+    .result-box {
+      background: var(--bg3);
+      border: 1px solid var(--border-em);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .result-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .result-value { font-family: var(--font-mono); font-size: clamp(28px, 6vw, 42px); font-weight: 500; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .result-detail { font-size: 13px; color: var(--text-2); }
+
+    .info-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .info-chip { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; font-size: 12px; color: var(--text-2); font-family: var(--font-mono); }
+    .info-chip span { color: var(--text); font-weight: 500; }
+
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 32px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th:not(:first-child) { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 10px 16px; color: var(--text-2); }
+    tbody td:first-child { color: var(--text); font-weight: 500; }
+    tbody td:not(:first-child) { text-align: right; }
+
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+
+    .ad-slot { background: var(--bg2); border: 1px dashed var(--border-em); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 32px; }
+
+    @media (max-width: 480px) {
+      .calc-wrap { padding: 20px; }
+      .calc-fields { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDW33KBK92"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-WDW33KBK92");
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://indicadoreschile.cl/" },
+      { "@type": "ListItem", "position": 2, "name": "Reajuste de arriendo por IPC", "item": "https://indicadoreschile.cl/reajuste-arriendo-ipc/" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Calculadora de Reajuste de Arriendo por IPC Chile 2026",
+    "url": "https://indicadoreschile.cl/reajuste-arriendo-ipc/",
+    "description": "Calcula el reajuste de tu arriendo en pesos por IPC. Reajuste anual y semestral con la serie oficial del Banco Central de Chile.",
+    "inLanguage": "es-CL",
+    "isPartOf": { "@type": "WebSite", "url": "https://indicadoreschile.cl/" }
+  }
+  </script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9836008718052688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadoreschile.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/ipc/">IPC</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="breadcrumb" style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--text-3);margin-bottom:12px">
+      <a href="/" style="color:var(--text-3);text-decoration:none">Inicio</a>
+      <span>›</span>
+      <a href="/ipc/" style="color:var(--text-3);text-decoration:none">IPC</a>
+      <span>›</span>
+      <span>Reajuste de arriendo</span>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Herramienta</p>
+    <h1><strong>Reajuste de arriendo</strong> por IPC</h1>
+    <p>Calcula cuánto sube tu arriendo en pesos al reajustarlo por IPC — anual o semestral, con datos oficiales del Banco Central.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- CALCULADORA -->
+  <div class="calc-wrap animate">
+    <div class="calc-fields">
+      <div class="calc-field">
+        <label class="calc-label" for="inp-monto">Monto actual del arriendo ($)</label>
+        <input class="input" id="inp-monto" type="number" min="1" step="1000" value="450000" placeholder="Ej: 450000">
+      </div>
+      <div class="calc-field">
+        <label class="calc-label" for="inp-meses">Meses de reajuste</label>
+        <input class="input" id="inp-meses" type="number" min="1" max="60" step="1" value="12" placeholder="Ej: 12">
+      </div>
+    </div>
+
+    <div class="period-btns">
+      <button class="period-btn" data-meses="6">Reajuste semestral (6 meses)</button>
+      <button class="period-btn active" data-meses="12">Reajuste anual (12 meses)</button>
+      <button class="period-btn" data-meses="24">2 años (24 meses)</button>
+    </div>
+
+    <div class="result-box" id="result-box">
+      <div class="result-label">Monto reajustado</div>
+      <div class="result-value" id="res-monto">—</div>
+      <div class="result-detail" id="res-diff"></div>
+    </div>
+
+    <div class="info-chips">
+      <div class="info-chip">Período usado: <span id="calc-periodo">—</span></div>
+      <div class="info-chip">IPC acumulado: <span id="calc-acum">—</span></div>
+    </div>
+  </div>
+
+  <div class="ad-container" style="margin:24px 0;text-align:center;min-height:90px">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-9836008718052688"
+       data-ad-slot="auto"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+  <!-- CONTENIDO EDITORIAL -->
+
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:0 0 12px">Cómo funciona el reajuste de arriendo por IPC</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:20px">
+    A diferencia de un arriendo en UF —que se reajusta automáticamente cada día—, un arriendo pactado en <strong style="color:var(--text)">pesos</strong> solo cambia de precio si el contrato lo estipula. Lo más común en Chile es una cláusula de reajuste <strong style="color:var(--text)">anual</strong> (cada 12 meses) o, en algunos casos, <strong style="color:var(--text)">semestral</strong> (cada 6 meses), aplicando el IPC acumulado del período sobre el monto vigente.
+  </p>
+
+  <div style="background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin-bottom:28px">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Caso práctico</div>
+    <p style="font-size:14px;color:var(--text-2);line-height:1.8;margin:0">
+      Tienes un arriendo de <strong style="color:var(--text)">$500.000</strong> firmado en enero 2025 con cláusula de reajuste anual por IPC. El IPC acumulado enero–diciembre 2025 fue aproximadamente <strong style="color:var(--text)">4,7%</strong>. Al renovar en enero 2026, el nuevo monto es $500.000 × 1,047 = <strong style="color:var(--ipc)">$523.500</strong> — un alza de $23.500 mensuales.
+    </p>
+  </div>
+
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:0 0 12px">Reajuste en pesos vs. arriendo en UF</h2>
+  <div class="table-wrap" style="margin-bottom:28px">
+    <table>
+      <thead>
+        <tr>
+          <th>Aspecto</th>
+          <th>Arriendo en pesos + IPC</th>
+          <th>Arriendo en UF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Frecuencia del reajuste</td>
+          <td>Solo si el contrato lo pacta (anual o semestral)</td>
+          <td>Diaria, automática</td>
+        </tr>
+        <tr>
+          <td>Cómo se calcula</td>
+          <td>Monto × (1 + IPC acumulado del período)</td>
+          <td>Cantidad de UF × valor UF del día de pago</td>
+        </tr>
+        <tr>
+          <td>Quién debe solicitarlo</td>
+          <td>El arrendador, explícitamente, al vencer el período</td>
+          <td>Se aplica solo — no requiere solicitud</td>
+        </tr>
+        <tr>
+          <td>Previsibilidad mensual</td>
+          <td style="color:var(--green)">Alta — el monto no cambia entre reajustes</td>
+          <td style="color:var(--red)">Baja — cambia cada mes con la UF</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:13px;color:var(--text-3);margin-bottom:32px">
+    ¿Tu arriendo está en UF? Usa la <a href="/calculadora-arriendo-uf/" style="color:var(--accent)">calculadora de arriendo en UF</a> para convertirlo a pesos al valor de hoy.
+  </p>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:32px">
+    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">Lo que dice la ley sobre el reajuste</div>
+    <ul style="font-size:14px;color:var(--text-2);line-height:1.9;padding-left:20px;margin:0">
+      <li>La <strong style="color:var(--text)">Ley de Arriendo (N° 18.101)</strong> no obliga a incluir una cláusula de reajuste por IPC. Si el contrato no la menciona, el monto se mantiene fijo hasta la renovación.</li>
+      <li>El reajuste debe estar <strong style="color:var(--text)">expresamente pactado</strong> en el contrato, indicando el índice (IPC) y la periodicidad (anual, semestral, etc.).</li>
+      <li>El IPC que se aplica es el <strong style="color:var(--text)">acumulado del período</strong> (ej. los últimos 12 meses), publicado mensualmente por el INE — no el IPC de un solo mes.</li>
+      <li>Si el contrato no especifica el mecanismo de cálculo, se recomienda usar el IPC acumulado entre el mes de inicio y el mes de renovación, como en el caso práctico de arriba.</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">Preguntas frecuentes</p>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cada cuánto se reajusta un arriendo en pesos por IPC?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Depende exclusivamente de lo pactado en el contrato de arriendo. Lo más común en Chile es un reajuste anual, aunque algunos contratos establecen reajuste semestral (cada 6 meses). Si el contrato no dice nada sobre reajuste, el arrendador no puede subir el precio hasta la renovación.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Es obligatorio reajustar el arriendo por IPC en Chile?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        No. La ley de arriendo (N° 18.101) no obliga a incluir una cláusula de reajuste por IPC. Si el contrato no la incluye explícitamente, el monto se mantiene fijo en pesos hasta que ambas partes acuerden un cambio o el contrato termine.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Cómo se calcula el reajuste de un arriendo por IPC?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        Se multiplica el monto del arriendo por (1 + IPC acumulado del período). Por ejemplo, si el arriendo es $450.000 y el IPC acumulado de los últimos 12 meses es 4,2%, el nuevo valor es $450.000 × 1,042 = $468.900. Usa la calculadora de esta página ingresando el monto y el período de reajuste.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ¿Qué diferencia hay entre reajustar por IPC y por UF?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">
+        El reajuste por UF es diario y automático: el valor en pesos cambia cada día según la UF. El reajuste por IPC en un arriendo en pesos ocurre solo en las fechas pactadas en el contrato (anual o semestral) y debe solicitarse explícitamente aplicando el IPC acumulado del período, no el del día.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadoreschile.cl — Datos: INE · Banco Central de Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/ipc/">IPC</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchIndicador, MESES } = window.IC;
+  let serieCompleta = [];
+
+  const timeout10s = () => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000));
+
+  try {
+    const data = await Promise.race([fetchIndicador('ipc', ''), timeout10s()]);
+    serieCompleta = (data?.serie || []).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  } catch (e) {
+    document.getElementById('res-monto').textContent = 'Error al cargar datos';
+    console.error(e);
+  }
+
+  function calcReajuste() {
+    const monto = parseFloat(document.getElementById('inp-monto').value) || 0;
+    const meses = parseInt(document.getElementById('inp-meses').value) || 0;
+    if (!monto || !meses || !serieCompleta.length) return;
+
+    const ultimosMeses = serieCompleta.slice(-meses);
+    if (!ultimosMeses.length) return;
+
+    const factor = ultimosMeses.reduce((f, r) => f * (1 + r.valor / 100), 1);
+    const reajustado = Math.round(monto * factor);
+    const diff = reajustado - monto;
+
+    document.getElementById('res-monto').textContent = fmt.clp(reajustado);
+    document.getElementById('res-diff').textContent =
+      `${diff >= 0 ? '+' : ''}${fmt.clp(diff)} respecto al monto actual`;
+    document.getElementById('calc-acum').textContent =
+      `${(factor - 1) * 100 >= 0 ? '+' : ''}${fmt.num((factor - 1) * 100, 2)}%`;
+
+    const dIni = new Date(ultimosMeses[0].fecha);
+    const dFin = new Date(ultimosMeses[ultimosMeses.length - 1].fecha);
+    const periodo = ultimosMeses.length < meses
+      ? `${MESES[dIni.getUTCMonth()]} ${dIni.getUTCFullYear()} – ${MESES[dFin.getUTCMonth()]} ${dFin.getUTCFullYear()} (solo ${ultimosMeses.length} meses disponibles)`
+      : `${MESES[dIni.getUTCMonth()]} ${dIni.getUTCFullYear()} – ${MESES[dFin.getUTCMonth()]} ${dFin.getUTCFullYear()}`;
+    document.getElementById('calc-periodo').textContent = periodo;
+  }
+
+  document.getElementById('inp-monto').addEventListener('input', calcReajuste);
+  document.getElementById('inp-meses').addEventListener('input', calcReajuste);
+
+  document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('inp-meses').value = btn.dataset.meses;
+      calcReajuste();
+    });
+  });
+
+  calcReajuste();
+})();
+</script>
+
+</body>
+</html>
