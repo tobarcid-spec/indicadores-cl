@@ -63,6 +63,8 @@ jobs:
                 \"https://indicadoreschile.cl/dolar/\",
                 \"https://indicadoreschile.cl/utm/\",
                 \"https://indicadoreschile.cl/ipc/\",
+                \"https://indicadoreschile.cl/calculadora-arriendo-uf/\",
+                \"https://indicadoreschile.cl/reajuste-arriendo-ipc/\",
                 \"https://indicadoreschile.cl/uf/${ANIO}/\",
                 \"${MES_URL}\"
               ]
