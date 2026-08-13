@@ -98,6 +98,11 @@
 
     .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
 
+    /* Contexto del año - editorial único */
+    .anio-context { background: var(--bg2); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin-bottom: 24px; }
+    .anio-context h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .anio-context p { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 0; }
+
     @media (max-width: 480px) { .month-meta { display: none; } }
   </style>
   <!-- Google Analytics 4 -->
@@ -180,6 +185,12 @@
 </header>
 
 <main class="container">
+
+  <!-- CONTEXTO DEL AÑO (único por año — contenido editorial) -->
+  <div class="anio-context" id="anio-context">
+    <h3 id="ctx-anio-title">Cargando contexto…</h3>
+    <p id="ctx-anio-text"></p>
+  </div>
 
   <!-- NAV AÑOS -->
   <div class="year-nav" id="year-nav">
@@ -277,6 +288,28 @@
     `Tabla completa con todos los valores diarios de la UF en Chile durante ${anio}.`;
   document.getElementById('chart-anio').textContent = anio;
   document.getElementById('tabla-label').textContent = `Tabla UF ${anio} — por mes`;
+
+  /* ─── Contexto editorial único del año ─── */
+  const ANIO_CONTEXTOS = {
+    2024: {
+      title: '2024: retorno a una inflación de un dígito bajo',
+      text: 'Tras el pico inflacionario de 2022 (IPC acumulado de 12,8%), 2024 marcó la consolidación de la baja en los precios en Chile. El IPC anual se ubicó dentro del rango meta del Banco Central (3% ±1 punto), lo que se tradujo en una UF con alzas graduales y predecibles, sin los saltos abruptos que afectaron a arriendos e hipotecas indexadas dos años antes.'
+    },
+    2025: {
+      title: '2025: estabilidad y convergencia a la meta del Banco Central',
+      text: 'Durante 2025 la inflación chilena continuó su proceso de convergencia hacia la meta de 3% anual del Banco Central. La UF mantuvo un ritmo de crecimiento moderado y consistente mes a mes, reflejando un IPC sin sobresaltos mayores — a diferencia de los años de alta inflación post-pandemia, donde las variaciones mensuales llegaban a superar el 1%.'
+    },
+    2026: {
+      title: '2026: alza acumulada más marcada que en el bienio anterior',
+      text: 'La UF partió 2026 en torno a $38.300 y hacia agosto superaba los $40.800, un incremento acumulado superior al 6% en el año — el mayor de los últimos ejercicios. El repunte se concentró principalmente entre abril y mayo, con un IPC más elevado por alzas estacionales en alimentos y energía, para luego moderarse marcadamente hacia julio, con variaciones mensuales cercanas a cero.'
+    }
+  };
+  const ctxAnio = ANIO_CONTEXTOS[anio] || {
+    title: `UF ${anio} — evolución anual`,
+    text: `Esta página recopila los valores diarios de la UF durante ${anio}, calculados por el Banco Central de Chile en base al IPC mensual publicado por el INE. Revisa el detalle mes a mes en las tablas desplegables más abajo.`
+  };
+  document.getElementById('ctx-anio-title').textContent = ctxAnio.title;
+  document.getElementById('ctx-anio-text').textContent = ctxAnio.text;
 
   /* ─── Nav años ─── */
   const nav = document.getElementById('year-nav');
