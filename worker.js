@@ -100,6 +100,7 @@ async function proxyApi(url, env) {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           'Cache-Control': `public, max-age=${CACHE_TTL}`,
+          'Access-Control-Allow-Origin': '*',
         },
       });
     }
@@ -125,7 +126,7 @@ async function proxyApi(url, env) {
     } catch {
       return new Response(JSON.stringify({ error: 'API no disponible' }), {
         status: 503,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       });
     }
 
@@ -165,6 +166,7 @@ async function proxyApi(url, env) {
       'Content-Type': 'application/json;charset=UTF-8',
       'Cache-Control': `public, max-age=${CACHE_TTL}`,
       'X-Cache': cacheState,
+      'Access-Control-Allow-Origin': '*',
     },
   });
 }
