@@ -3,7 +3,7 @@
   <rect x="0" y="0" width="6" height="630" fill="#3b9eff"/>
   <text x="80" y="108" font-family="monospace" font-size="22" fill="#3b9eff" letter-spacing="3">INDICADORESCHILE.CL</text>
   <text x="80" y="210" font-family="monospace" font-size="38" fill="#8899aa">Valor UF Hoy</text>
-  <text x="80" y="370" font-family="Arial,sans-serif" font-size="130" font-weight="700" fill="#ffffff" id="og-uf-val">$40.804</text>
-  <text x="80" y="455" font-family="monospace" font-size="30" fill="#3b9eff" id="og-uf-fecha">Agosto 2026</text>
+  <text x="80" y="370" font-family="Arial,sans-serif" font-size="130" font-weight="700" fill="#ffffff" id="og-uf-val">$40.875</text>
+  <text x="80" y="455" font-family="monospace" font-size="30" fill="#3b9eff" id="og-uf-fecha">Septiembre 2026</text>
   <text x="80" y="575" font-family="monospace" font-size="20" fill="#4a5a6a">Fuente oficial: Banco Central de Chile</text>
 </svg>
