@@ -9,7 +9,7 @@
   <link rel="canonical" id="page-canonical" href="https://indicadoreschile.cl/uf/2026/">
   <meta property="og:title" id="og-title" content="Valor UF 2026 Chile — Tabla Completa">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
-  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20261005">
   <script src="/assets/js/chart.min.js"></script>
 
   <style>
@@ -254,7 +254,7 @@
   </div>
 </footer>
 
-<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/utils.js?v=20261005"></script>
 <script>
 (async () => {
   const { fmt, fetchIndicador, MESES, anioActual } = window.IC;
@@ -311,6 +311,7 @@
     btn.textContent = a;
     nav.appendChild(btn);
   });
+  window.IC.agregarBotonCSV('year-nav', 'uf', 'valor_uf_clp', { anio });
 
   /* ─── Paginador ─── */
   const pager = document.getElementById('year-pager');

@@ -221,16 +221,34 @@ def set_el(html, el_id, value, tag=None):
     tags = [tag] if tag else TAGS
     for t in tags:
         pattern = re.compile(
-            rf'(<{t}(?:\s[^>]*)?\bid="{re.escape(el_id)}"[^>]*>)(.*?)</{t}>',
+            rf'(<{t}(?:\s[^>]*)?\bid="{re.escape(el_id)}"[^>]*>)',
             re.DOTALL
         )
         m = pattern.search(html)
         if m:
-            def replacer(match, v=value, t=t):
-                return f'{match.group(1)}{v}</{t}>'
-            return pattern.sub(replacer, html, count=1)
+            fin = _cierre_balanceado(html, m.end(), t)
+            if fin is None:
+                print(f'    WARN: id="{el_id}" sin cierre </{t}>')
+                return html
+            return f'{html[:m.end()]}{value}{html[fin:]}'
     print(f'    WARN: id="{el_id}" no encontrado')
     return html
+
+def _cierre_balanceado(html, inicio, t):
+    """
+    Posicion del </t> que cierra el elemento cuyo contenido empieza en `inicio`,
+    contando los <t> anidados. Un regex no greedy se detenia en el primer </div>
+    interno y dejaba cierres sobrantes en cada ejecucion (bug de /uf/).
+    """
+    profundidad = 1
+    for m in re.finditer(rf'<{t}(?:\s[^>]*)?>|</{t}>', html[inicio:]):
+        if m.group(0).startswith('</'):
+            profundidad -= 1
+            if profundidad == 0:
+                return inicio + m.start()
+        else:
+            profundidad += 1
+    return None
 
 def process(path, fn, label=None):
     print(f'\n[{label or path}]')

@@ -60,6 +60,16 @@ Cloudflare Edge (CDN)
 4. El JavaScript del browser lee esas variables al cargar → render instantáneo sin petición adicional
 5. Si el Worker falla, el JS hace fetch directamente a `/api-proxy/` como fallback
 
+### Caché de /assets: subir la versión al editar utils.js o base.css
+
+Los archivos de `/assets/` se sirven con caché de 1 año (`immutable`). Las páginas los referencian con `?v=AAAAMMDD` (por ejemplo `/assets/js/utils.js?v=20261005`). **Al modificar `utils.js` o `base.css`, cambiar ese número en todas las páginas**, por ejemplo con:
+
+```
+sed -i "s#utils.js?v=[0-9]*#utils.js?v=NUEVO#; s#base.css?v=[0-9]*#base.css?v=NUEVO#" $(git ls-files "*.html")
+```
+
+Si no, quienes ya visitaron el sitio seguirán con la versión vieja.
+
 ### Datos estáticos en /data (carga rápida)
 
 mindicador.cl es lento y variable (4-20 s). Para no depender de él al momento de la visita, el workflow `datos.yml` ejecuta `scripts/actualizar-datos.mjs` cada 3 horas (y justo después de medianoche en Chile) y guarda los indicadores como JSON en `/data` (`hoy.json`, `uf.json`, `uf-2026.json`, `ipc.json`, etc.). Solo hace commit si hubo cambios.

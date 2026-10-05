@@ -122,6 +122,56 @@ async function cargarHoy() {
   return data;
 }
 
+/* ---- Exportar series a CSV ----
+   Separador ";" y coma decimal, con BOM UTF-8: abre directo en Excel en español. */
+function descargarCSV(nombre, encabezados, filas) {
+  const esc = v => {
+    const s = String(v ?? '');
+    return /[;"\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const texto = [encabezados, ...filas].map(f => f.map(esc).join(';')).join('\r\n');
+  const url = URL.createObjectURL(new Blob(['\uFEFF' + texto], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombre;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function exportarSerieCSV(tipo, anio, encabezadoValor) {
+  // IPC se pide completo (una sola serie); el resto, por año
+  const data = await fetchIndicador(tipo, tipo === 'ipc' ? '' : String(anio));
+  const serie = (data.serie || [])
+    .filter(r => new Date(r.fecha).getUTCFullYear() === Number(anio))
+    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  if (!serie.length) throw new Error('sin datos');
+  descargarCSV(`${tipo}-${anio}.csv`, ['fecha', encabezadoValor],
+    serie.map(r => [r.fecha.slice(0, 10), String(r.valor).replace('.', ',')]));
+}
+
+/* Agrega un botón "Descargar CSV" al contenedor. El año sale de la pestaña activa
+   (.year-tab.active) o de opts.anio si la página no tiene pestañas. */
+function agregarBotonCSV(contenedorId, tipo, encabezadoValor, opts = {}) {
+  const cont = document.getElementById(contenedorId);
+  if (!cont) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn-csv';
+  btn.textContent = '⬇ Descargar CSV';
+  btn.title = 'Descarga la serie del año en CSV (abre directo en Excel)';
+  btn.onclick = async () => {
+    const activa = cont.querySelector('.year-tab.active');
+    const anio = opts.anio ?? (activa ? parseInt(activa.textContent, 10) : anioActual);
+    btn.disabled = true;
+    try { await exportarSerieCSV(tipo, anio, encabezadoValor); }
+    catch (e) { alert('No se pudo descargar la serie. Intenta de nuevo en unos segundos.'); }
+    btn.disabled = false;
+  };
+  cont.appendChild(btn);
+}
+
 /* ---- Mes en español ---- */
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const mesNombre = n => MESES[n - 1];
@@ -133,4 +183,4 @@ const anioActual = hoy.getFullYear();
 const mesActual = hoy.getMonth() + 1;
 
 /* ---- Exportar para uso global ---- */
-window.IC = { fmt, fetchIndicador, fetchHoy, MESES, mesNombre, mesSlug, hoy, anioActual, mesActual };
+window.IC = { fmt, fetchIndicador, fetchHoy, descargarCSV, exportarSerieCSV, agregarBotonCSV, MESES, mesNombre, mesSlug, hoy, anioActual, mesActual };
