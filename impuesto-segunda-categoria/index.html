@@ -56,13 +56,13 @@
     .res.main .res-val { color: var(--amber); }
     .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
     .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 12px; }
-    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
-    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--border); line-height: 1.3; }
     thead th:first-child { text-align: left; }
     tbody tr { border-bottom: 1px solid var(--border); }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--bg3); }
-    tbody td { padding: 10px 16px; color: var(--text-2); text-align: right; white-space: nowrap; }
+    tbody td { padding: 8px 10px; color: var(--text-2); text-align: right; white-space: nowrap; }
     tbody td:first-child { text-align: left; color: var(--text); font-weight: 500; }
     tr.activo { background: rgba(251,191,36,0.08); }
     tr.activo td { color: var(--amber) !important; }
@@ -75,6 +75,7 @@
     .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--amber); }
     .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
     .faq-item.open .faq-a { display: block; }
+    @media (max-width: 900px) { table { font-size: 11px; } tbody td { padding: 8px 7px; } thead th { padding: 8px 7px; } }
     @media (max-width: 540px) { .calc-card { padding: 20px; } }
   </style>
 
