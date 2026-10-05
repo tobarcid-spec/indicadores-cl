@@ -1,0 +1,47 @@
+name: Actualizar datos de indicadores
+
+on:
+  schedule:
+    # Cada 3 horas
+    - cron: '20 */3 * * *'
+    # Justo despues de medianoche en Chile (verano e invierno): valores del dia nuevo
+    - cron: '10 3,4 * * *'
+
+  # Ejecución manual desde GitHub Actions → pestaña Actions → "Run workflow"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actualizar-datos
+  cancel-in-progress: false
+
+jobs:
+  update-datos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Descargar indicadores a /data
+        env:
+          BCENTRAL_API_USER: ${{ secrets.BCENTRAL_API_USER }}
+          BCENTRAL_API_PASS: ${{ secrets.BCENTRAL_API_PASS }}
+          BCENTRAL_IPC_SERIES: ${{ secrets.BCENTRAL_IPC_SERIES }}
+        run: node scripts/actualizar-datos.mjs
+
+      - name: Commit y push (si hubo cambios)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: actualizar datos de indicadores (automatico)'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+          file_pattern: 'data/*.json'

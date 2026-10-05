@@ -239,25 +239,32 @@
   }
 
   try {
+    /* Todo se pide en paralelo: el mes actual se muestra apenas llegan los datos de hoy
+       y el selector se completa cuando llegan las series de cada año. */
+    const seriesP = [anioActual, anioActual - 1].map(a => fetchIndicador('utm', a).then(d => ({ a, d })).catch(() => null));
     const hoy = (await fetchHoy()).utm;
     const sel = $('mes');
     const mesesAnio = new Map(); /* clave "aaaa-mm" -> { etiqueta, valor } */
     const clave = f => { const d = new Date(f); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0'); };
     const etiqueta = f => { const d = new Date(f); return MESES[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); };
     mesesAnio.set(clave(hoy.fecha), { etiqueta: etiqueta(hoy.fecha), valor: hoy.valor });
-    for (const a of [anioActual, anioActual - 1]) {
-      try {
-        (await fetchIndicador('utm', a)).serie.forEach(r => {
-          if (new Date(r.fecha).getUTCFullYear() === a) mesesAnio.set(clave(r.fecha), { etiqueta: etiqueta(r.fecha), valor: r.valor });
-        });
-      } catch (e) { /* si falla un año, el selector queda con los meses disponibles */ }
-    }
-    const claves = [...mesesAnio.keys()].sort().reverse();
-    sel.innerHTML = claves.map(k => '<option value="' + k + '">' + mesesAnio.get(k).etiqueta + '</option>').join('');
-    sel.value = clave(hoy.fecha);
+    const pintarOpciones = () => {
+      const elegido = sel.value || clave(hoy.fecha);
+      const claves = [...mesesAnio.keys()].sort().reverse();
+      sel.innerHTML = claves.map(k => '<option value="' + k + '">' + mesesAnio.get(k).etiqueta + '</option>').join('');
+      sel.value = mesesAnio.has(elegido) ? elegido : clave(hoy.fecha);
+    };
+    pintarOpciones();
     sel.addEventListener('change', () => aplicar(mesesAnio.get(sel.value).valor));
     $('inp').addEventListener('input', calc);
     aplicar(hoy.valor);
+    for (const r of await Promise.all(seriesP)) {
+      if (!r || !Array.isArray(r.d?.serie)) continue; /* si falla un año, el selector queda con los meses disponibles */
+      r.d.serie.forEach(x => {
+        if (new Date(x.fecha).getUTCFullYear() === r.a) mesesAnio.set(clave(x.fecha), { etiqueta: etiqueta(x.fecha), valor: x.valor });
+      });
+    }
+    pintarOpciones();
   } catch (e) {
     $('utm-act').textContent = 'no disponible';
   }

@@ -571,6 +571,8 @@
 <script>
 (async () => {
   const { fmt, fetchHoy, fetchIndicador, MESES, anioActual, mesActual } = window.IC;
+  /* Adelanta la serie mientras llegan los datos de hoy (pedidos en paralelo) */
+  fetchIndicador('uf').catch(() => {});
 
   /* ---- Cargar todos los indicadores ---- */
   let todos;

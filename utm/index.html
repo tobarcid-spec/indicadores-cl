@@ -497,6 +497,8 @@
 <script>
 (async () => {
   const { fmt, fetchIndicador, fetchHoy, MESES, anioActual } = window.IC;
+  /* Adelanta la serie mientras llegan los datos de hoy (pedidos en paralelo) */
+  fetchIndicador('utm', anioActual).catch(() => {});
   const ANIOS = [anioActual, anioActual - 1, anioActual - 2];
   let utmHoy = null;
   let chartInstance = null;

@@ -2,7 +2,7 @@
    indicadores.cl — Utilidades JS compartidas
    ========================================= */
 
-// Proxy en el Worker de Cloudflare — cachea 30 min en edge, mismo dominio
+// Proxy en el Worker de Cloudflare (respaldo si falta el dato estático), mismo dominio
 const API_BASE = '/api-proxy';
 
 /* ---- Formateo de números ---- */
@@ -13,8 +13,32 @@ const fmt = {
   dateShort: d => new Date(d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' }),
 };
 
+/* ---- Datos estáticos: /data/*.json, regenerados por el workflow cada pocas horas ----
+   Salen del CDN (milisegundos) y evitan depender de mindicador.cl, que tarda 4-20 s. */
+const DATA_BASE = '/data';
+
+async function fetchEstatico(archivo) {
+  const res = await fetch(`${DATA_BASE}/${archivo}`, { cache: 'no-cache' });
+  if (!res.ok || !(res.headers.get('Content-Type') || '').includes('json')) throw new Error(`data ${res.status}`);
+  return res.json();
+}
+
+/* Evita pedidos duplicados: si una página adelanta una carga, la segunda llamada
+   reutiliza la misma promesa en vez de volver a pedir. */
+const enVuelo = new Map();
+function unaVez(key, fn) {
+  if (!enVuelo.has(key)) enVuelo.set(key, fn().finally(() => enVuelo.delete(key)));
+  return enVuelo.get(key);
+}
+
+const hoyChile = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Santiago' });
+
 /* ---- Fetch con cache en localStorage (TTL 1 hora) ---- */
-async function fetchIndicador(tipo, fecha = '') {
+function fetchIndicador(tipo, fecha = '') {
+  return unaVez(`ind_${tipo}_${fecha || 'hoy'}`, () => cargarIndicador(tipo, fecha));
+}
+
+async function cargarIndicador(tipo, fecha) {
   const key = `ind_${tipo}_${fecha || 'hoy'}`;
 
   // Prioridad 0: serie pre-inyectada por el Worker (cero latencia, render instantáneo)
@@ -35,7 +59,16 @@ async function fetchIndicador(tipo, fecha = '') {
     }
   } catch { localStorage.removeItem(key); }
 
-  // Prioridad 2: llamada al proxy en edge (cachea 30 min en Cloudflare)
+  // Prioridad 2: archivo estático /data (CDN). Si falta o viene vacío, se sigue al proxy.
+  try {
+    const data = await fetchEstatico(fecha ? `${tipo}-${fecha}.json` : `${tipo}.json`);
+    if (Array.isArray(data?.serie) && data.serie.length) {
+      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+      return data;
+    }
+  } catch { /* cae al proxy */ }
+
+  // Prioridad 3: llamada al proxy en edge (cachea en Cloudflare)
   const url = fecha
     ? `${API_BASE}/${tipo}/${fecha}`
     : `${API_BASE}/${tipo}`;
@@ -47,7 +80,11 @@ async function fetchIndicador(tipo, fecha = '') {
 }
 
 /* ---- Fetch de todos los indicadores de hoy ---- */
-async function fetchHoy() {
+function fetchHoy() {
+  return unaVez('ind_hoy_all', cargarHoy);
+}
+
+async function cargarHoy() {
   const key = 'ind_hoy_all';
 
   // Prioridad 1: datos pre-inyectados por el Worker (cero latencia)
@@ -67,7 +104,17 @@ async function fetchHoy() {
     }
   } catch { localStorage.removeItem(key); }
 
-  // Prioridad 3: llamada al proxy en edge
+  // Prioridad 3: archivo estático /data/hoy.json. Se usa solo si trae IPC del
+  // Banco Central y la UF es de hoy (hora de Chile); si no, se pide al proxy.
+  try {
+    const data = await fetchEstatico('hoy.json');
+    if (data?.ipc_ok && data.uf?.fecha && data.uf.fecha.slice(0, 10) >= hoyChile()) {
+      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+      return data;
+    }
+  } catch { /* cae al proxy */ }
+
+  // Prioridad 4: llamada al proxy en edge
   const res = await fetch(API_BASE);
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   const data = await res.json();

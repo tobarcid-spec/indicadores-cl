@@ -1,7 +1,8 @@
 /**
  * Cloudflare Worker — indicadoreschile.cl
  *
- * 1. /api-proxy/*  → proxy con cache en edge (30 min) a mindicador.cl
+ * 1. /api-proxy/*  → proxy con cache en edge a mindicador.cl (dato viejo se
+ *                    sirve al instante y se refresca en segundo plano)
  *    (excepto /api-proxy/ipc*, que se sirve desde el Banco Central)
  * 2. Páginas HTML  → sirve asset estático + inyecta window.__SSR__ con
  *                    valores del día para render instantáneo sin API call
@@ -11,11 +12,15 @@
  * comentario existe solo para forzar un redeploy y que el Worker lo tome.
  */
 
-const CACHE_TTL = 1800; // 30 minutos
+const CACHE_TTL = 1800;                 // 30 min: un dato mas viejo se considera "viejo" y se refresca en segundo plano
+const STALE_MAX = 86400;                // 24 h: cuanto se conserva un dato viejo para poder servirlo al instante
+const PAST_YEAR_TTL = 43200;            // 12 h: los anios cerrados casi no cambian
+const PAST_YEAR_STALE_MAX = 2592000;    // 30 dias
+const ORIGIN_TIMEOUT = 20000;           // mindicador.cl llega a tardar 20 s: no esperar mas que eso
 const MIN_YEAR = 2020;  // recorte del historial de IPC cuando se pide la serie completa
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
     // ── Redirect www → sin www (301 permanente) ─────────────────────────
@@ -26,7 +31,7 @@ export default {
 
     // ── Proxy de API con cache en edge ──────────────────────────────────
     if (url.pathname.startsWith('/api-proxy')) {
-      return proxyApi(url, env);
+      return proxyApi(url, env, ctx);
     }
 
     // ── Assets estáticos ────────────────────────────────────────────────
@@ -60,8 +65,8 @@ export default {
 
     const [html, hoy, serie] = await Promise.all([
       assetRes.text(),
-      fetchHoy(env),
-      serieType ? fetchSerie(serieType, year, env) : Promise.resolve(null),
+      fetchHoy(env, ctx),
+      serieType ? fetchSerie(serieType, year, env, ctx) : Promise.resolve(null),
     ]);
 
     let script = '';
@@ -83,8 +88,56 @@ export default {
   },
 };
 
+// ── Cache en edge con "stale-while-revalidate" ───────────────────────────
+// mindicador.cl es lento y variable (4-20 s). Si hay un dato guardado, se
+// responde al instante aunque este viejo y se refresca en segundo plano; el
+// visitante solo espera cuando no hay nada guardado.
+function ttlsPara(apiPath) {
+  const m = apiPath.match(/^\/(?:uf|dolar|utm|euro)\/(\d{4})$/);
+  if (m && Number(m[1]) < new Date().getFullYear()) {
+    return { soft: PAST_YEAR_TTL, hard: PAST_YEAR_STALE_MAX };
+  }
+  return { soft: CACHE_TTL, hard: STALE_MAX };
+}
+
+async function traerYGuardar(apiUrl, hard) {
+  const res = await fetch(apiUrl, { signal: AbortSignal.timeout(ORIGIN_TIMEOUT) });
+  if (!res.ok) return { res };
+  const body = await res.text();
+  await caches.default.put(new Request(apiUrl), new Response(body, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Cache-Control': `public, max-age=${hard}`,
+      'X-Cached-At': String(Date.now()),
+    },
+  }));
+  return { body };
+}
+
+// Devuelve { body, state } | { res } (respuesta de error del origen) | { unavailable: true }
+async function cachedFetch(apiUrl, ctx, { soft, hard }) {
+  const cached = await caches.default.match(new Request(apiUrl));
+  if (cached) {
+    const body = await cached.text();
+    const edad = (Date.now() - Number(cached.headers.get('X-Cached-At') || 0)) / 1000;
+    if (edad > soft) {
+      const refresco = traerYGuardar(apiUrl, hard).catch(() => {});
+      if (ctx) ctx.waitUntil(refresco);
+      return { body, state: 'STALE' };
+    }
+    return { body, state: 'HIT' };
+  }
+  try {
+    const r = await traerYGuardar(apiUrl, hard);
+    return r.res ? { res: r.res } : { body: r.body, state: 'MISS' };
+  } catch {
+    return { unavailable: true };
+  }
+}
+
 // ── Proxy a mindicador.cl con cache en edge ──────────────────────────────
-async function proxyApi(url, env) {
+async function proxyApi(url, env, ctx) {
   const apiPath = url.pathname.replace('/api-proxy', '') || '/';
 
   // IPC: mindicador.cl dejo de actualizar esta serie (quedo fija en dic-2025).
@@ -106,46 +159,16 @@ async function proxyApi(url, env) {
     }
   }
 
-  const apiUrl = `https://mindicador.cl/api${apiPath}${url.search}`;
-  const cacheKey = new Request(apiUrl);
-  const cache = caches.default;
-
-  let body, status, cacheState;
-
-  // Intentar desde cache de edge
-  const cached = await cache.match(cacheKey);
-  if (cached) {
-    body = await cached.text();
-    status = cached.status;
-    cacheState = 'HIT';
-  } else {
-    // Fetch desde origen
-    let res;
-    try {
-      res = await fetch(apiUrl);
-    } catch {
-      return new Response(JSON.stringify({ error: 'API no disponible' }), {
-        status: 503,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      });
-    }
-
-    if (!res.ok) return res;
-
-    body = await res.text();
-    status = 200;
-    cacheState = 'MISS';
-
-    // Guardar en cache de edge (respuesta original de mindicador.cl)
-    const toStore = new Response(body, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Cache-Control': `public, max-age=${CACHE_TTL}`,
-      },
+  const ttls = ttlsPara(apiPath);
+  const r = await cachedFetch(`https://mindicador.cl/api${apiPath}${url.search}`, ctx, ttls);
+  if (r.res) return r.res;
+  if (r.unavailable) {
+    return new Response(JSON.stringify({ error: 'API no disponible' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     });
-    await cache.put(cacheKey, toStore);
   }
+  let body = r.body;
 
   // Endpoint base ("hoy", todos los indicadores): el campo ipc que trae
   // mindicador.cl esta desactualizado, se reemplaza con Banco Central.
@@ -161,76 +184,31 @@ async function proxyApi(url, env) {
   }
 
   return new Response(body, {
-    status,
+    status: 200,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      'Cache-Control': `public, max-age=${CACHE_TTL}`,
-      'X-Cache': cacheState,
+      'Cache-Control': `public, max-age=${ttls.soft}`,
+      'X-Cache': r.state,
       'Access-Control-Allow-Origin': '*',
     },
   });
 }
 
 // ── Fetch serie anual de un indicador con cache en edge ──────────────────
-async function fetchSerie(indicador, year, env) {
+async function fetchSerie(indicador, year, env, ctx) {
   if (indicador === 'ipc') return fetchBcentralIpcSerie(env, year);
 
-  const apiUrl = `https://mindicador.cl/api/${indicador}/${year}`;
-  const cacheKey = new Request(apiUrl);
-  const cache = caches.default;
-
-  const cached = await cache.match(cacheKey);
-  if (cached) {
-    try {
-      const data = await cached.json();
-      return data.serie || null;
-    } catch { /* continúa */ }
-  }
-
-  try {
-    const res = await fetch(apiUrl);
-    if (!res.ok) return null;
-    const body = await res.text();
-    const data = JSON.parse(body);
-    const toStore = new Response(body, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': `public, max-age=${CACHE_TTL}`,
-      },
-    });
-    await cache.put(cacheKey, toStore);
-    return data.serie || null;
-  } catch { return null; }
+  const r = await cachedFetch(`https://mindicador.cl/api/${indicador}/${year}`, ctx, ttlsPara(`/${indicador}/${year}`));
+  if (r.body === undefined) return null;
+  try { return JSON.parse(r.body).serie || null; } catch { return null; }
 }
 
 // ── Fetch "todos los indicadores de hoy" con cache en edge ───────────────
-async function fetchHoy(env) {
-  const cacheKey = new Request('https://mindicador.cl/api');
-  const cache = caches.default;
-
+async function fetchHoy(env, ctx) {
+  const r = await cachedFetch('https://mindicador.cl/api', ctx, { soft: CACHE_TTL, hard: STALE_MAX });
   let data = null;
-  const cached = await cache.match(cacheKey);
-  if (cached) {
-    try { data = await cached.json(); } catch { /* continúa */ }
-  }
-
-  if (!data) {
-    try {
-      const res = await fetch('https://mindicador.cl/api');
-      if (res.ok) {
-        const body = await res.text();
-        data = JSON.parse(body);
-        const toStore = new Response(body, {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': `public, max-age=${CACHE_TTL}`,
-          },
-        });
-        await cache.put(cacheKey, toStore);
-      }
-    } catch { /* data queda null */ }
+  if (r.body !== undefined) {
+    try { data = JSON.parse(r.body); } catch { /* data queda null */ }
   }
 
   // El IPC de mindicador.cl esta desactualizado: se reemplaza con Banco Central.

@@ -60,6 +60,14 @@ Cloudflare Edge (CDN)
 4. El JavaScript del browser lee esas variables al cargar → render instantáneo sin petición adicional
 5. Si el Worker falla, el JS hace fetch directamente a `/api-proxy/` como fallback
 
+### Datos estáticos en /data (carga rápida)
+
+mindicador.cl es lento y variable (4-20 s). Para no depender de él al momento de la visita, el workflow `datos.yml` ejecuta `scripts/actualizar-datos.mjs` cada 3 horas (y justo después de medianoche en Chile) y guarda los indicadores como JSON en `/data` (`hoy.json`, `uf.json`, `uf-2026.json`, `ipc.json`, etc.). Solo hace commit si hubo cambios.
+
+El cliente (`assets/js/utils.js`) busca los datos en este orden: inyección del Worker → localStorage (1 h) → `/data/*.json` → `/api-proxy` (respaldo). `hoy.json` solo se usa si trae IPC del Banco Central (`ipc_ok`) y la UF es de hoy en hora de Chile; si no, se pide al proxy. El Worker responde con el dato en caché aunque esté viejo y lo refresca en segundo plano.
+
+Primera vez o tras cambiar credenciales: ejecutar el workflow a mano (Actions → Actualizar datos de indicadores → Run workflow). Requiere los secrets `BCENTRAL_API_USER`, `BCENTRAL_API_PASS` y `BCENTRAL_IPC_SERIES` para generar `ipc.json` y `hoy.json`.
+
 ### Prebuild de datos estáticos
 
 El script `prebuild-fallback.py` se ejecuta localmente antes de hacer deploy cuando se necesita actualizar stats estáticos (mínimo, máximo, promedio, variación del mes/año). Hace fetch a mindicador.cl y escribe los valores directamente en atributos de elementos HTML por `id`. Esto garantiza que los crawlers de Google vean datos reales sin ejecutar JavaScript.
