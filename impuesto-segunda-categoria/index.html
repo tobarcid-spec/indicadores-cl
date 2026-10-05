@@ -116,7 +116,7 @@
 
   <div class="calc-card animate">
     <div class="calc-title">Calculadora del impuesto a tu sueldo</div>
-    <div class="calc-desc">Ingresa la renta imponible del mes: sueldo bruto menos cotizaciones previsionales y de salud. Se calcula con la UTM vigente: <strong id="utm-act" style="color:var(--amber)">—</strong>.</div>
+    <div class="calc-desc">Ingresa la renta imponible del mes: sueldo bruto menos cotizaciones previsionales y de salud. Se calcula con la UTM del mes elegido en la tabla de abajo: <strong id="utm-act" style="color:var(--amber)">—</strong>.</div>
     <div class="calc-field">
       <span class="calc-label-txt">Renta tributable mensual ($)</span>
       <input class="input" id="inp" type="number" min="0" step="10000" value="1800000" inputmode="numeric">
@@ -131,6 +131,7 @@
   </div>
 
   <span class="section-label">Tabla mensual (con UTM del mes)</span>
+  <div class="calc-field" style="max-width:260px;margin-bottom:12px"><span class="calc-label-txt">Mes</span><select class="input" id="mes" aria-label="Mes de la tabla"></select></div>
   <div class="table-wrap"><table>
     <thead><tr><th>Tramo</th><th>Desde (UTM)</th><th>Hasta (UTM)</th><th>Factor</th><th>Rebaja (UTM)</th><th>Desde ($)</th><th>Hasta ($)</th><th>Rebaja ($)</th></tr></thead>
     <tbody id="tabla">
@@ -144,7 +145,7 @@
       <tr data-i="7"><td>8</td><td>310</td><td>y más</td><td>40%</td><td>38,82</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
     </tbody>
   </table></div>
-  <p class="note">Fuente: art. 43 N°1 de la Ley sobre Impuesto a la Renta, contrastada con la <a href="https://www.sii.cl/valores_y_fechas/impuesto_2da_categoria/impuesto2026.htm" rel="noopener" style="color:var(--amber)">tabla mensual del SII</a>. Es la que aplica a trabajadores dependientes y pensionados. Los valores en UTM son fijos; en pesos cambian cada mes.</p>
+  <p class="note">Fuente: art. 43 N°1 de la Ley sobre Impuesto a la Renta, contrastada con la <a href="https://www.sii.cl/valores_y_fechas/impuesto_2da_categoria/impuesto2026.htm" rel="noopener" style="color:var(--amber)">tabla mensual del SII</a>. Es la que aplica a trabajadores dependientes y pensionados. Los valores en UTM son fijos; en pesos cambian cada mes. Los montos se muestran con 2 decimales, sin aproximar, igual que en el SII.</p>
 
   <div class="ad-container" style="margin:24px 0;text-align:center;min-height:90px">
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9836008718052688" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
@@ -204,11 +205,22 @@
 <script src="/assets/js/utils.js"></script>
 <script>
 (async () => {
-  const { fmt, fetchHoy } = window.IC;
+  const { fmt, fetchHoy, fetchIndicador, MESES, anioActual } = window.IC;
   const $ = id => document.getElementById(id);
+  /* Pesos con 2 decimales exactos, como en las tablas del SII */
+  const fmt2 = v => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Math.round(v * 100) / 100);
   /* [desde UTM, hasta UTM, factor, rebaja UTM] */
   const T = [[0,13.5,0,0],[13.5,30,.04,.54],[30,50,.08,1.74],[50,70,.135,4.49],[70,90,.23,11.14],[90,120,.304,17.8],[120,310,.35,23.32],[310,Infinity,.4,38.82]];
   let utm = null;
+
+  function pintarTabla() {
+    document.querySelectorAll('#tabla tr').forEach(tr => {
+      const i = +tr.dataset.i, [, h, , r] = T[i];
+      tr.querySelector('.d').textContent = i === 0 ? '—' : fmt2(T[i - 1][1] * utm + 0.01);
+      tr.querySelector('.h').textContent = isFinite(h) ? fmt2(h * utm) : 'y más';
+      tr.querySelector('.r').textContent = r ? fmt2(r * utm) : '—';
+    });
+  }
 
   function calc() {
     if (!utm) return;
@@ -224,17 +236,33 @@
     document.querySelectorAll('#tabla tr').forEach(tr => tr.classList.toggle('activo', +tr.dataset.i === i));
   }
 
-  try {
-    utm = (await fetchHoy()).utm.valor;
-    $('utm-act').textContent = fmt.clp(utm);
-    document.querySelectorAll('#tabla tr').forEach(tr => {
-      const [d, h, , r] = T[+tr.dataset.i];
-      tr.querySelector('.d').textContent = fmt.clp(Math.round(d * utm));
-      tr.querySelector('.h').textContent = isFinite(h) ? fmt.clp(Math.round(h * utm)) : 'y más';
-      tr.querySelector('.r').textContent = r ? fmt.clp(Math.round(r * utm)) : '—';
-    });
-    $('inp').addEventListener('input', calc);
+  function aplicar(valor) {
+    utm = valor;
+    $('utm-act').textContent = fmt2(utm);
+    pintarTabla();
     calc();
+  }
+
+  try {
+    const hoy = (await fetchHoy()).utm;
+    const sel = $('mes');
+    const mesesAnio = new Map(); /* clave "aaaa-mm" -> { etiqueta, valor } */
+    const clave = f => { const d = new Date(f); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0'); };
+    const etiqueta = f => { const d = new Date(f); return MESES[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); };
+    mesesAnio.set(clave(hoy.fecha), { etiqueta: etiqueta(hoy.fecha), valor: hoy.valor });
+    for (const a of [anioActual, anioActual - 1]) {
+      try {
+        (await fetchIndicador('utm', a)).serie.forEach(r => {
+          if (new Date(r.fecha).getUTCFullYear() === a) mesesAnio.set(clave(r.fecha), { etiqueta: etiqueta(r.fecha), valor: r.valor });
+        });
+      } catch (e) { /* si falla un año, el selector queda con los meses disponibles */ }
+    }
+    const claves = [...mesesAnio.keys()].sort().reverse();
+    sel.innerHTML = claves.map(k => '<option value="' + k + '">' + mesesAnio.get(k).etiqueta + '</option>').join('');
+    sel.value = clave(hoy.fecha);
+    sel.addEventListener('change', () => aplicar(mesesAnio.get(sel.value).valor));
+    $('inp').addEventListener('input', calc);
+    aplicar(hoy.valor);
   } catch (e) {
     $('utm-act').textContent = 'no disponible';
   }
