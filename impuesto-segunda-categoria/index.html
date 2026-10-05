@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impuesto Segunda Categoría 2026 — Tabla en Pesos y Calculadora | indicadoreschile.cl</title>
+  <meta name="description" content="Tabla del Impuesto Único de Segunda Categoría 2026 en UTM y en pesos, actualizada con la UTM del mes. Calculadora del impuesto a tu sueldo.">
+  <link rel="canonical" href="https://indicadoreschile.cl/impuesto-segunda-categoria/">
+  <meta property="og:title" content="Impuesto Segunda Categoría 2026 — Tabla en Pesos y Calculadora">
+  <meta property="og:description" content="Tramos, factores y rebajas en UTM y en pesos, más calculadora del impuesto a tu sueldo.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://indicadoreschile.cl/impuesto-segunda-categoria/">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:image" content="https://indicadoreschile.cl/assets/img/og.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
+  <link rel="stylesheet" href="/assets/css/base.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "¿Desde qué sueldo se paga impuesto de segunda categoría en Chile?", "acceptedAnswer": { "@type": "Answer", "text": "Se paga cuando la renta imponible mensual (sueldo menos cotizaciones previsionales y de salud) supera 13,5 UTM. Bajo ese monto el trabajador está exento." } },
+      { "@type": "Question", "name": "¿Cómo se calcula el Impuesto Único de Segunda Categoría?", "acceptedAnswer": { "@type": "Answer", "text": "Se multiplica la renta tributable por el factor del tramo que le corresponde y se resta la cantidad a rebajar de ese tramo, expresada en UTM del mes." } },
+      { "@type": "Question", "name": "¿Los tramos cambian cada mes?", "acceptedAnswer": { "@type": "Answer", "text": "Los tramos, factores y rebajas en UTM son fijos por ley. Lo que cambia cada mes es su valor en pesos, porque la UTM se reajusta mensualmente." } }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://indicadoreschile.cl/" },
+      { "@type": "ListItem", "position": 2, "name": "Impuesto Segunda Categoría", "item": "https://indicadoreschile.cl/impuesto-segunda-categoria/" }
+    ]
+  }
+  </script>
+
+  <style>
+    .page-header { padding: 48px 20px 32px; }
+    .page-header h1 { font-size: clamp(26px, 4.5vw, 40px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .page-header h1 strong { font-weight: 600; }
+    .page-header p { color: var(--text-2); font-size: 15px; }
+    .calc-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 32px; }
+    .calc-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .calc-desc { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+    .calc-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; max-width: 360px; }
+    .calc-label-txt { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+    .res { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .res.main { border-color: rgba(251,191,36,0.3); }
+    .res-label { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .res-val { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--text); }
+    .res.main .res-val { color: var(--amber); }
+    .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    thead th:first-child { text-align: left; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 10px 16px; color: var(--text-2); text-align: right; white-space: nowrap; }
+    tbody td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+    tr.activo { background: rgba(251,191,36,0.08); }
+    tr.activo td { color: var(--amber) !important; }
+    .note { font-size: 12px; color: var(--text-3); margin: 0 0 36px; font-family: var(--font-mono); }
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; background: var(--bg2); border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text); text-align: left; gap: 16px; }
+    .faq-q:hover { background: var(--bg3); }
+    .faq-icon { font-size: 18px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--amber); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-2); line-height: 1.7; background: var(--bg2); }
+    .faq-item.open .faq-a { display: block; }
+    @media (max-width: 540px) { .calc-card { padding: 20px; } }
+  </style>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDW33KBK92"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-WDW33KBK92");
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9836008718052688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-logo"><span>$</span> indicadoreschile.cl</a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/dolar/">Dólar</a></li>
+      <li><a href="/utm/">UTM</a></li>
+      <li><a href="/ipc/">IPC</a></li>
+      <li><a href="/feriados/">Feriados</a></li>
+      <li><a href="/calculadora-arriendo-uf/">Arriendo UF</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">📋 Tributario</p>
+    <h1><strong>Impuesto de Segunda Categoría</strong> 2026</h1>
+    <p>Tabla de tramos en UTM y en pesos con el valor de la UTM del mes, y calculadora del impuesto a tu sueldo.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="calc-card animate">
+    <div class="calc-title">Calculadora del impuesto a tu sueldo</div>
+    <div class="calc-desc">Ingresa la renta imponible del mes: sueldo bruto menos cotizaciones previsionales y de salud. Se calcula con la UTM vigente: <strong id="utm-act" style="color:var(--amber)">—</strong>.</div>
+    <div class="calc-field">
+      <span class="calc-label-txt">Renta tributable mensual ($)</span>
+      <input class="input" id="inp" type="number" min="0" step="10000" value="1800000" inputmode="numeric">
+    </div>
+    <div class="res-grid">
+      <div class="res main"><div class="res-label">Impuesto a pagar</div><div class="res-val" id="r-imp">—</div></div>
+      <div class="res"><div class="res-label">Tramo</div><div class="res-val" id="r-tramo">—</div></div>
+      <div class="res"><div class="res-label">Tasa efectiva</div><div class="res-val" id="r-efec">—</div></div>
+      <div class="res"><div class="res-label">Renta después de impuesto</div><div class="res-val" id="r-liq">—</div></div>
+    </div>
+    <p class="note" style="margin:14px 0 0">Referencial. No considera otras rebajas ni créditos personales. Para tu declaración oficial consulta al SII o a tu contador.</p>
+  </div>
+
+  <span class="section-label">Tabla mensual (con UTM del mes)</span>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Tramo</th><th>Desde (UTM)</th><th>Hasta (UTM)</th><th>Factor</th><th>Rebaja (UTM)</th><th>Desde ($)</th><th>Hasta ($)</th><th>Rebaja ($)</th></tr></thead>
+    <tbody id="tabla">
+      <tr data-i="0"><td>1 — Exento</td><td>0</td><td>13,5</td><td>0%</td><td>—</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="1"><td>2</td><td>13,5</td><td>30</td><td>4%</td><td>0,54</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="2"><td>3</td><td>30</td><td>50</td><td>8%</td><td>1,74</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="3"><td>4</td><td>50</td><td>70</td><td>13,5%</td><td>4,49</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="4"><td>5</td><td>70</td><td>90</td><td>23%</td><td>11,14</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="5"><td>6</td><td>90</td><td>120</td><td>30,4%</td><td>17,80</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="6"><td>7</td><td>120</td><td>310</td><td>35%</td><td>23,32</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+      <tr data-i="7"><td>8</td><td>310</td><td>y más</td><td>40%</td><td>38,82</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Fuente: art. 43 N°1 de la Ley sobre Impuesto a la Renta (Impuesto Único de Segunda Categoría). Los valores en UTM son fijos; en pesos cambian cada mes.</p>
+
+  <div class="ad-container" style="margin:24px 0;text-align:center;min-height:90px">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9836008718052688" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:32px 0 12px">Cómo se calcula el impuesto</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:12px">La fórmula es: <strong>impuesto = renta tributable × factor − rebaja en pesos</strong>, donde la rebaja es la cantidad en UTM del tramo multiplicada por el valor de la UTM del mes. Por ejemplo, con una UTM de $70.000 y una renta de $1.800.000 (25,7 UTM), el tramo es el 2: <em>1.800.000 × 4% − 0,54 × 70.000 = $34.200</em>.</p>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:40px">La renta tributable es la remuneración bruta menos las cotizaciones de AFP, salud y seguro de cesantía. Para otros montos y multas en UTM revisa la <a href="/utm/" style="color:var(--amber)">página de la UTM</a>; los plazos para pagar y declarar están en el <a href="/calendario-tributario/" style="color:var(--amber)">calendario tributario</a>.</p>
+
+  <span class="section-label">Preguntas frecuentes</span>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">¿Desde qué sueldo se paga impuesto de segunda categoría?<span class="faq-icon">+</span></button>
+      <div class="faq-a">Cuando la renta tributable mensual supera <strong>13,5 UTM</strong>. Bajo ese monto estás exento.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">¿Cómo se calcula el impuesto?<span class="faq-icon">+</span></button>
+      <div class="faq-a">Se multiplica la renta tributable por el factor del tramo y se resta la rebaja de ese tramo (en UTM del mes). Usa la calculadora de esta página.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">¿Los tramos cambian cada mes?<span class="faq-icon">+</span></button>
+      <div class="faq-a">Los tramos y factores en UTM son fijos por ley. Lo que cambia mes a mes es su valor en pesos, porque la UTM se reajusta cada mes según el IPC.</div>
+    </div>
+  </div>
+
+  <span class="section-label">Herramientas relacionadas</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
+    <a href="/calendario-tributario/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">🗓️</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Calendario tributario</div><div style="font-size:12px;color:var(--text-2)">Vencimientos del mes</div></div></a>
+    <a href="/utm/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📋</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">UTM</div><div style="font-size:12px;color:var(--text-2)">Valor mensual y multas</div></div></a>
+    <a href="/ipc/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📈</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">IPC</div><div style="font-size:12px;color:var(--text-2)">Inflación mensual</div></div></a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 indicadoreschile.cl — Datos: Banco Central · SII Chile</span>
+    <ul class="footer-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/uf/">UF</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+(async () => {
+  const { fmt, fetchHoy } = window.IC;
+  const $ = id => document.getElementById(id);
+  /* [desde UTM, hasta UTM, factor, rebaja UTM] */
+  const T = [[0,13.5,0,0],[13.5,30,.04,.54],[30,50,.08,1.74],[50,70,.135,4.49],[70,90,.23,11.14],[90,120,.304,17.8],[120,310,.35,23.32],[310,Infinity,.4,38.82]];
+  let utm = null;
+
+  function calc() {
+    if (!utm) return;
+    const renta = Math.max(0, parseFloat($('inp').value) || 0);
+    const u = renta / utm;
+    let i = T.findIndex(t => u <= t[1]); if (i < 0) i = T.length - 1;
+    const [, , f, reb] = T[i];
+    const imp = Math.max(0, Math.round(renta * f - reb * utm));
+    $('r-imp').textContent = fmt.clp(imp);
+    $('r-tramo').textContent = i === 0 ? 'Exento' : 'Tramo ' + (i + 1) + ' · ' + String(f * 100).replace('.', ',') + '%';
+    $('r-efec').textContent = renta ? fmt.num(imp / renta * 100, 2) + '%' : '—';
+    $('r-liq').textContent = fmt.clp(renta - imp);
+    document.querySelectorAll('#tabla tr').forEach(tr => tr.classList.toggle('activo', +tr.dataset.i === i));
+  }
+
+  try {
+    utm = (await fetchHoy()).utm.valor;
+    $('utm-act').textContent = fmt.clp(utm);
+    document.querySelectorAll('#tabla tr').forEach(tr => {
+      const [d, h, , r] = T[+tr.dataset.i];
+      tr.querySelector('.d').textContent = fmt.clp(Math.round(d * utm));
+      tr.querySelector('.h').textContent = isFinite(h) ? fmt.clp(Math.round(h * utm)) : 'y más';
+      tr.querySelector('.r').textContent = r ? fmt.clp(Math.round(r * utm)) : '—';
+    });
+    $('inp').addEventListener('input', calc);
+    calc();
+  } catch (e) {
+    $('utm-act').textContent = 'no disponible';
+  }
+})();
+</script>
+</body>
+</html>

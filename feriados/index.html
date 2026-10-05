@@ -235,6 +235,8 @@
 
   <span class="section-label">Herramientas relacionadas</span>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
+    <a href="/calendario-tributario/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📆</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Calendario tributario</div><div style="font-size:12px;color:var(--text-2)">Vencimientos del mes</div></div></a>
+    <a href="/impuesto-segunda-categoria/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">🧮</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Impuesto segunda categoría</div><div style="font-size:12px;color:var(--text-2)">Tabla y calculadora</div></div></a>
     <a href="/utm/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📋</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">UTM</div><div style="font-size:12px;color:var(--text-2)">Multas y valor mensual</div></div></a>
     <a href="/ipc/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📈</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">IPC</div><div style="font-size:12px;color:var(--text-2)">Inflación mensual</div></div></a>
     <a href="/uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📊</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Valor UF hoy</div><div style="font-size:12px;color:var(--text-2)">Conversor e historial</div></div></a>
@@ -254,9 +256,10 @@
   </div>
 </footer>
 
+<script src="/assets/js/feriados-data.js"></script>
 <script>
 (() => {
-  const DATA = {"2026": [["2026-01-01", "Año Nuevo"], ["2026-04-03", "Viernes Santo"], ["2026-04-04", "Sábado Santo"], ["2026-05-01", "Día del Trabajo"], ["2026-05-21", "Glorias Navales"], ["2026-06-21", "Día Nacional de los Pueblos Indígenas"], ["2026-06-29", "San Pedro y San Pablo"], ["2026-07-16", "Virgen del Carmen"], ["2026-08-15", "Asunción de la Virgen"], ["2026-09-18", "Independencia Nacional"], ["2026-09-19", "Glorias del Ejército"], ["2026-10-12", "Encuentro de Dos Mundos"], ["2026-10-31", "Día de las Iglesias Evangélicas"], ["2026-11-01", "Día de Todos los Santos"], ["2026-12-08", "Inmaculada Concepción"], ["2026-12-25", "Navidad"]], "2027": [["2027-01-01", "Año Nuevo"], ["2027-03-26", "Viernes Santo"], ["2027-03-27", "Sábado Santo"], ["2027-05-01", "Día del Trabajo"], ["2027-05-21", "Glorias Navales"], ["2027-06-21", "Día Nacional de los Pueblos Indígenas"], ["2027-06-28", "San Pedro y San Pablo"], ["2027-07-16", "Virgen del Carmen"], ["2027-08-15", "Asunción de la Virgen"], ["2027-09-18", "Independencia Nacional"], ["2027-09-19", "Glorias del Ejército"], ["2027-10-11", "Encuentro de Dos Mundos"], ["2027-10-31", "Día de las Iglesias Evangélicas"], ["2027-11-01", "Día de Todos los Santos"], ["2027-12-08", "Inmaculada Concepción"], ["2027-12-25", "Navidad"]]};
+  const DATA = window.FERIADOS_CL;
   const FERIADOS = [].concat(...Object.values(DATA));
   const SET = new Set(FERIADOS.map(f => f[0]));
   const LIMITE = '2027-12-31';
