@@ -22,6 +22,7 @@
     "mainEntity": [
       { "@type": "Question", "name": "¿Desde qué sueldo se paga impuesto de segunda categoría en Chile?", "acceptedAnswer": { "@type": "Answer", "text": "Se paga cuando la renta imponible mensual (sueldo menos cotizaciones previsionales y de salud) supera 13,5 UTM. Bajo ese monto el trabajador está exento." } },
       { "@type": "Question", "name": "¿Cómo se calcula el Impuesto Único de Segunda Categoría?", "acceptedAnswer": { "@type": "Answer", "text": "Se multiplica la renta tributable por el factor del tramo que le corresponde y se resta la cantidad a rebajar de ese tramo, expresada en UTM del mes." } },
+      { "@type": "Question", "name": "¿Cuál es la diferencia entre el artículo 43 y el 52 bis?", "acceptedAnswer": { "@type": "Answer", "text": "La tabla del artículo 43 N°1 es la general para trabajadores dependientes. La del artículo 52 bis letra a) solo aplica al Presidente, ministros, subsecretarios, senadores y diputados con rentas por su función superiores a 150 UTM mensuales." } },
       { "@type": "Question", "name": "¿Los tramos cambian cada mes?", "acceptedAnswer": { "@type": "Answer", "text": "Los tramos, factores y rebajas en UTM son fijos por ley. Lo que cambia cada mes es su valor en pesos, porque la UTM se reajusta mensualmente." } }
     ]
   }
@@ -143,12 +144,16 @@
       <tr data-i="7"><td>8</td><td>310</td><td>y más</td><td>40%</td><td>38,82</td><td class="d">—</td><td class="h">—</td><td class="r">—</td></tr>
     </tbody>
   </table></div>
-  <p class="note">Fuente: art. 43 N°1 de la Ley sobre Impuesto a la Renta (Impuesto Único de Segunda Categoría). Los valores en UTM son fijos; en pesos cambian cada mes.</p>
+  <p class="note">Fuente: art. 43 N°1 de la Ley sobre Impuesto a la Renta, contrastada con la <a href="https://www.sii.cl/valores_y_fechas/impuesto_2da_categoria/impuesto2026.htm" rel="noopener" style="color:var(--amber)">tabla mensual del SII</a>. Es la que aplica a trabajadores dependientes y pensionados. Los valores en UTM son fijos; en pesos cambian cada mes.</p>
 
   <div class="ad-container" style="margin:24px 0;text-align:center;min-height:90px">
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9836008718052688" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
+
+  <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:32px 0 12px">Artículo 43 N°1 y artículo 52 bis letra a): cuál se usa</h2>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:12px">El SII publica dos tablas del Impuesto Único de Segunda Categoría. La del <strong>artículo 43 N°1</strong> es la de uso general: se aplica a los trabajadores dependientes (y es la que usan casi todas las liquidaciones de sueldo). La del <strong>artículo 52 bis letra a)</strong> es de uso muy acotado: reemplaza a la anterior solo para el Presidente de la República, ministros de Estado, subsecretarios, senadores y diputados, cuando su renta mensual por esa función supera 150 UTM.</p>
+  <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:40px">Tienen los mismos factores (4%, 8%, 13,5%, 23%, 30,4%, 35% y 40%), pero los tramos de la tabla del 52 bis parten mucho más arriba: exento hasta 150 UTM en lugar de 13,5 UTM. Esta página calcula con la tabla del artículo 43, que es la que corresponde a la gran mayoría de las personas.</p>
 
   <h2 style="font-size:18px;font-weight:600;color:var(--text);margin:32px 0 12px">Cómo se calcula el impuesto</h2>
   <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:12px">La fórmula es: <strong>impuesto = renta tributable × factor − rebaja en pesos</strong>, donde la rebaja es la cantidad en UTM del tramo multiplicada por el valor de la UTM del mes. Por ejemplo, con una UTM de $70.000 y una renta de $1.800.000 (25,7 UTM), el tramo es el 2: <em>1.800.000 × 4% − 0,54 × 70.000 = $34.200</em>.</p>
@@ -163,6 +168,10 @@
     <div class="faq-item">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">¿Cómo se calcula el impuesto?<span class="faq-icon">+</span></button>
       <div class="faq-a">Se multiplica la renta tributable por el factor del tramo y se resta la rebaja de ese tramo (en UTM del mes). Usa la calculadora de esta página.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">¿Cuál es la diferencia entre el artículo 43 y el 52 bis?<span class="faq-icon">+</span></button>
+      <div class="faq-a">La tabla del <strong>artículo 43 N°1</strong> es la general, para trabajadores dependientes. La del <strong>artículo 52 bis letra a)</strong> solo aplica al Presidente, ministros, subsecretarios, senadores y diputados con rentas por su función sobre 150 UTM al mes.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">¿Los tramos cambian cada mes?<span class="faq-icon">+</span></button>
