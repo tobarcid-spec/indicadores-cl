@@ -131,31 +131,31 @@
 
   <!-- CONTEXTO DEL MES (único por mes — contenido editorial) -->
   <div class="mes-context" id="mes-context">
-    <h3 id="ctx-title">Valores del mes en tiempo real</h3>
-    <p id="ctx-text">Julio 2026 muestra la evolución diaria de la UF calculada por el Banco Central de Chile en base al IPC del mes anterior. Los valores se actualizan a diario durante el mes.</p>
+    <h3 id="ctx-title">Julio 2026: pleno invierno y presión inflacionaria</h3>
+    <p id="ctx-text">La UF de julio 2026 refleja el IPC de junio, mes en que las alzas en calefacción, gas y servicios básicos del invierno chileno presionan la inflación. El Banco Central de Chile ha mantenido la Tasa de Política Monetaria (TPM) estable buscando anclar las expectativas inflacionarias al 3% anual. Los valores diarios de julio muestran el ajuste gradual y proporcional que distribuye el reajuste mensual entre todos los días del período.</p>
   </div>
 
   <!-- STATS -->
   <div class="stats-row">
-    <div class="stat-chip"><div class="stat-chip-label">Inicio mes</div><div class="stat-chip-val" id="s-ini">$40.823</div><div class="stat-chip-sub" id="s-ini-f">1</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Fin mes</div><div class="stat-chip-val" id="s-fin">$40.845</div><div class="stat-chip-sub" id="s-fin-f">31</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Mínimo</div><div class="stat-chip-val" id="s-min">$40.823</div><div class="stat-chip-sub" id="s-min-f">1</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Máximo</div><div class="stat-chip-val" id="s-max">$40.845</div><div class="stat-chip-sub" id="s-max-f">9</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Variación mes</div><div class="stat-chip-val" id="s-var">+0,05%</div><div class="stat-chip-sub">vs día 1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Inicio mes</div><div class="stat-chip-val" id="s-ini">$40.823,03</div><div class="stat-chip-sub" id="s-ini-f">1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Fin mes</div><div class="stat-chip-val" id="s-fin">$40.844,79</div><div class="stat-chip-sub" id="s-fin-f">31</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mínimo</div><div class="stat-chip-val" id="s-min">$40.823,03</div><div class="stat-chip-sub" id="s-min-f">1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Máximo</div><div class="stat-chip-val" id="s-max">$40.844,79</div><div class="stat-chip-sub" id="s-max-f">9</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Variación mes</div><div class="stat-chip-val" id="s-var" style="color: var(--red)">+0.05%</div><div class="stat-chip-sub">vs día 1</div></div>
     <div class="stat-chip"><div class="stat-chip-label">Promedio mes</div><div class="stat-chip-val" id="s-prom">$40.842</div><div class="stat-chip-sub">mensual</div></div>
   </div>
 
   <!-- GRÁFICO -->
   <div class="chart-wrap">
-    <div class="chart-title-txt">Evolución UF — <span id="chart-mes">Junio 2026</span></div>
-    <div class="chart-subtitle" id="chart-sub">Valor diario de la UF durante el mes</div>
+    <div class="chart-title-txt">Evolución UF — <span id="chart-mes">Julio 2026</span></div>
+    <div class="chart-subtitle" id="chart-sub">UF diaria Julio 2026 — 31 valores</div>
     <div class="chart-container">
       <canvas id="chart-uf" role="img" aria-label="Gráfico evolución valor UF mes completo"></canvas>
     </div>
   </div>
 
   <!-- TABLA -->
-  <span class="section-label" id="tabla-label">Tabla UF diaria — cargando…</span>
+  <span class="section-label" id="tabla-label">Tabla UF diaria — Julio 2026</span>
   <div class="table-wrap">
     <table>
       <thead>
@@ -166,9 +166,7 @@
           <th>Variación</th>
         </tr>
       </thead>
-      <tbody id="tabla-uf">
-        <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Cargando…</td></tr>
-      </tbody>
+      <tbody id="tabla-uf"><tr class=""><td>1</td><td>01-07-2026</td><td>$40.823,03</td><td>—</td></tr><tr class=""><td>2</td><td>02-07-2026</td><td>$40.825,75</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>3</td><td>03-07-2026</td><td>$40.828,47</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>4</td><td>04-07-2026</td><td>$40.831,19</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>5</td><td>05-07-2026</td><td>$40.833,91</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>6</td><td>06-07-2026</td><td>$40.836,63</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>7</td><td>07-07-2026</td><td>$40.839,35</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>8</td><td>08-07-2026</td><td>$40.842,07</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>9</td><td>09-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$2,72 (0.01%)</span></td></tr><tr class=""><td>10</td><td>10-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>11</td><td>11-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>12</td><td>12-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>13</td><td>13-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>14</td><td>14-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>15</td><td>15-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>16</td><td>16-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>17</td><td>17-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>18</td><td>18-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>19</td><td>19-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>20</td><td>20-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>21</td><td>21-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>22</td><td>22-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>23</td><td>23-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>24</td><td>24-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>25</td><td>25-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>26</td><td>26-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>27</td><td>27-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>28</td><td>28-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>29</td><td>29-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>30</td><td>30-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr><tr class=""><td>31</td><td>31-07-2026</td><td>$40.844,79</td><td><span class="change-pos">+$0 (0.00%)</span></td></tr></tbody>
     </table>
   </div>
 

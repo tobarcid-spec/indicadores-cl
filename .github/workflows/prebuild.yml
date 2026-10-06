@@ -13,6 +13,11 @@ on:
 permissions:
   contents: write
 
+# Mismo grupo que datos.yml: evita que dos ejecuciones hagan push a la vez
+concurrency:
+  group: actualizar-datos
+  cancel-in-progress: false
+
 jobs:
   update-fallback:
     runs-on: ubuntu-latest

@@ -130,31 +130,31 @@
 
   <!-- CONTEXTO DEL MES (único por mes — contenido editorial) -->
   <div class="mes-context" id="mes-context">
-    <h3 id="ctx-title">Valores del mes en tiempo real</h3>
-    <p id="ctx-text">Octubre 2026 muestra la evolución diaria de la UF calculada por el Banco Central de Chile en base al IPC del mes anterior. Los valores se actualizan a diario durante el mes.</p>
+    <h3 id="ctx-title">Octubre 2026 — contexto económico</h3>
+    <p id="ctx-text">Durante octubre 2026, la UF se reajustó según la variación del IPC del mes anterior publicada por el INE. El Banco Central distribuye este reajuste entre los días del mes de forma proporcional.</p>
   </div>
 
   <!-- STATS -->
   <div class="stats-row">
-    <div class="stat-chip"><div class="stat-chip-label">Inicio mes</div><div class="stat-chip-val" id="s-ini">$41.065</div><div class="stat-chip-sub" id="s-ini-f">1</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Fin mes</div><div class="stat-chip-val" id="s-fin">$41.131</div><div class="stat-chip-sub" id="s-fin-f">9</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Mínimo</div><div class="stat-chip-val" id="s-min">$41.065</div><div class="stat-chip-sub" id="s-min-f">1</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Máximo</div><div class="stat-chip-val" id="s-max">$41.131</div><div class="stat-chip-sub" id="s-max-f">9</div></div>
-    <div class="stat-chip"><div class="stat-chip-label">Variación mes</div><div class="stat-chip-val" id="s-var">+0,16%</div><div class="stat-chip-sub">vs día 1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Inicio mes</div><div class="stat-chip-val" id="s-ini">$41.065,38</div><div class="stat-chip-sub" id="s-ini-f">1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Fin mes</div><div class="stat-chip-val" id="s-fin">$41.130,94</div><div class="stat-chip-sub" id="s-fin-f">9</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Mínimo</div><div class="stat-chip-val" id="s-min">$41.065,38</div><div class="stat-chip-sub" id="s-min-f">1</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Máximo</div><div class="stat-chip-val" id="s-max">$41.130,94</div><div class="stat-chip-sub" id="s-max-f">9</div></div>
+    <div class="stat-chip"><div class="stat-chip-label">Variación mes</div><div class="stat-chip-val" id="s-var" style="color: var(--red)">+0.16%</div><div class="stat-chip-sub">vs día 1</div></div>
     <div class="stat-chip"><div class="stat-chip-label">Promedio mes</div><div class="stat-chip-val" id="s-prom">$41.098</div><div class="stat-chip-sub">mensual</div></div>
   </div>
 
   <!-- GRÁFICO -->
   <div class="chart-wrap">
-    <div class="chart-title-txt">Evolución UF — <span id="chart-mes">Junio 2026</span></div>
-    <div class="chart-subtitle" id="chart-sub">Valor diario de la UF durante el mes</div>
+    <div class="chart-title-txt">Evolución UF — <span id="chart-mes">Octubre 2026</span></div>
+    <div class="chart-subtitle" id="chart-sub">UF diaria Octubre 2026 — 9 valores</div>
     <div class="chart-container">
       <canvas id="chart-uf" role="img" aria-label="Gráfico evolución valor UF mes completo"></canvas>
     </div>
   </div>
 
   <!-- TABLA -->
-  <span class="section-label" id="tabla-label">Tabla UF diaria — cargando…</span>
+  <span class="section-label" id="tabla-label">Tabla UF diaria — Octubre 2026</span>
   <div class="table-wrap">
     <table>
       <thead>
@@ -165,9 +165,7 @@
           <th>Variación</th>
         </tr>
       </thead>
-      <tbody id="tabla-uf">
-        <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-3)">Cargando…</td></tr>
-      </tbody>
+      <tbody id="tabla-uf"><tr class=""><td>1</td><td>01-10-2026</td><td>$41.065,38</td><td>—</td></tr><tr class=""><td>2</td><td>02-10-2026</td><td>$41.073,57</td><td><span class="change-pos">+$8,19 (0.02%)</span></td></tr><tr class=""><td>3</td><td>03-10-2026</td><td>$41.081,76</td><td><span class="change-pos">+$8,19 (0.02%)</span></td></tr><tr class=""><td>4</td><td>04-10-2026</td><td>$41.089,96</td><td><span class="change-pos">+$8,2 (0.02%)</span></td></tr><tr class=""><td>5</td><td>05-10-2026</td><td>$41.098,15</td><td><span class="change-pos">+$8,19 (0.02%)</span></td></tr><tr class=""><td>6</td><td>06-10-2026</td><td>$41.106,35</td><td><span class="change-pos">+$8,2 (0.02%)</span></td></tr><tr class=""><td>7</td><td>07-10-2026</td><td>$41.114,54</td><td><span class="change-pos">+$8,19 (0.02%)</span></td></tr><tr class=""><td>8</td><td>08-10-2026</td><td>$41.122,74</td><td><span class="change-pos">+$8,2 (0.02%)</span></td></tr><tr class=""><td>9</td><td>09-10-2026</td><td>$41.130,94</td><td><span class="change-pos">+$8,2 (0.02%)</span></td></tr></tbody>
     </table>
   </div>
 

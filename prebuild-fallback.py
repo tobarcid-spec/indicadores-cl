@@ -45,6 +45,11 @@ def fetch_bcentral_ipc(year=None):
     """Trae la serie completa (la API ignora firstdate/lastdate en la practica)
     y filtra por año en Python, igual como se hace con las series de mindicador.cl."""
     if not (BCENTRAL_USER and BCENTRAL_PASS and BCENTRAL_IPC_SERIES):
+        # Sin credenciales: se usa el IPC ya descargado en /data/ipc.json (si existe)
+        local = leer_local('ipc')
+        if local and local.get('serie'):
+            return sorted((r for r in local['serie'] if not year or int(r['fecha'][:4]) == year),
+                          key=lambda r: r['fecha'])
         return []
     params = {
         'user': BCENTRAL_USER,
@@ -80,7 +85,21 @@ def fetch_bcentral_ipc(year=None):
         print(f'  (fallo Banco Central API: {type(e).__name__})')
         return []
 
+def leer_local(path=''):
+    """Lee el JSON de /data (lo genera scripts/actualizar-datos.mjs): evita pedir a
+    mindicador.cl, que tarda 4-20 s. Devuelve None si el archivo no existe."""
+    nombre = 'hoy' if not path else path.replace('/', '-')
+    ruta = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', f'{nombre}.json')
+    try:
+        with open(ruta, encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
 def fetch_url(path=''):
+    local = leer_local(path)
+    if local:
+        return local
     urls = [
         f'https://mindicador.cl/api/{path}'.rstrip('/') if path else 'https://mindicador.cl/api',
         f'https://indicadoreschile.cl/api-proxy/{path}'.rstrip('/') if path else 'https://indicadoreschile.cl/api-proxy',

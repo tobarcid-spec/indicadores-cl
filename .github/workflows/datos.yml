@@ -22,13 +22,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo (historial completo, para las fechas del sitemap)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
       - name: Descargar indicadores a /data
         env:
@@ -37,6 +44,22 @@ jobs:
           BCENTRAL_IPC_SERIES: ${{ secrets.BCENTRAL_IPC_SERIES }}
         run: node scripts/actualizar-datos.mjs
 
+      - name: Crear página mensual UF si no existe
+        run: python create-monthly-uf-page.py
+
+      - name: Actualizar valores estáticos del HTML (desde /data)
+        env:
+          BCENTRAL_API_USER: ${{ secrets.BCENTRAL_API_USER }}
+          BCENTRAL_API_PASS: ${{ secrets.BCENTRAL_API_PASS }}
+          BCENTRAL_IPC_SERIES: ${{ secrets.BCENTRAL_IPC_SERIES }}
+        run: python prebuild-fallback.py
+
+      - name: Tablas y estadísticas de las páginas UF en el HTML
+        run: node scripts/prerender-uf.mjs
+
+      - name: Fechas del sitemap
+        run: node scripts/actualizar-sitemap.mjs
+
       - name: Commit y push (si hubo cambios)
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -44,4 +67,4 @@ jobs:
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
-          file_pattern: 'data/*.json'
+          file_pattern: 'data/*.json *.html *.svg sitemap.xml'
