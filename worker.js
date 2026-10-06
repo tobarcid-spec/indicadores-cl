@@ -37,6 +37,20 @@ export default {
     // ── Assets estáticos ────────────────────────────────────────────────
     const assetRes = await env.ASSETS.fetch(request);
 
+    // Ruta sin archivo: se sirve la página 404 propia (con status 404 real, sin inyectar datos)
+    if (assetRes.status === 404) {
+      let pagina = await env.ASSETS.fetch(new Request(new URL('/404.html', url)));
+      const destino = pagina.headers.get('Location');
+      if (pagina.status >= 300 && pagina.status < 400 && destino) {
+        pagina = await env.ASSETS.fetch(new Request(new URL(destino, url)));
+      }
+      if (pagina.status !== 200) return assetRes;
+      return new Response(pagina.body, {
+        status: 404,
+        headers: { 'Content-Type': 'text/html;charset=UTF-8', 'Cache-Control': 'public, max-age=300' },
+      });
+    }
+
     // Solo modificar respuestas HTML
     if (!assetRes.headers.get('Content-Type')?.includes('text/html')) {
       return assetRes;

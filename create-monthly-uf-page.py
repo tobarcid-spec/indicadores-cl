@@ -123,6 +123,28 @@ def update_sitemap(mes, year, prev_slug):
         f.write(sitemap)
     print(f'OK: sitemap.xml actualizado con uf/{slug}/')
 
+def actualizar_indice_uf(mes, year):
+    """Agrega el mes (y el año, si falta) al indice estatico de enlaces de /uf/."""
+    ruta = os.path.join(os.path.dirname(__file__), 'uf', 'index.html')
+    if not os.path.exists(ruta):
+        return
+    with open(ruta, encoding='utf-8', newline='') as f:
+        html = f.read()
+    slug = f'{slug_mes(mes)}-{year}'
+    cambios = 0
+    if f'href="/uf/{slug}/"' not in html and '<!-- meses:inicio -->' in html:
+        link = f'<a class="uf-idx" href="/uf/{slug}/">UF {titulo_mes(mes)} {year}</a>'
+        html = html.replace('<!-- meses:inicio -->', f'<!-- meses:inicio -->\n    {link}', 1)
+        cambios += 1
+    if f'href="/uf/{year}/"' not in html.split('<!-- años:fin -->')[0] and '<!-- años:inicio -->' in html:
+        link = f'<a class="uf-idx" href="/uf/{year}/">UF {year}</a>'
+        html = html.replace('<!-- años:inicio -->', f'<!-- años:inicio -->\n    {link}', 1)
+        cambios += 1
+    if cambios:
+        with open(ruta, 'w', encoding='utf-8', newline='') as f:
+            f.write(html)
+        print(f'OK: indice de /uf/ actualizado con {slug}')
+
 def main():
     now = datetime.now()
     mes  = now.month
@@ -155,7 +177,7 @@ def main():
     next_y  = year if mes < 12 else year + 1
 
     # -- Metadatos --
-    html = set_title_tag(html, f'Valor UF {mes_t} {year} Chile — Tabla Diaria Completa | indicadoreschile.cl')
+    html = set_title_tag(html, f'Valor UF {mes_t} {year} Chile — Tabla Diaria Completa')
     html = replace_attr(html, 'page-desc', 'content',
         f'Todos los valores diarios de la UF en {slug_mes(mes)} {year}. '
         f'Minimo, maximo, variacion y promedio del mes. Fuente oficial Banco Central de Chile.')
@@ -196,51 +218,9 @@ def main():
         html = set_tag_content(html, sid, '--')
 
     # -- Navegación mes anterior/siguiente --
-    # <a href="/uf/mes-year/" …> texto </a>
-    # Actualizar hrefs de nav
+    # Los botones los arma el JavaScript de la plantilla a partir de la URL; no se
+    # tocan aqui (antes unas regex dañaban el texto del boton en la plantilla).
     prev_slug = f'{slug_mes(prev_m)}-{prev_y}'
-    next_slug = f'{slug_mes(next_m)}-{next_y}'
-    prev_txt  = f'← {titulo_mes(prev_m)} {prev_y}'
-    next_txt  = f'{titulo_mes(next_m)} {next_y} →'
-
-    def fix_nav(h, old_slug_pattern, new_href, new_text):
-        # Reemplaza href y texto en botones de nav mes
-        p = re.compile(
-            rf'(<a[^>]+class="month-nav-btn[^"]*"[^>]+href=")([^"]+)("[^>]*>)\s*[^<]+\s*(</a>)',
-            re.DOTALL
-        )
-        matches = list(p.finditer(h))
-        if len(matches) >= 2:
-            # Primero es "anterior", segundo es "siguiente"
-            return h  # reemplazamos manualmente abajo
-        return h
-
-    # Reemplazar todos los hrefs en month-nav-btn
-    nav_pattern = re.compile(
-        r'(<a[^>]+class="month-nav-btn(?:\s+\w+)?"[^>]+href=")([^"]+)(")',
-        re.DOTALL
-    )
-    nav_matches = nav_pattern.findall(html)
-    if len(nav_matches) >= 2:
-        html = nav_pattern.sub(
-            lambda m, i=iter([
-                f'/uf/{prev_slug}/',
-                f'/uf/{next_slug}/',
-            ]): f'{m.group(1)}{next(i, m.group(2))}{m.group(3)}',
-            html
-        )
-
-    # También el texto de los botones
-    html = re.sub(
-        r'(<a[^>]+class="month-nav-btn"[^>]*>)\s*[^←→<]+',
-        lambda m: f'{m.group(1)}{prev_txt}',
-        html, count=1
-    )
-    html = re.sub(
-        r'(<a[^>]+class="month-nav-btn next"[^>]*>)\s*[^←→<]+',
-        lambda m: f'{m.group(1)}{next_txt}',
-        html, count=1
-    )
 
     with open(target_file, 'w', encoding='utf-8') as f:
         f.write(html)
@@ -249,6 +229,7 @@ def main():
     print(f'    Siguiente paso: prebuild-fallback.py llenara los stats con valores reales.')
 
     update_sitemap(mes, year, prev_slug)
+    actualizar_indice_uf(mes, year)
 
 if __name__ == '__main__':
     main()

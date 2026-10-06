@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">Valor UF Enero 2026 Chile — Tabla Diaria Completa | indicadoreschile.cl</title>
+  <title id="page-title">Valor UF Enero 2026 Chile — Tabla Diaria Completa</title>
   <meta name="description" id="page-desc" content="Todos los valores diarios de la UF en enero 2026. Mínimo, máximo, variación y promedio del mes. Fuente oficial Banco Central de Chile.">
   <meta name="keywords" id="page-kw" content="UF enero 2026, valor UF enero 2026 Chile, UF diaria enero 2026, tabla UF enero">
   <link rel="canonical" id="page-canonical" href="https://indicadoreschile.cl/uf/enero-2026/">
@@ -17,7 +17,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/svg+xml">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0e14'/><text y='22' x='6' font-size='18' font-family='monospace' fill='%233b9eff'>$</text></svg>">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20261005">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20261006">
   <script src="/assets/js/chart.min.js"></script>
 
   <!-- Breadcrumb Schema -->
@@ -198,6 +198,9 @@
   <div class="footer-inner">
     <span class="footer-copy">© 2026 indicadoreschile.cl — Datos: Banco Central de Chile</span>
     <ul class="footer-links">
+      <li><a href="/uf/2026/">UF 2026</a></li>
+      <li><a href="/uf/2025/">UF 2025</a></li>
+      <li><a href="/uf/2024/">UF 2024</a></li>
       <li><a href="/">Dashboard</a></li>
       <li><a href="/uf/">UF hoy</a></li>
       <li><a href="/privacidad/">Privacidad</a></li>
@@ -205,7 +208,7 @@
   </div>
 </footer>
 
-<script src="/assets/js/utils.js?v=20261005"></script>
+<script src="/assets/js/utils.js?v=20261006"></script>
 <script>
 (async () => {
   const { fmt, fetchIndicador, MESES } = window.IC;
@@ -227,7 +230,7 @@
   const mesNum = mesIdx + 1;
 
   /* ─── Meta dinámico ─── */
-  document.title = `Valor UF ${mesNombre} ${año} Chile — Tabla Diaria | indicadoreschile.cl`;
+  document.title = `Valor UF ${mesNombre} ${año} Chile — Tabla Diaria Completa`;
   document.getElementById('page-title').textContent = document.title;
   document.getElementById('page-desc').setAttribute('content', 
     `Todos los valores diarios de la UF en ${mesNombre.toLowerCase()} ${año}. Mínimo, máximo, variación y promedio del mes. Fuente oficial Banco Central de Chile.`);

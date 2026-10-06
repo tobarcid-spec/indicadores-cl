@@ -3,3 +3,5 @@
 /uf-a-pesos      /uf/      301
 /dolar-hoy       /dolar/   301
 /valor-dolar     /dolar/   301
+/valores-de-cambio  /dolar/  301
+/valores-de-cambio/*  /dolar/  301
