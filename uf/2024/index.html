@@ -180,8 +180,8 @@
 <header class="page-header">
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Unidad de Fomento · Historial completo</p>
-    <h1 id="h1-titulo"><strong>Valor UF</strong> — Cargando…</h1>
-    <p id="h1-sub">Tabla diaria completa, mínimo, máximo y variación mensual.</p>
+    <h1 id="h1-titulo"><strong>Valor UF 2024</strong> — Chile</h1>
+    <p id="h1-sub">Tabla completa con todos los valores diarios de la UF en Chile durante 2024.</p>
   </div>
 </header>
 
@@ -273,7 +273,7 @@
   /* ─── Meta dinámico ─── */
   document.getElementById('page-title').textContent =
     `Valor UF ${anio} Chile — Tabla Completa por Día y Mes`;
-  document.getElementById('page-desc').setAttribute('content',
+  document.getElementById('meta-desc').setAttribute('content',
     `Tabla completa con todos los valores diarios de la UF en Chile durante ${anio}. Mínimo, máximo y variación mensual. Fuente oficial Banco Central.`);
   document.getElementById('page-canonical').setAttribute('href', `https://indicadoreschile.cl/uf/${anio}/`);
   document.getElementById('og-title').setAttribute('content', `Valor UF ${anio} Chile — Tabla Completa`);

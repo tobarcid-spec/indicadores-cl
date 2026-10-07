@@ -172,6 +172,8 @@ function anual(html, pagina, anio) {
     ['div', 's-max', esc(clp(s.max))], ['div', 's-max-f', s.maxFila ? fecha(s.maxFila.fecha) : ''],
     ['div', 's-var', s.varTxt, `color: ${s.varColor}`],
     ['div', 's-prom', esc(clp(Math.round(s.prom)))],
+    ['h1', 'h1-titulo', `<strong>Valor UF ${anio}</strong> — Chile`],
+    ['p', 'h1-sub', `Tabla completa con todos los valores diarios de la UF en Chile durante ${anio}.`],
     ['span', 'chart-anio', anio],
     ['div', 'chart-sub', `UF diaria ${anio} — ${serie.length} valores`],
     ['span', 'tabla-label', `Tabla UF ${anio} — por mes`],
