@@ -26,8 +26,5 @@
   <url><loc>https://indicadoreschile.cl/reajuste-arriendo-ipc/</loc><lastmod>2026-10-06</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://indicadoreschile.cl/que-es-la-uf/</loc><lastmod>2026-10-06</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://indicadoreschile.cl/widget/</loc><lastmod>2026-10-06</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-
-  <!-- Páginas de soporte -->
-  <url><loc>https://indicadoreschile.cl/privacidad/</loc><lastmod>2026-10-06</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
-  <url><loc>https://indicadoreschile.cl/contacto/</loc><lastmod>2026-10-06</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <!-- /privacidad/ y /contacto/ llevan noindex: no se listan aquí -->
 </urlset>
