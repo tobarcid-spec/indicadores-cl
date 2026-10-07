@@ -60,6 +60,12 @@ Cloudflare Edge (CDN)
 4. El JavaScript del browser lee esas variables al cargar → render instantáneo sin petición adicional
 5. Si el Worker falla, el JS hace fetch directamente a `/api-proxy/` como fallback
 
+### Páginas mensuales de la UF: noindex
+
+Las páginas `/uf/mes-aaaa/` llevan `<meta name="robots" content="noindex, follow">` y no están en `sitemap.xml` ni en IndexNow: son una plantilla con poco texto propio (unas 200-450 palabras) y varias casi iguales, lo que da señal de contenido en serie. Siguen accesibles para los usuarios y enlazadas desde `/uf/`. `create-monthly-uf-page.py` crea las nuevas con `noindex`.
+
+Para volver a indexarlas (por ejemplo, cuando cada mes tenga texto propio): quitar la etiqueta robots de la página y agregar su URL al sitemap.
+
 ### Caché de /assets: subir la versión al editar utils.js o base.css
 
 Los archivos de `/assets/` se sirven con caché de 1 año (`immutable`). Las páginas los referencian con `?v=AAAAMMDD` (por ejemplo `/assets/js/utils.js?v=20261005`). **Al modificar `utils.js` o `base.css`, cambiar ese número en todas las páginas**, por ejemplo con:

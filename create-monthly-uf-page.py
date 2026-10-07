@@ -80,6 +80,12 @@ def set_tag_content(html, el_id, value, tag=None):
 def set_title_tag(html, value):
     return re.sub(r'<title[^>]*>.*?</title>', f'<title id="page-title">{value}</title>', html, flags=re.DOTALL)
 
+def asegurar_noindex(html):
+    """Las paginas mensuales llevan noindex,follow (poco texto propio): ver PROYECTO.md."""
+    if re.search(r'<meta name="robots"', html):
+        return html
+    return re.sub(r'(<link rel="canonical"[^>]*>)', r'\1\n  <meta name="robots" content="noindex, follow">', html, count=1)
+
 def update_sitemap(mes, year, prev_slug):
     """Agrega la URL del mes nuevo al sitemap y baja de prioridad la del mes anterior."""
     if not os.path.exists(SITEMAP_PATH):
@@ -222,13 +228,14 @@ def main():
     # tocan aqui (antes unas regex dañaban el texto del boton en la plantilla).
     prev_slug = f'{slug_mes(prev_m)}-{prev_y}'
 
+    html = asegurar_noindex(html)
     with open(target_file, 'w', encoding='utf-8') as f:
         f.write(html)
 
     print(f'OK: creada uf/{slug_mes(mes)}-{year}/index.html')
     print(f'    Siguiente paso: prebuild-fallback.py llenara los stats con valores reales.')
 
-    update_sitemap(mes, year, prev_slug)
+    # Las paginas mensuales llevan noindex: ya no se agregan a sitemap.xml
     actualizar_indice_uf(mes, year)
 
 if __name__ == '__main__':

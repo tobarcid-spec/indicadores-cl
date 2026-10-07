@@ -51,11 +51,7 @@ jobs:
 
       - name: Notificar IndexNow (Bing) con URLs actualizadas
         run: |
-          MESES=(enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre)
-          MES_NUM=$(date +%-m)
-          MES_NOMBRE=${MESES[$MES_NUM-1]}
           ANIO=$(date +%Y)
-          MES_URL="https://indicadoreschile.cl/uf/${MES_NOMBRE}-${ANIO}/"
           curl -s -X POST "https://api.indexnow.org/indexnow" \
             -H "Content-Type: application/json; charset=utf-8" \
             -d "{
@@ -73,8 +69,7 @@ jobs:
                 \"https://indicadoreschile.cl/feriados/\",
                 \"https://indicadoreschile.cl/impuesto-segunda-categoria/\",
                 \"https://indicadoreschile.cl/sueldo-minimo/\",
-                \"https://indicadoreschile.cl/uf/${ANIO}/\",
-                \"${MES_URL}\"
+                \"https://indicadoreschile.cl/uf/${ANIO}/\"
               ]
             }"
-          echo "IndexNow notificado: ${MES_URL}"
+          echo "IndexNow notificado"
