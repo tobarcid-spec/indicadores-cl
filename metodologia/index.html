@@ -75,7 +75,7 @@
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">📐 Transparencia</p>
     <h1><strong>Metodología</strong> y fuentes de los datos</h1>
-    <p>De dónde sale cada valor, cada cuánto se actualiza y qué límites tienen nuestras calculadoras.</p>
+    <p>De dónde sale cada valor, cada cuánto se actualiza y qué límites tienen las calculadoras.</p>
   </div>
 </header>
 
@@ -83,23 +83,23 @@
 
   <h2>Fuentes por indicador</h2>
   <div class="table-wrap"><table>
-    <thead><tr><th>Dato</th><th>Fuente y cómo lo obtenemos</th></tr></thead>
+    <thead><tr><th>Dato</th><th>Fuente y cómo lo obtengo</th></tr></thead>
     <tbody>
-      <tr><td>UF</td><td>Valor fijado por el Banco Central de Chile. Lo obtenemos de la API pública mindicador.cl, que publica los datos oficiales. La UF de cada día del mes se conoce con anticipación, por eso la tabla incluye días futuros del mes en curso.</td></tr>
+      <tr><td>UF</td><td>Valor fijado por el Banco Central de Chile. Lo obtengo de la API pública mindicador.cl, que publica los datos oficiales. La UF de cada día del mes se conoce con anticipación, por eso la tabla incluye días futuros del mes en curso.</td></tr>
       <tr><td>Dólar observado y euro</td><td>Tipo de cambio publicado por el Banco Central de Chile, también vía mindicador.cl. Se actualiza en días hábiles; fines de semana y feriados repiten el último valor.</td></tr>
       <tr><td>UTM y UTA</td><td>Valor mensual fijado por el Servicio de Impuestos Internos (SII). La UTA es 12 veces la UTM del mes.</td></tr>
-      <tr><td>IPC</td><td>Variación mensual publicada por el INE. La serie la tomamos directamente de la base de datos estadísticos del Banco Central, y no de mindicador.cl, porque allí está desactualizada. El IPC se publica alrededor del día 8 de cada mes.</td></tr>
-      <tr><td>Impuesto de segunda categoría</td><td>Tramos, factores y rebajas del artículo 43 N°1 de la Ley sobre Impuesto a la Renta, expresados en UTM y convertidos a pesos con la UTM del mes. Los contrastamos con la tabla mensual del SII.</td></tr>
-      <tr><td>Sueldo mínimo y topes imponibles</td><td>Ingreso mínimo según la Dirección del Trabajo y topes imponibles según la Superintendencia de Pensiones. Estos valores los actualizamos manualmente cuando cambian, normalmente una o dos veces al año.</td></tr>
+      <tr><td>IPC</td><td>Variación mensual publicada por el INE. La serie la tomo directamente de la base de datos estadísticos del Banco Central, y no de mindicador.cl, porque allí está desactualizada. El IPC se publica alrededor del día 8 de cada mes.</td></tr>
+      <tr><td>Impuesto de segunda categoría</td><td>Tramos, factores y rebajas del artículo 43 N°1 de la Ley sobre Impuesto a la Renta, expresados en UTM y convertidos a pesos con la UTM del mes. Los contrasto con la tabla mensual del SII.</td></tr>
+      <tr><td>Sueldo mínimo y topes imponibles</td><td>Ingreso mínimo según la Dirección del Trabajo y topes imponibles según la Superintendencia de Pensiones. Estos valores los actualizo manualmente cuando cambian, normalmente una o dos veces al año.</td></tr>
       <tr><td>Feriados</td><td>Leyes de feriados vigentes en Chile. Los del año siguiente son una proyección según la ley vigente y pueden cambiar si se publica una nueva norma.</td></tr>
     </tbody>
   </table></div>
 
   <h2>Cada cuánto se actualizan</h2>
   <p>Un proceso automático descarga los datos y actualiza el sitio varias veces al día (cada 3 horas y justo después de medianoche, hora de Chile). Los días 8 a 10 de cada mes, cuando se publica el IPC, revisa cada hora. Aun así, puede haber un desfase de algunas horas entre la publicación oficial y su aparición en el sitio, y en algunos casos más si la fuente no responde.</p>
-  <p>Cada valor muestra su fecha. Si una fuente falla, conservamos el último dato disponible en vez de mostrar uno inventado, y nunca reemplazamos el IPC del Banco Central por una fuente desactualizada.</p>
+  <p>Cada valor muestra su fecha. Si una fuente falla, conservo el último dato disponible en vez de mostrar uno inventado, y nunca reemplazo el IPC del Banco Central por una fuente desactualizada.</p>
 
-  <h2>Cómo calculamos las herramientas</h2>
+  <h2>Cómo calculo las herramientas</h2>
   <ul>
     <li><strong>Conversor y calculadoras de UF:</strong> multiplican el valor en UF por el valor de la UF de la fecha elegida.</li>
     <li><strong>Reajuste de arriendo por IPC:</strong> aplica la variación del IPC del período que indiques sobre el monto del arriendo.</li>
@@ -113,7 +113,7 @@
   <p>indicadoreschile.cl es un sitio independiente y no está vinculado a ninguno de estos organismos.</p>
 
   <h2>Correcciones</h2>
-  <p>Si encuentras un valor que no coincide con la fuente oficial o un error en una calculadora, escríbenos desde la página de <a href="/contacto/">contacto</a> indicando la página y el valor. Revisamos cada reporte y corregimos lo que corresponda. Conoce más sobre el sitio en <a href="/quienes-somos/">quiénes somos</a>.</p>
+  <p>Si encuentras un valor que no coincide con la fuente oficial o un error en una calculadora, escríbeme desde la página de <a href="/contacto/">contacto</a> indicando la página y el valor. Reviso cada reporte y corrijo lo que corresponda. Conoce más sobre el sitio en <a href="/quienes-somos/">quiénes somos</a>.</p>
 
 </main>
 
