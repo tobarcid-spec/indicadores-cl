@@ -13,5 +13,8 @@
 /widget/embed*
   ! X-Frame-Options
 
+# Los datos cambian varias veces al dia: cache corta (5 min) para que el sitio y los widgets se actualicen rapido
 /data/*
+  ! Cache-Control
+  Cache-Control: public, max-age=300, must-revalidate
   Access-Control-Allow-Origin: *
