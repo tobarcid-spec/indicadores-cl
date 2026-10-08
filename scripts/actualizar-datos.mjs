@@ -110,7 +110,13 @@ async function main() {
 
   // Todos los indicadores de hoy
   console.log('hoy');
-  const hoy = await getJson(API);
+  let hoy = await getJson(API);
+  if (!hoy) {
+    // mindicador.cl no respondio: se parte del hoy.json anterior, para que al menos el
+    // IPC (que viene del Banco Central) no quede desactualizado.
+    hoy = await leer('hoy.json');
+    if (hoy) console.warn('  mindicador no respondio: se conserva hoy.json y solo se actualiza el IPC');
+  }
   if (hoy) {
     // mindicador.cl dejo de actualizar el IPC: se reemplaza por el del Banco Central.
     // Sin IPC fresco no se publica hoy.json (el cliente cae al proxy).
