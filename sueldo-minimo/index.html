@@ -138,20 +138,20 @@
   </div>
 
   <div class="calc-card animate delay-2">
-    <div class="calc-title">Calculadora de sueldo líquido</div>
+    <div class="calc-title">Calculadora de sueldo líquido (estimación)</div>
     <div class="calc-desc">Descuenta AFP, salud, seguro de cesantía e impuesto de segunda categoría, con topes y UTM vigentes (UF hoy: <strong id="uf-act" style="color:var(--amber)">—</strong> · UTM: <strong id="utm-act" style="color:var(--amber)">—</strong>).</div>
     <div class="calc-row">
       <div class="calc-field"><span class="calc-label-txt">Sueldo bruto imponible ($)</span><input class="input" id="inp" type="number" min="0" step="10000" value="1200000" inputmode="numeric"></div>
       <div class="calc-field"><span class="calc-label-txt">Comisión AFP (%)</span><input class="input" id="com" type="number" min="0" max="3" step="0.01" value="1.0"></div>
     </div>
     <div class="res-grid">
-      <div class="res main"><div class="res-label">Sueldo líquido</div><div class="res-val" id="r-liq">—</div></div>
+      <div class="res main"><div class="res-label">Sueldo líquido estimado</div><div class="res-val" id="r-liq">—</div></div>
       <div class="res"><div class="res-label">AFP (10% + comisión)</div><div class="res-val" id="r-afp">—</div></div>
       <div class="res"><div class="res-label">Salud (7%)</div><div class="res-val" id="r-sal">—</div></div>
       <div class="res"><div class="res-label">Cesantía (0,6%)</div><div class="res-val" id="r-afc">—</div></div>
       <div class="res"><div class="res-label">Impuesto 2.ª categoría</div><div class="res-val" id="r-imp">—</div></div>
     </div>
-    <p class="note" style="margin:0">Referencial: supone contrato indefinido, salud Fonasa (7%) y no incluye gratificación, bonos, APV ni otros descuentos. La comisión varía por AFP: ingrésala según la tuya.</p>
+    <p class="note" style="margin:0">Estimación referencial: supone contrato indefinido y salud Fonasa (7%), y no incluye gratificación, bonos, APV ni otros descuentos. La comisión varía por AFP: ingrésala según la tuya. Tu liquidación real puede ser distinta; confírmala con tu empleador.</p>
   </div>
 
   <span class="section-label">Cotizaciones previsionales del trabajador</span>
@@ -187,7 +187,6 @@
   <span class="section-label">Herramientas relacionadas</span>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:48px">
     <a href="/impuesto-segunda-categoria/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">🧮</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Impuesto segunda categoría</div><div style="font-size:12px;color:var(--text-2)">Tabla y calculadora</div></div></a>
-    <a href="/calculadora-finiquito/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📄</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Calculadora de finiquito</div><div style="font-size:12px;color:var(--text-2)">Indemnización y aviso previo</div></div></a>
     <a href="/uf/" style="display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;text-decoration:none"><span style="font-size:24px">📊</span><div><div style="font-size:14px;font-weight:600;color:var(--text)">Valor UF hoy</div><div style="font-size:12px;color:var(--text-2)">Conversor e historial</div></div></a>
   </div>
 

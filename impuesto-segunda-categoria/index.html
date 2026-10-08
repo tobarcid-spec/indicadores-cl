@@ -124,19 +124,19 @@
 <main class="container">
 
   <div class="calc-card animate">
-    <div class="calc-title">Calculadora del impuesto a tu sueldo</div>
+    <div class="calc-title">Calculadora del impuesto a tu sueldo (estimación)</div>
     <div class="calc-desc">Ingresa la renta imponible del mes: sueldo bruto menos cotizaciones previsionales y de salud. Se calcula con la UTM del mes elegido en la tabla de abajo: <strong id="utm-act" style="color:var(--amber)">—</strong>.</div>
     <div class="calc-field">
       <span class="calc-label-txt">Renta tributable mensual ($)</span>
       <input class="input" id="inp" type="number" min="0" step="10000" value="1800000" inputmode="numeric">
     </div>
     <div class="res-grid">
-      <div class="res main"><div class="res-label">Impuesto a pagar</div><div class="res-val" id="r-imp">—</div></div>
+      <div class="res main"><div class="res-label">Impuesto estimado</div><div class="res-val" id="r-imp">—</div></div>
       <div class="res"><div class="res-label">Tramo</div><div class="res-val" id="r-tramo">—</div></div>
       <div class="res"><div class="res-label">Tasa efectiva</div><div class="res-val" id="r-efec">—</div></div>
       <div class="res"><div class="res-label">Renta después de impuesto</div><div class="res-val" id="r-liq">—</div></div>
     </div>
-    <p class="note" style="margin:14px 0 0">Referencial. No considera otras rebajas ni créditos personales. Para tu declaración oficial consulta al SII o a tu contador.</p>
+    <p class="note" style="margin:14px 0 0">Estimación referencial. No considera otras rebajas ni créditos personales. El impuesto exacto lo determina tu empleador en la liquidación y, en tu declaración anual, el SII. Consulta al SII o a tu contador.</p>
   </div>
 
   <span class="section-label">Tabla mensual (con UTM del mes)</span>
