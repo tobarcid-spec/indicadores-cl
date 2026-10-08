@@ -82,6 +82,8 @@ mindicador.cl es lento y variable (4-20 s). Para no depender de él al momento d
 
 El cliente (`assets/js/utils.js`) busca los datos en este orden: inyección del Worker → localStorage (1 h) → `/data/*.json` → `/api-proxy` (respaldo). `hoy.json` solo se usa si trae IPC del Banco Central (`ipc_ok`) y la UF es de hoy en hora de Chile; si no, se pide al proxy. El Worker responde con el dato en caché aunque esté viejo y lo refresca en segundo plano.
 
+**Regla del IPC: siempre del Banco Central, nunca de mindicador.cl** (su serie de IPC quedó congelada en dic-2025). `ipc.json` y el campo `ipc` de `hoy.json` salen de la API BDE del Banco Central; si esta falla se conserva el último valor que vino de ella. El Worker responde 503 en `/api-proxy/ipc*` y omite el campo `ipc` en `/api-proxy` si el Banco Central no responde, en vez de usar el dato de mindicador.
+
 Primera vez o tras cambiar credenciales: ejecutar el workflow a mano (Actions → Actualizar datos de indicadores → Run workflow). Requiere los secrets `BCENTRAL_API_USER`, `BCENTRAL_API_PASS` y `BCENTRAL_IPC_SERIES` para generar `ipc.json` y `hoy.json`.
 
 ### Prebuild de datos estáticos

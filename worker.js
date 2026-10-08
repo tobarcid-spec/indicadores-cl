@@ -155,9 +155,9 @@ async function proxyApi(url, env, ctx) {
   const apiPath = url.pathname.replace('/api-proxy', '') || '/';
 
   // IPC: mindicador.cl dejo de actualizar esta serie (quedo fija en dic-2025).
-  // Se sirve desde el Banco Central, con la misma forma {serie:[...]} para
-  // que el cliente no necesite cambios. Si no hay credenciales configuradas
-  // o la consulta falla, se sigue de largo y se usa mindicador.cl como antes.
+  // Se sirve SIEMPRE desde el Banco Central, con la misma forma {serie:[...]} para
+  // que el cliente no necesite cambios. Si no hay credenciales o la consulta falla se
+  // responde un error (503): nunca se cae a mindicador.cl, que mostraria un IPC viejo.
   if (apiPath === '/ipc' || apiPath.startsWith('/ipc/')) {
     const anio = apiPath.startsWith('/ipc/') ? parseInt(apiPath.slice(5), 10) : null;
     const serie = await fetchBcentralIpcSerie(env, anio);
@@ -171,6 +171,10 @@ async function proxyApi(url, env, ctx) {
         },
       });
     }
+    return new Response(JSON.stringify({ error: 'IPC no disponible por ahora' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' },
+    });
   }
 
   const ttls = ttlsPara(apiPath);
@@ -185,15 +189,15 @@ async function proxyApi(url, env, ctx) {
   let body = r.body;
 
   // Endpoint base ("hoy", todos los indicadores): el campo ipc que trae
-  // mindicador.cl esta desactualizado, se reemplaza con Banco Central.
+  // mindicador.cl esta desactualizado, se reemplaza con Banco Central. Si el Banco
+  // Central no responde, el campo se omite (mejor sin IPC que con uno viejo).
   if (apiPath === '/') {
     try {
       const data = JSON.parse(body);
       const ipcSerie = await fetchBcentralIpcSerie(env, null);
-      if (ipcSerie && ipcSerie.length) {
-        data.ipc = ipcSerie[ipcSerie.length - 1];
-        body = JSON.stringify(data);
-      }
+      if (ipcSerie && ipcSerie.length) data.ipc = ipcSerie[ipcSerie.length - 1];
+      else delete data.ipc;
+      body = JSON.stringify(data);
     } catch { /* si no es JSON valido, se devuelve tal cual */ }
   }
 
