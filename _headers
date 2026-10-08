@@ -8,3 +8,10 @@
 /assets/*
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+
+# Widget embebible: se puede incluir en otros sitios (iframe) y los datos se pueden leer desde cualquier origen
+/widget/embed*
+  ! X-Frame-Options
+
+/data/*
+  Access-Control-Allow-Origin: *

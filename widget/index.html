@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Widget UF Chile — Agrega el Valor UF a tu Sitio Web Gratis</title>
-  <meta name="description" id="meta-desc" content="Widget gratuito para mostrar el valor UF actualizado en tu sitio web. Copia el código y listo. También disponible para dólar, UTM e IPC. Sin registro.">
+  <title>Widget de Indicadores Chile — UF, Dólar, UTM e IPC Gratis</title>
+  <meta name="description" id="meta-desc" content="Widget gratuito con UF, dólar, euro, UTM e IPC actualizados para tu sitio web. Elige indicadores y estilo, copia el código y listo. Sin registro.">
   <link rel="canonical" href="https://indicadoreschile.cl/widget/">
-  <meta property="og:title" content="Widget UF Chile — Gratis para tu sitio web">
-  <meta property="og:description" content="Agrega el valor UF actualizado a tu web con una línea de código. Gratis, sin registro.">
+  <meta property="og:title" content="Widget de indicadores de Chile — Gratis para tu sitio web">
+  <meta property="og:description" content="Agrega UF, dólar, euro, UTM e IPC actualizados a tu web con un par de líneas de código. Gratis, sin registro.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://indicadoreschile.cl/widget/">
   <meta property="og:locale" content="es_CL">
@@ -239,9 +239,9 @@
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Widget UF Chile — Agrega el Valor UF a tu Sitio Web",
+    "name": "Widget de Indicadores Chile — UF, Dólar, UTM e IPC",
     "url": "https://indicadoreschile.cl/widget/",
-    "description": "Widget gratuito para mostrar el valor UF actualizado en tu sitio web. Copia el código y listo. Sin registro.",
+    "description": "Widget gratuito con UF, dólar, euro, UTM e IPC actualizados para tu sitio web. Sin registro.",
     "inLanguage": "es-CL",
     "isPartOf": { "@type": "WebSite", "url": "https://indicadoreschile.cl/" }
   }
@@ -269,35 +269,53 @@
 <header class="page-header">
   <div class="container">
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">🔧 Para desarrolladores y sitios web</p>
-    <h1><strong>Widget UF</strong> para tu sitio web</h1>
-    <p>Muestra el valor UF actualizado en tu web con una línea de código. Gratis, sin registro, sin límites.</p>
+    <h1><strong>Widget de indicadores</strong> para tu sitio web</h1>
+    <p>Muestra la UF, el dólar, el euro, la UTM y el IPC actualizados en tu web con un par de líneas de código. Gratis, sin registro, sin límites.</p>
   </div>
 </header>
 
 <main class="container">
 
-  <!-- SELECTOR DE ESTILO -->
-  <span class="section-label">Elige el estilo del widget</span>
-  <div class="widget-tabs">
-    <button class="widget-tab active" onclick="showWidget('compact', this)">Compacto</button>
-    <button class="widget-tab" onclick="showWidget('badge', this)">Badge</button>
-    <button class="widget-tab" onclick="showWidget('card', this)">Tarjeta</button>
-    <button class="widget-tab" onclick="showWidget('iframe', this)">iFrame</button>
+  <!-- OPCIONES -->
+  <span class="section-label">1. Elige los indicadores</span>
+  <div class="widget-tabs" id="opt-ind">
+    <button type="button" class="widget-tab active" data-ind="uf" aria-pressed="true">UF</button>
+    <button type="button" class="widget-tab active" data-ind="dolar" aria-pressed="true">Dólar</button>
+    <button type="button" class="widget-tab" data-ind="euro" aria-pressed="false">Euro</button>
+    <button type="button" class="widget-tab" data-ind="utm" aria-pressed="false">UTM</button>
+    <button type="button" class="widget-tab" data-ind="ipc" aria-pressed="false">IPC</button>
+  </div>
+
+  <span class="section-label">2. Elige el estilo</span>
+  <div class="widget-tabs" id="opt-estilo">
+    <button type="button" class="widget-tab active" data-t="tarjetas">Tarjetas</button>
+    <button type="button" class="widget-tab" data-t="lista">Lista</button>
+    <button type="button" class="widget-tab" data-t="fila">Fila compacta</button>
+  </div>
+
+  <span class="section-label">3. Elige el tema</span>
+  <div class="widget-tabs" id="opt-tema">
+    <button type="button" class="widget-tab active" data-tema="oscuro">Oscuro</button>
+    <button type="button" class="widget-tab" data-tema="claro">Claro</button>
   </div>
 
   <!-- PREVIEW -->
   <div class="preview-wrap">
-    <div class="preview-label">Indicador</div>
+    <div class="preview-label">Indicadores</div>
     <div class="preview-area" id="preview-area">
-      <!-- se rellena por JS -->
+      <div id="preview-widget" style="width:100%;max-width:560px"></div>
     </div>
   </div>
 
   <!-- CÓDIGO GENERADO -->
+  <div class="widget-tabs" id="opt-codigo" style="margin-top:20px">
+    <button type="button" class="widget-tab active" data-cod="html">HTML + JS (recomendado)</button>
+    <button type="button" class="widget-tab" data-cod="iframe">iFrame</button>
+  </div>
   <div class="code-block-wrap" id="code-wrap">
     <div class="code-header">
       <span class="code-header-label" id="code-label">HTML — Copia y pega en tu sitio</span>
-      <button class="copy-btn" id="copy-btn" onclick="copiarCodigo()">Copiar código</button>
+      <button class="copy-btn" id="copy-btn" type="button">Copiar código</button>
     </div>
     <pre id="code-pre"></pre>
   </div>
@@ -311,8 +329,8 @@
         <div class="step-line"></div>
       </div>
       <div class="step-body">
-        <div class="step-title">Elige el estilo que prefieras arriba</div>
-        <div class="step-desc">Compacto es ideal para barras laterales. Badge funciona bien dentro de texto o encabezados. Tarjeta es perfecta para secciones destacadas.</div>
+        <div class="step-title">Elige indicadores, estilo y tema arriba</div>
+        <div class="step-desc">Tarjetas sirve para destacar los valores, Lista para barras laterales y Fila compacta para encabezados o pies de página. La vista previa usa datos reales.</div>
       </div>
     </div>
     <div class="step">
@@ -322,7 +340,7 @@
       </div>
       <div class="step-body">
         <div class="step-title">Copia el código con el botón "Copiar código"</div>
-        <div class="step-desc">El código incluye todo lo necesario: estilos, el fetch a la API y el enlace a indicadoreschile.cl. No necesitas instalar ninguna dependencia.</div>
+        <div class="step-desc">Son un par de líneas: un contenedor y un script que se encarga del resto (estilos, datos y enlace a indicadoreschile.cl). No necesitas instalar nada. Si tu editor no permite scripts, usa la opción iFrame.</div>
       </div>
     </div>
     <div class="step">
@@ -331,65 +349,57 @@
       </div>
       <div class="step-body">
         <div class="step-title">Pégalo en el HTML de tu sitio donde quieras mostrarlo</div>
-        <div class="step-desc">El widget se actualiza automáticamente cada vez que alguien visita tu página. No requiere base de datos ni backend — consulta directo a la API del Banco Central.</div>
+        <div class="step-desc">Los valores se actualizan solos cada vez que alguien visita tu página (UF y dólar a diario, UTM e IPC cada mes). No requiere base de datos ni backend. Fuente: Banco Central y SII.</div>
       </div>
     </div>
   </div>
 
-  <!-- API PÚBLICA -->
-  <span class="section-label" style="margin-top:16px">API pública — úsala directamente</span>
-  <p style="font-size:14px;color:var(--text-2);margin-bottom:20px">Si prefieres construir tu propia integración, puedes consultar la API de <strong>mindicador.cl</strong> directamente. Es gratuita, no requiere API key y tiene CORS habilitado.</p>
+  <!-- DATOS ABIERTOS -->
+  <span class="section-label" style="margin-top:16px">Datos abiertos — úsalos directamente</span>
+  <p style="font-size:14px;color:var(--text-2);margin-bottom:20px">Si prefieres construir tu propia integración, estos archivos JSON son públicos, gratuitos y se pueden consultar desde cualquier sitio. Se actualizan varias veces al día con datos del <strong>Banco Central</strong> y del <strong>SII</strong>. Si los usas, agradecemos un enlace a indicadoreschile.cl.</p>
 
   <div class="api-endpoint">
     <span class="method">GET</span>
-    <span class="endpoint-url">https://mindicador.cl/api</span>
-    <span class="endpoint-desc">Todos los indicadores del día (UF, dólar, UTM, euro, IPC…)</span>
+    <span class="endpoint-url">https://indicadoreschile.cl/data/hoy.json</span>
+    <span class="endpoint-desc">Todos los indicadores del día: UF, dólar, euro, UTM e IPC</span>
   </div>
   <div class="api-endpoint">
     <span class="method">GET</span>
-    <span class="endpoint-url">https://mindicador.cl/api/uf</span>
-    <span class="endpoint-desc">UF del mes actual — array de valores diarios</span>
+    <span class="endpoint-url">https://indicadoreschile.cl/data/uf-2026.json</span>
+    <span class="endpoint-desc">UF de todo el año 2026 (también dolar-2026.json y utm-2026.json; años desde 2024)</span>
   </div>
   <div class="api-endpoint">
     <span class="method">GET</span>
-    <span class="endpoint-url">https://mindicador.cl/api/uf/2026</span>
-    <span class="endpoint-desc">UF de todo el año 2026</span>
-  </div>
-  <div class="api-endpoint">
-    <span class="method">GET</span>
-    <span class="endpoint-url">https://mindicador.cl/api/dolar</span>
-    <span class="endpoint-desc">Dólar observado del mes</span>
+    <span class="endpoint-url">https://indicadoreschile.cl/data/ipc.json</span>
+    <span class="endpoint-desc">IPC mensual desde 2020</span>
   </div>
   <div class="api-endpoint" style="margin-bottom:32px">
     <span class="method">GET</span>
-    <span class="endpoint-url">https://mindicador.cl/api/utm</span>
-    <span class="endpoint-desc">UTM del mes actual</span>
+    <span class="endpoint-url">https://indicadoreschile.cl/data/uf.json</span>
+    <span class="endpoint-desc">Últimos días de la UF (también dolar.json y utm.json)</span>
   </div>
 
   <!-- EJEMPLO JS PURO -->
   <span class="section-label">Ejemplo en JavaScript puro</span>
   <div class="code-block-wrap" style="margin-bottom:48px">
     <div class="code-header">
-      <span class="code-header-label">JavaScript — fetch a la API</span>
-      <button class="copy-btn" onclick="copiarEjemplo(this)">Copiar</button>
+      <span class="code-header-label">JavaScript — fetch a los datos</span>
+      <button class="copy-btn" id="copy-ejemplo" type="button">Copiar</button>
     </div>
-    <pre id="ejemplo-js"><span class="c-cmt">// Obtener valor UF de hoy</span>
-<span class="c-key">fetch</span>(<span class="c-str">'https://mindicador.cl/api/uf'</span>)
-  .<span class="c-key">then</span>(r <span class="c-key">=></span> r.<span class="c-key">json</span>())
-  .<span class="c-key">then</span>(data <span class="c-key">=></span> {
-    <span class="c-key">const</span> hoy = data.serie[<span class="c-val">0</span>];
-    console.<span class="c-key">log</span>(<span class="c-str">`UF hoy: $${hoy.valor} (${hoy.fecha})`</span>);
-    <span class="c-cmt">// → UF hoy: $38542.45 (2026-04-21T00:00:00.000Z)</span>
-  });
-
-<span class="c-cmt">// Obtener todos los indicadores del día</span>
-<span class="c-key">fetch</span>(<span class="c-str">'https://mindicador.cl/api'</span>)
+    <pre id="ejemplo-js"><span class="c-cmt">// Todos los indicadores del día</span>
+<span class="c-key">fetch</span>(<span class="c-str">'https://indicadoreschile.cl/data/hoy.json'</span>)
   .<span class="c-key">then</span>(r <span class="c-key">=></span> r.<span class="c-key">json</span>())
   .<span class="c-key">then</span>(data <span class="c-key">=></span> {
     console.<span class="c-key">log</span>(<span class="c-str">'UF:'</span>, data.uf.valor);
     console.<span class="c-key">log</span>(<span class="c-str">'Dólar:'</span>, data.dolar.valor);
     console.<span class="c-key">log</span>(<span class="c-str">'UTM:'</span>, data.utm.valor);
-  });</pre>
+    console.<span class="c-key">log</span>(<span class="c-str">'IPC mensual:'</span>, data.ipc.valor + <span class="c-str">'%'</span>);
+  });
+
+<span class="c-cmt">// UF de todo el año (la serie viene de la fecha más reciente a la más antigua)</span>
+<span class="c-key">fetch</span>(<span class="c-str">'https://indicadoreschile.cl/data/uf-2026.json'</span>)
+  .<span class="c-key">then</span>(r <span class="c-key">=></span> r.<span class="c-key">json</span>())
+  .<span class="c-key">then</span>(data <span class="c-key">=></span> console.<span class="c-key">log</span>(data.serie[<span class="c-val">0</span>]));</pre>
   </div>
 
 </main>
@@ -409,194 +419,88 @@
   </div>
 </footer>
 
-<script src="/assets/js/utils.js?v=20261006"></script>
+<script src="/widget/widget.js"></script>
 <script>
-(async () => {
-  const { fmt, fetchHoy } = window.IC;
-  let ufVal = null, dolarVal = null, utmVal = null;
+(function () {
+  var ORIGEN = 'https://indicadoreschile.cl';
+  var ORDEN = ['uf', 'dolar', 'euro', 'utm', 'ipc'];
+  var estado = { ind: ['uf', 'dolar'], t: 'tarjetas', tema: 'oscuro', cod: 'html' };
+  var $ = function (id) { return document.getElementById(id); };
 
-  /* Cargar valores reales */
-  try {
-    const todos = await fetchHoy();
-    ufVal    = todos.uf?.valor    ?? 38542;
-    dolarVal = todos.dolar?.valor ?? 985;
-    utmVal   = todos.utm?.valor   ?? 65443;
-  } catch {
-    ufVal = 38542; dolarVal = 985; utmVal = 65443;
+  function indicadores() { return ORDEN.filter(function (x) { return estado.ind.indexOf(x) >= 0; }); }
+
+  function alturaSugerida(n) {
+    if (estado.t === 'fila') return 64;
+    if (estado.t === 'lista') return 44 * n + 40;
+    return Math.ceil(n / 2) * 96 + 40;
   }
 
-  const ufFmt    = fmt.clp(ufVal);
-  const dolarFmt = fmt.clp(dolarVal);
-  const utmFmt   = fmt.clp(utmVal);
-  const hoyStr   = new Date().toLocaleDateString('es-CL', { day:'2-digit', month:'2-digit', year:'numeric' });
-
-  /* ─── Definición de widgets ─── */
-  const WIDGETS = {
-    compact: {
-      label: 'HTML — Widget compacto',
-      preview: () => `
-        <a class="ic-widget-compact" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
-          <div class="ic-dot"></div>
-          <div>
-            <div class="ic-label">UF Hoy · ${hoyStr}</div>
-            <div class="ic-value" id="pw-val">${ufFmt}</div>
-          </div>
-        </a>`,
-      code: () => `<style>
-.ic-widget{display:inline-flex;align-items:center;gap:12px;background:#111720;
-border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 16px;
-font-family:monospace;text-decoration:none}
-.ic-widget .ic-label{font-size:11px;color:#8a99b3;text-transform:uppercase;letter-spacing:.08em}
-.ic-widget .ic-value{font-size:18px;font-weight:500;color:#fff}
-.ic-dot{width:6px;height:6px;border-radius:50%;background:#34d399;flex-shrink:0;
-animation:ic-p 2s ease infinite}
-@keyframes ic-p{0%,100%{opacity:1}50%{opacity:.3}}
-</style>
-<a class="ic-widget" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener" id="ic-uf-widget">
-  <div class="ic-dot"></div>
-  <div>
-    <div class="ic-label">UF Hoy</div>
-    <div class="ic-value" id="ic-uf-value">Cargando…</div>
-  </div>
-</a>
-<script>
-fetch('https://mindicador.cl/api/uf')
-  .then(r=>r.json()).then(d=>{
-    const v=d.serie[0].valor;
-    document.getElementById('ic-uf-value').textContent=
-      new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(v);
-  }).catch(()=>{});
-<\/script>`
-    },
-    badge: {
-      label: 'HTML — Badge inline',
-      preview: () => `
-        <a class="ic-widget-badge" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
-          <div class="ic-b-dot"></div>
-          <span class="ic-b-label">UF</span>
-          <span class="ic-b-value">${ufFmt}</span>
-        </a>`,
-      code: () => `<style>
-.ic-badge{display:inline-flex;align-items:center;gap:8px;background:#111720;
-border:1px solid rgba(255,255,255,.08);border-radius:99px;padding:6px 14px;
-font-family:monospace;text-decoration:none}
-.ic-badge .lbl{font-size:11px;color:#8a99b3}
-.ic-badge .val{font-size:14px;font-weight:500;color:#3b9eff}
-.ic-bdot{width:5px;height:5px;border-radius:50%;background:#34d399;flex-shrink:0;
-animation:ic-p 2s ease infinite}
-@keyframes ic-p{0%,100%{opacity:1}50%{opacity:.3}}
-</style>
-<a class="ic-badge" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
-  <div class="ic-bdot"></div>
-  <span class="lbl">UF hoy</span>
-  <span class="val" id="ic-uf-badge">—</span>
-</a>
-<script>
-fetch('https://mindicador.cl/api/uf')
-  .then(r=>r.json()).then(d=>{
-    document.getElementById('ic-uf-badge').textContent=
-      new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(d.serie[0].valor);
-  }).catch(()=>{});
-<\/script>`
-    },
-    card: {
-      label: 'HTML — Tarjeta con fecha',
-      preview: () => `
-        <a class="ic-widget-card" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
-          <div class="ic-c-eyebrow">Unidad de Fomento · Chile</div>
-          <div class="ic-c-value">${ufFmt}</div>
-          <div class="ic-c-date">${hoyStr} · Banco Central</div>
-          <div class="ic-c-footer">Fuente: indicadoreschile.cl</div>
-        </a>`,
-      code: () => `<style>
-.ic-card{display:inline-flex;flex-direction:column;background:#111720;
-border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 20px;
-font-family:monospace;text-decoration:none;min-width:180px}
-.ic-card .ey{font-size:10px;color:rgba(138,153,179,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.ic-card .val{font-size:24px;font-weight:500;color:#fff;margin-bottom:4px}
-.ic-card .dt{font-size:11px;color:rgba(138,153,179,.6)}
-.ic-card .ft{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)}
-</style>
-<a class="ic-card" href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
-  <div class="ey">Unidad de Fomento · Chile</div>
-  <div class="val" id="ic-uf-card">—</div>
-  <div class="dt" id="ic-uf-date">—</div>
-  <div class="ft">Fuente: indicadoreschile.cl</div>
-</a>
-<script>
-fetch('https://mindicador.cl/api/uf').then(r=>r.json()).then(d=>{
-  const r=d.serie[0];
-  document.getElementById('ic-uf-card').textContent=
-    new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(r.valor);
-  document.getElementById('ic-uf-date').textContent=
-    new Date(r.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'})
-    +' · Banco Central';
-}).catch(()=>{});
-<\/script>`
-    },
-    iframe: {
-      label: 'iFrame — Compatible con cualquier CMS',
-      preview: () => `
-        <div style="width:200px;background:#111720;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px 20px;font-family:monospace">
-          <div style="font-size:10px;color:rgba(138,153,179,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">UF · Chile</div>
-          <div style="font-size:22px;font-weight:500;color:#fff;margin-bottom:4px">${ufFmt}</div>
-          <div style="font-size:11px;color:rgba(138,153,179,.6)">${hoyStr}</div>
-          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(138,153,179,.4)">indicadoreschile.cl</div>
-        </div>`,
-      code: () => `<!-- Usar con cualquier CMS (WordPress, Wix, Squarespace…) -->
-<iframe
-  src="https://indicadoreschile.cl/widget/embed.html"
-  width="220"
-  height="110"
-  frameborder="0"
-  scrolling="no"
-  style="border:none;overflow:hidden"
-  title="Valor UF Chile hoy - indicadoreschile.cl">
-</iframe>`
+  function codigo() {
+    var i = indicadores().join(',');
+    if (estado.cod === 'iframe') {
+      return '<iframe id="ic-widget"\n' +
+        '  src="' + ORIGEN + '/widget/embed.html?i=' + i + '&amp;t=' + estado.t + '&amp;tema=' + estado.tema + '"\n' +
+        '  title="Indicadores económicos de Chile" width="100%" height="' + alturaSugerida(indicadores().length) + '"\n' +
+        '  style="border:0;max-width:' + (estado.t === 'fila' ? '100%' : '480px') + '" loading="lazy"></iframe>\n' +
+        '<script>\n' +
+        'window.addEventListener("message", function (e) {\n' +
+        '  if (e.origin === "' + ORIGEN + '" && e.data && e.data.icWidgetHeight) {\n' +
+        '    document.getElementById("ic-widget").style.height = e.data.icWidgetHeight + "px";\n' +
+        '  }\n' +
+        '});\n' +
+        '<\/script>';
     }
-  };
-
-  let activeWidget = 'compact';
-
-  function renderWidget(key) {
-    const w = WIDGETS[key];
-    document.getElementById('preview-area').innerHTML = w.preview();
-    const code = w.code();
-    document.getElementById('code-pre').textContent = code;
-    document.getElementById('code-label').textContent = w.label;
-    document.getElementById('copy-btn').textContent = 'Copiar código';
-    document.getElementById('copy-btn').classList.remove('copied');
-    activeWidget = key;
+    return '<div data-ic-widget data-i="' + i + '" data-t="' + estado.t + '" data-tema="' + estado.tema + '"></div>\n' +
+      '<script async src="' + ORIGEN + '/widget/widget.js"><\/script>';
   }
 
-  window.showWidget = (key, btn) => {
-    document.querySelectorAll('.widget-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    renderWidget(key);
-  };
+  function pintar() {
+    window.ICWidget.render($('preview-widget'), { i: indicadores(), t: estado.t, tema: estado.tema });
+    $('code-pre').textContent = codigo();
+    $('code-label').textContent = estado.cod === 'iframe' ? 'iFrame — Copia y pega en tu sitio' : 'HTML — Copia y pega en tu sitio';
+  }
 
-  window.copiarCodigo = () => {
-    const code = WIDGETS[activeWidget].code();
-    navigator.clipboard.writeText(code).then(() => {
-      const btn = document.getElementById('copy-btn');
-      btn.textContent = '✓ Copiado';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copiar código'; btn.classList.remove('copied'); }, 2500);
+  /* Indicadores: se pueden combinar, pero siempre queda al menos uno */
+  $('opt-ind').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-ind]');
+    if (!b) return;
+    var id = b.getAttribute('data-ind'), pos = estado.ind.indexOf(id);
+    if (pos >= 0) { if (estado.ind.length === 1) return; estado.ind.splice(pos, 1); } else estado.ind.push(id);
+    b.classList.toggle('active', estado.ind.indexOf(id) >= 0);
+    b.setAttribute('aria-pressed', String(estado.ind.indexOf(id) >= 0));
+    pintar();
+  });
+
+  /* Estilo, tema y tipo de código: una sola opción a la vez */
+  function unica(idGrupo, atributo, clave) {
+    $(idGrupo).addEventListener('click', function (e) {
+      var b = e.target.closest('[' + atributo + ']');
+      if (!b) return;
+      estado[clave] = b.getAttribute(atributo);
+      Array.prototype.forEach.call($(idGrupo).children, function (x) { x.classList.toggle('active', x === b); });
+      pintar();
     });
-  };
+  }
+  unica('opt-estilo', 'data-t', 't');
+  unica('opt-tema', 'data-tema', 'tema');
+  unica('opt-codigo', 'data-cod', 'cod');
 
-  window.copiarEjemplo = (btn) => {
-    const text = document.getElementById('ejemplo-js').innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = '✓ Copiado';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2500);
-    });
-  };
+  function copiar(texto, btn, normal) {
+    var listo = function () { btn.textContent = '¡Copiado!'; setTimeout(function () { btn.textContent = normal; }, 1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(listo, function () {});
+    } else {
+      var t = document.createElement('textarea');
+      t.value = texto; document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); listo(); } catch (err) { /* sin permiso */ }
+      document.body.removeChild(t);
+    }
+  }
+  $('copy-btn').addEventListener('click', function () { copiar($('code-pre').textContent, this, 'Copiar código'); });
+  $('copy-ejemplo').addEventListener('click', function () { copiar($('ejemplo-js').textContent, this, 'Copiar'); });
 
-  renderWidget('compact');
+  pintar();
 })();
 </script>
-
 </body>
 </html>

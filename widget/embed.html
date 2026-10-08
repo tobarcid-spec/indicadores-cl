@@ -4,59 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
-  <title>UF Chile — Widget</title>
+  <title>Indicadores económicos de Chile — Widget</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDW33KBK92"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-WDW33KBK92');</script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #111720;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: 'DM Mono', monospace, monospace;
-    }
-    a {
-      display: inline-flex;
-      flex-direction: column;
-      background: #111720;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 16px 20px;
-      text-decoration: none;
-      min-width: 180px;
-    }
-    .ey { font-size: 10px; color: rgba(138,153,179,0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
-    .val { font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 4px; }
-    .dt { font-size: 11px; color: rgba(138,153,179,0.6); }
-    .ft { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(138,153,179,0.4); }
+    html, body { margin: 0; padding: 0; background: transparent; }
+    body { padding: 2px; }
   </style>
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9836008718052688"
-       crossorigin="anonymous"></script>
 </head>
 <body>
-<a href="https://indicadoreschile.cl/uf/" target="_blank" rel="noopener">
-  <div class="ey">Unidad de Fomento · Chile</div>
-  <div class="val" id="val">—</div>
-  <div class="dt" id="dt">—</div>
-  <div class="ft">indicadoreschile.cl</div>
-</a>
+<!-- Parámetros: ?i=uf,dolar,utm&t=tarjetas|lista|fila&tema=oscuro|claro   (sin parámetros: solo la UF) -->
+<div id="w" data-ic-widget></div>
 <script>
-fetch('https://mindicador.cl/api/uf')
-  .then(r => r.json())
-  .then(d => {
-    const r = d.serie[0];
-    document.getElementById('val').textContent =
-      new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(r.valor);
-    document.getElementById('dt').textContent =
-      new Date(r.fecha).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      + ' · Banco Central';
-  })
-  .catch(() => {
-    document.getElementById('val').textContent = 'No disponible';
-  });
+  (function () {
+    var q = new URLSearchParams(location.search), el = document.getElementById('w');
+    el.setAttribute('data-i', q.get('i') || 'uf');
+    el.setAttribute('data-t', q.get('t') || 'tarjetas');
+    el.setAttribute('data-tema', q.get('tema') || 'oscuro');
+  })();
 </script>
+<script src="/widget/widget.js"></script>
 </body>
 </html>
