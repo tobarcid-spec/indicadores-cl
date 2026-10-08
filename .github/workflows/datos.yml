@@ -6,6 +6,9 @@ on:
     - cron: '20 */3 * * *'
     # Justo despues de medianoche en Chile (verano e invierno): valores del dia nuevo
     - cron: '10 3,4 * * *'
+    # Dias 8 a 10: el INE publica el IPC a las 08:00 (hora Chile) y el Banco Central lo
+    # carga unas horas despues; se revisa cada hora para recogerlo apenas aparezca
+    - cron: '5 11-23 8-10 * *'
 
   # Ejecución manual desde GitHub Actions → pestaña Actions → "Run workflow"
   workflow_dispatch:
