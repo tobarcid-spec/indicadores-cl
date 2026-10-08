@@ -28,6 +28,9 @@ const START_YEAR = 2024;
 const INDICADORES = ['uf', 'dolar', 'utm'];
 const IPC_MIN_YEAR = 2020;
 const API = 'https://mindicador.cl/api';
+// Respaldo: el Worker del propio sitio llega bien a mindicador desde Cloudflare, mientras que
+// desde los servidores de GitHub falla seguido (timeouts, fetch failed, HTTP 500).
+const API_RESPALDO = 'https://indicadoreschile.cl/api-proxy';
 
 const anioActual = new Date().getFullYear();
 let ok = 0;
@@ -35,7 +38,7 @@ let fallos = 0;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-async function getJson(url, intentos = 4, timeoutMs = 90_000) {
+async function getJson(url, intentos = 2, timeoutMs = 45_000) {
   for (let i = 1; i <= intentos; i++) {
     try {
       const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
@@ -48,6 +51,27 @@ async function getJson(url, intentos = 4, timeoutMs = 90_000) {
   }
   return null;
 }
+
+// Pide a mindicador.cl; si no responde, al respaldo del sitio. ruta: '' | 'uf' | 'uf/2026'
+// Corte: tras 2 fallos seguidos de una fuente se deja de insistir con ella en esta corrida,
+// para no esperar minutos en cada archivo cuando mindicador.cl esta caido.
+let fallosDirectos = 0;
+let fallosRespaldo = 0;
+async function getApi(ruta) {
+  if (fallosDirectos < 2) {
+    const directo = await getJson(ruta ? `${API}/${ruta}` : API);
+    if (directo) { fallosDirectos = 0; return directo; }
+    fallosDirectos++;
+  }
+  if (fallosRespaldo >= 2) return null;
+  console.warn('  mindicador.cl no responde: se usa el respaldo del sitio (/api-proxy)');
+  const respaldo = await getJson(ruta ? `${API_RESPALDO}/${ruta}` : API_RESPALDO, 1, 60_000);
+  if (respaldo) { fallosRespaldo = 0; return respaldo; }
+  fallosRespaldo++;
+  return null;
+}
+
+const fechaMax = serie => serie.reduce((m, r) => (r.fecha > m ? r.fecha : m), '');
 
 async function leer(nombre) {
   try { return JSON.parse(await fs.readFile(path.join(DIR, nombre), 'utf8')); }
@@ -65,6 +89,17 @@ async function escribir(nombre, data) {
 }
 
 const serieValida = d => Array.isArray(d?.serie) && d.serie.length > 0;
+
+// Escribe una serie solo si no es mas vieja que la guardada (el respaldo puede venir de una cache).
+async function escribirSerie(nombre, data) {
+  const previo = await leer(nombre);
+  if (serieValida(previo) && fechaMax(data.serie) < fechaMax(previo.serie)) {
+    console.warn(`  ${nombre}: el dato nuevo es mas viejo que el guardado; se conserva el actual`);
+    return false;
+  }
+  await escribir(nombre, data);
+  return true;
+}
 
 // ── IPC desde la API BDE del Banco Central (misma logica que worker.js) ──────
 async function ipcBancoCentral() {
@@ -110,11 +145,16 @@ async function main() {
 
   // Todos los indicadores de hoy
   console.log('hoy');
-  let hoy = await getJson(API);
+  let hoy = await getApi('');
+  const hoyPrevio = await leer('hoy.json');
+  if (hoy && hoyPrevio?.uf?.fecha && hoy.uf?.fecha && hoy.uf.fecha < hoyPrevio.uf.fecha) {
+    console.warn('  el hoy recibido es mas viejo que el guardado; se conserva el guardado');
+    hoy = null;
+  }
   if (!hoy) {
     // mindicador.cl no respondio: se parte del hoy.json anterior, para que al menos el
     // IPC (que viene del Banco Central) no quede desactualizado.
-    hoy = await leer('hoy.json');
+    hoy = hoyPrevio;
     if (hoy) console.warn('  mindicador no respondio: se conserva hoy.json y solo se actualiza el IPC');
   }
   if (hoy) {
@@ -135,14 +175,14 @@ async function main() {
   // Ultimos dias y series anuales
   for (const ind of INDICADORES) {
     console.log(ind);
-    const reciente = await getJson(`${API}/${ind}`);
-    if (serieValida(reciente)) { await escribir(`${ind}.json`, reciente); ok++; } else fallos++;
+    const reciente = await getApi(ind);
+    if (serieValida(reciente)) { if (await escribirSerie(`${ind}.json`, reciente)) ok++; } else fallos++;
 
     for (let y = START_YEAR; y <= anioActual; y++) {
       const nombre = `${ind}-${y}.json`;
       if (y < anioActual && serieValida(await leer(nombre))) continue; // anio cerrado ya guardado
-      const data = await getJson(`${API}/${ind}/${y}`);
-      if (serieValida(data)) { await escribir(nombre, data); ok++; } else fallos++;
+      const data = await getApi(`${ind}/${y}`);
+      if (serieValida(data)) { if (await escribirSerie(nombre, data)) ok++; } else fallos++;
     }
   }
 
