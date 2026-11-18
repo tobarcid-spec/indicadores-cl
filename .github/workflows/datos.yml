@@ -60,6 +60,9 @@ jobs:
       - name: Tablas y estadísticas de las páginas UF en el HTML
         run: node scripts/prerender-uf.mjs
 
+      - name: Resúmenes de dólar y UTM en el HTML
+        run: node scripts/prerender-resumenes.mjs
+
       - name: Fechas del sitemap
         run: node scripts/actualizar-sitemap.mjs
 

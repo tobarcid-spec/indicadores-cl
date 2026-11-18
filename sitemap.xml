@@ -6,10 +6,8 @@
   <!-- UF principal -->
   <url><loc>https://indicadoreschile.cl/uf/</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
 
-  <!-- UF por año -->
+  <!-- UF por año: solo el año en curso; 2024 y 2025 son tablas históricas sin texto propio y siguen accesibles por enlace -->
   <url><loc>https://indicadoreschile.cl/uf/2026/</loc><lastmod>2026-11-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://indicadoreschile.cl/uf/2025/</loc><lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://indicadoreschile.cl/uf/2024/</loc><lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
 
   <!-- Las páginas /uf/mes-aaaa/ llevan noindex (poco texto propio): no se listan aquí -->
 
