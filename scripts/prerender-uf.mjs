@@ -183,7 +183,124 @@ function anual(html, pagina, anio) {
   return aplicar(html, pagina, lista);
 }
 
+/* ── /uf/: valores de la UF ya publicados para los proximos dias ──
+ * El Banco Central publica la UF con semanas de anticipacion (hasta el dia 9 del mes
+ * siguiente). Con eso se arma, en HTML estatico, lo que otros portales no muestran:
+ * la UF de manana y de fin de mes, el efecto en pesos segun el dia de pago y una
+ * simulacion de la UF del proximo periodo segun el IPC. */
+const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+const hoyChile = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santiago' }).format(new Date());
+const isoUTC = iso => new Date(iso + 'T00:00:00Z');
+const larga = iso => { const d = isoUTC(iso); return `${DIAS_SEMANA[d.getUTCDay()]} ${d.getUTCDate()} de ${MESES[d.getUTCMonth()].toLowerCase()}`; };
+const corta = iso => `${iso.slice(8, 10)}-${iso.slice(5, 7)}-${iso.slice(0, 4)}`;
+const pct = (v, dec) => `${v > 0 ? '+' : ''}${v.toFixed(dec).replace('.', ',')}%`;
+const num = v => new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(v);
+
+function serieUF() {
+  const mapa = new Map();
+  const anio = Number(hoyChile().slice(0, 4));
+  for (const f of [`uf-${anio}.json`, `uf-${anio + 1}.json`, 'uf.json']) {
+    const ruta = path.join('data', f);
+    if (!fs.existsSync(ruta)) continue;
+    for (const r of JSON.parse(fs.readFileSync(ruta, 'utf8')).serie || []) {
+      if (typeof r.valor === 'number') mapa.set(r.fecha.slice(0, 10), r.valor);
+    }
+  }
+  return [...mapa].sort(([a], [b]) => (a < b ? -1 : 1));
+}
+
+function proximos(html) {
+  const hoy = hoyChile();
+  const s = serieUF();
+  const iHoy = s.findIndex(([f]) => f === hoy);
+  if (iHoy < 0) return html;                     // sin valor de hoy: no se toca la seccion
+  const futuros = s.slice(iHoy + 1);
+  if (futuros.length < 3) return html;           // casi nunca pasa: la UF se publica con semanas de anticipo
+  const vHoy = s[iHoy][1];
+  const [fUlt, vUlt] = futuros[futuros.length - 1];
+  const [fMan, vMan] = futuros[0];
+  const delMes = futuros.filter(([f]) => f.slice(0, 7) === hoy.slice(0, 7));
+  const finMes = delMes.length ? delMes[delMes.length - 1] : null;
+  const diario = (vUlt - vHoy) / futuros.length;
+  const diarioPct = diario / vHoy * 100;
+  const mesesNom = i => MESES[(i + 12) % 12].toLowerCase();
+  const mUlt = isoUTC(fUlt).getUTCMonth();
+  const esDia9 = fUlt.slice(8, 10) === '09';
+
+  // IPC que se esta aplicando: variacion del dia 9 anterior al ultimo dia 9 publicado
+  let ipcAplicado = null;
+  if (esDia9) {
+    const d = isoUTC(fUlt); d.setUTCMonth(d.getUTCMonth() - 1);
+    const previo = s.find(([f]) => f === d.toISOString().slice(0, 10));
+    if (previo) ipcAplicado = (vUlt / previo[1] - 1) * 100;
+  }
+
+  const chip = (t, v, sub) => `<div class="stat-chip"><div class="stat-chip-label">${t}</div><div class="stat-chip-val">${esc(clp(v))}</div>` +
+    `<div style="font-size:11px;color:var(--text-3);margin-top:4px">${sub}</div></div>`;
+  const chips = [chip('UF mañana', vMan, larga(fMan))];
+  if (finMes && finMes[0] !== fMan) chips.push(chip('UF a fin de mes', finMes[1], larga(finMes[0])));
+  chips.push(chip(`UF al ${isoUTC(fUlt).getUTCDate()} de ${mesesNom(mUlt)}`, vUlt, 'último valor publicado'));
+
+  const p = 'font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:16px';
+  let h = `<h2 id="uf-proximos-h" style="font-size:18px;font-weight:600;color:var(--text);margin:8px 0 12px">UF de mañana y de fin de mes: valores ya publicados</h2>`;
+  h += `<p style="${p}">El Banco Central ya fijó la UF hasta el <strong>${larga(fUlt)} de ${fUlt.slice(0, 4)}</strong>. ` +
+    `Hoy (${larga(hoy)}) vale <strong>${esc(clp(vHoy))}</strong> y mañana valdrá <strong>${esc(clp(vMan))}</strong>. ` +
+    `En promedio sube <strong>${esc(clp(diario))}</strong> por día (${esc(pct(diarioPct, 4))} diario)` +
+    (ipcAplicado !== null ? `, porque el IPC de ${mesesNom(mUlt - 2)} (${esc(pct(ipcAplicado, 1))}) se reparte en partes iguales entre los días del 10 de ${mesesNom(mUlt - 1)} al 9 de ${mesesNom(mUlt)}.` : '.') + `</p>`;
+  h += `<div class="stats-row" style="margin-bottom:24px">${chips.join('')}</div>`;
+
+  // Tabla de los dias que faltan
+  const filas = futuros.map(([f, v], i) => {
+    const dif = v - vHoy;
+    return `<tr><td>${larga(f)}</td><td class="td-val">${esc(clp(v))}</td><td><span class="change-pos">+${esc(clp(dif))}</span></td></tr>`;
+  }).join('');
+  h += `<div class="ed-table-wrap"><table><thead><tr><th>Fecha</th><th>Valor UF</th><th>Diferencia con hoy</th></tr></thead><tbody>${filas}</tbody></table></div>`;
+  h += `<p style="font-size:12px;color:var(--text-3);margin:8px 0 28px;font-family:var(--font-mono)">Valores publicados por el Banco Central de Chile. Actualizado: ${corta(hoy)}.</p>`;
+
+  // Cuanto cambia el monto en pesos segun el dia de pago
+  const cols = [['Hoy', vHoy, larga(hoy)]];
+  if (finMes && finMes[0] !== fMan) cols.push(['Fin de mes', finMes[1], larga(finMes[0])]);
+  cols.push([`Al ${isoUTC(fUlt).getUTCDate()} de ${mesesNom(mUlt)}`, vUlt, larga(fUlt)]);
+  const montos = [[20, 'Arriendo de 20 UF'], [50, 'Dividendo de 50 UF'], [3000, 'Saldo de 3.000 UF']];
+  h += `<h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 8px">¿Cuánto cambia el monto en pesos según el día en que pagas?</h3>`;
+  h += `<p style="${p}">Una deuda o un arriendo en UF cuesta más pesos cada día. Esta tabla usa los valores ya publicados:</p>`;
+  h += `<div class="ed-table-wrap"><table><thead><tr><th>Monto</th>${cols.map(c => `<th>${esc(c[0])}</th>`).join('')}<th>Diferencia</th></tr></thead><tbody>` +
+    montos.map(([uf, nom]) => `<tr><td>${nom}</td>${cols.map(c => `<td>$${num(uf * c[1])}</td>`).join('')}` +
+      `<td><span class="change-pos">+$${num(uf * (vUlt - vHoy))}</span></td></tr>`).join('') +
+    `</tbody></table></div>`;
+  h += `<p style="font-size:12px;color:var(--text-3);margin:8px 0 28px;font-family:var(--font-mono)">Diferencia entre hoy y el ${larga(fUlt)}. Montos de ejemplo.</p>`;
+
+  // Simulacion del proximo periodo segun el IPC
+  if (esDia9) {
+    const sig = isoUTC(fUlt); sig.setUTCMonth(sig.getUTCMonth() + 1);
+    const dias = Math.round((sig - isoUTC(fUlt)) / 86400000);
+    const filasIpc = [0.2, 0.4, 0.6, 0.8].map(i => {
+      const v9 = vUlt * (1 + i / 100);
+      return `<tr><td>${esc(pct(i, 1))}</td><td>${esc(clp(vUlt * i / 100 / dias))}</td><td class="td-val">${esc(clp(v9))}</td></tr>`;
+    }).join('');
+    h += `<h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 8px">Cómo podría estar la UF el ${larga(sig.toISOString().slice(0, 10))} según el IPC de ${mesesNom(mUlt - 1)}</h3>`;
+    h += `<p style="${p}">La UF del 9 de cada mes es la del 9 anterior más el IPC del mes que acaba de cerrar, repartido día a día. ` +
+      `El INE publica ese IPC alrededor del día 8. Mientras tanto, esta simulación muestra el rango habitual (no es un pronóstico oficial):</p>`;
+    h += `<div class="ed-table-wrap"><table><thead><tr><th>Si el IPC de ${mesesNom(mUlt - 1)} es</th><th>La UF sube por día</th><th>UF el ${sig.getUTCDate()} de ${mesesNom(mUlt + 1)}</th></tr></thead><tbody>${filasIpc}</tbody></table></div>`;
+    h += `<p style="font-size:12px;color:var(--text-3);margin:8px 0 36px;font-family:var(--font-mono)">Cálculo: UF del ${larga(fUlt)} (${esc(clp(vUlt))}) × (1 + IPC). Simulación ilustrativa.</p>`;
+  }
+
+  const r = setInner(html, 'section', 'uf-proximos', h);
+  if (r === null) console.warn('  uf/: no se encontró <section id="uf-proximos">');
+  return r === null ? html : r;
+}
+
 /* ── Recorrido ── */
+{
+  const archivo = path.join('uf', 'index.html');
+  if (fs.existsSync(archivo)) {
+    const original = fs.readFileSync(archivo, 'utf8');
+    const nl = original.includes('\r\n') ? '\r\n' : '\n';
+    const html = original.replace(/\r\n/g, '\n');
+    const nuevo = proximos(html);
+    if (nuevo !== html) { fs.writeFileSync(archivo, nuevo.replace(/\n/g, nl)); console.log('+ uf/ (próximos días)'); }
+  }
+}
 let tocadas = 0;
 const paginas = [];
 for (const d of fs.readdirSync('uf')) {

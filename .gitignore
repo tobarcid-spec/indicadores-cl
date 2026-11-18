@@ -28,3 +28,6 @@ npm-debug.log*
 
 __pycache__/
 *.pyc
+
+# Exportes de Search Console (datos privados, no publicar)
+gsc-export/

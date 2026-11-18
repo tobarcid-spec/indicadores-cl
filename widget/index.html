@@ -340,7 +340,7 @@
       </div>
       <div class="step-body">
         <div class="step-title">Copia el código con el botón "Copiar código"</div>
-        <div class="step-desc">Son un par de líneas: un contenedor y un script que se encarga del resto (estilos, datos y enlace a indicadoreschile.cl). No necesitas instalar nada. Si tu editor no permite scripts, usa la opción iFrame.</div>
+        <div class="step-desc">Son un par de líneas: un contenedor y un script que se encarga del resto (estilos y datos). El código incluye un enlace de fuente a indicadoreschile.cl: déjalo, es la única condición de uso y sirve de respaldo si el script no carga. No necesitas instalar nada. Si tu editor no permite scripts, usa la opción iFrame.</div>
       </div>
     </div>
     <div class="step">
@@ -437,6 +437,12 @@
     return Math.ceil(n / 2) * 96 + 40;
   }
 
+  /* Enlace de fuente en HTML fijo (visible sin JavaScript): apunta a la pagina del primer indicador */
+  var PAGINA = { uf: '/uf/', dolar: '/dolar/', euro: '/', utm: '/utm/', ipc: '/ipc/' };
+  function enlaceFuente() {
+    return '<a href="' + ORIGEN + PAGINA[indicadores()[0]] + '">Indicadores económicos de Chile — indicadoreschile.cl</a>';
+  }
+
   function codigo() {
     var i = indicadores().join(',');
     if (estado.cod === 'iframe') {
@@ -450,9 +456,12 @@
         '    document.getElementById("ic-widget").style.height = e.data.icWidgetHeight + "px";\n' +
         '  }\n' +
         '});\n' +
-        '<\/script>';
+        '<\/script>\n' +
+        '<p style="font-size:12px;margin:6px 0 0">Fuente: ' + enlaceFuente() + '</p>';
     }
-    return '<div data-ic-widget data-i="' + i + '" data-t="' + estado.t + '" data-tema="' + estado.tema + '"></div>\n' +
+    return '<div data-ic-widget data-i="' + i + '" data-t="' + estado.t + '" data-tema="' + estado.tema + '">\n' +
+      '  ' + enlaceFuente() + '\n' +
+      '</div>\n' +
       '<script async src="' + ORIGEN + '/widget/widget.js"><\/script>';
   }
 
